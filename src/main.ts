@@ -1,8 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { initializeFirebaseAdmin } from './firebase';
 
 async function bootstrap() {
+  initializeFirebaseAdmin();
   const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
+  app.enableCors();
+  await app.listen(3040);
 }
 bootstrap();
