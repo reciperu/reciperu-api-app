@@ -6,14 +6,16 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from './decorators/public.decorator';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class FirebaseAuthGuard extends AuthGuard('bearer') {
   constructor(private reflector: Reflector) {
     super();
   }
-
-  canActivate(context: ExecutionContext) {
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
