@@ -23,7 +23,7 @@ export class FirebaseAuthGuard extends AuthGuard('bearer') {
 
     return isPublic ? true : super.canActivate(context);
   }
-  handleRequest(err, user, info) {
+  handleRequest(err, user) {
     if (err || !user) {
       throw err || new UnauthorizedException();
     }
