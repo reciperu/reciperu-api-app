@@ -1,0 +1,127 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  uuid      String   @unique
+  name      String
+  isOwner   Boolean  @default(false) @map("is_owner")
+  imageUrl  String   @map("image_url")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  spaceId   Int?      @map("space_id")
+  spaces    Space?    @relation(fields: [spaceId], references: [id])
+
+  @@index([uuid, id])
+  @@map("users")
+}
+
+model Space {
+  id         Int           @id @default(autoincrement())
+  uuid       String        @unique
+  name       String
+  createdAt  DateTime      @default(now()) @map("created_at")
+  user       User[]
+  invitation Invitation[]
+  recipe     Recipe[]
+  suggestion Suggestions[]
+
+  @@index([uuid, id])
+  @@map("spaces")
+}
+
+model Invitation {
+  id        Int      @id @default(autoincrement())
+  code      String
+  joinedAt  DateTime @map("joined_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  spaceId   Int      @map("space_id")
+  spaces    Space?   @relation(fields: [spaceId], references: [id])
+
+  @@index([code, id])
+  @@map("invitations")
+}
+
+model Recipe {
+  id             Int                @id @default(autoincrement())
+  uuid           String             @unique
+  title          String
+  cost           Int
+  indication     String
+  genre          String
+  imageUrl       String             @map("image_url")
+  recipeUrl      String             @map("recipe_url")
+  createdAt      DateTime           @default(now()) @map("created_at")
+  updatedAt      DateTime           @updatedAt @map("updated_at")
+  spaceId        Int                @map("space_id")
+  spaces         Space              @relation(fields: [spaceId], references: [id])
+  recipeMaterial RecipeMateritals[]
+  recipeTags     RecipeTags[]
+  suggestion     Suggestions[]
+
+  @@index([uuid, id])
+  @@map("recipes")
+}
+
+model RecipeMateritals {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now()) @map("created_at")
+  recipeId   Int      @map("recipe_id")
+  recipes    Recipe   @relation(fields: [recipeId], references: [id])
+  materialId Int      @map("material_id")
+  materials  Material @relation(fields: [materialId], references: [id])
+
+  @@map("recipe_materials")
+}
+
+model RecipeTags {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  recipeId  Int      @map("recipe_id")
+  recipes   Recipe   @relation(fields: [recipeId], references: [id])
+  tagId     Int      @map("tag_id")
+  tags      Tag      @relation(fields: [tagId], references: [id])
+
+  @@index([recipeId, tagId])
+  @@map("recipe_tags")
+}
+
+model Material {
+  id              Int                @id @default(autoincrement())
+  name            String
+  receipeMaterial RecipeMateritals[]
+
+  @@index([name, id])
+  @@map("materials")
+}
+
+model Tag {
+  id          Int          @id @default(autoincrement())
+  name        String
+  receipeTags RecipeTags[]
+
+  @@index([name, id])
+  @@map("tags")
+}
+
+model Suggestions {
+  id               Int      @id @default(autoincrement())
+  rakutenRecipeUrl String   @map("rakuten_recipe_url")
+  createdAt        DateTime @default(now()) @map("created_at")
+  spaceId          Int
+  recipeId         Int
+  spaces           Space    @relation(fields: [spaceId], references: [id])
+  recipes          Recipe   @relation(fields: [recipeId], references: [id])
+
+  @@index([rakutenRecipeUrl, id])
+  @@map("suggestions")
+}
