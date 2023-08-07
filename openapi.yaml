@@ -1,0 +1,26 @@
+openapi: 3.0.0
+paths:
+  /users:
+    post:
+      operationId: createUser
+      summary: ''
+      parameters: []
+      responses:
+        '201':
+          description: ''
+info:
+  title: reciperu api app
+  description: API documents
+  version: '1.0'
+  contact: {}
+tags:
+  - name: '1.0'
+    description: ''
+servers: []
+components:
+  securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+  schemas: {}
