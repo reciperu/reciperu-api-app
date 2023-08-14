@@ -8,6 +8,71 @@ paths:
       responses:
         '201':
           description: ''
+  /spaces:
+    post:
+      operationId: SpaceController_create
+      parameters:
+        - name: userUuid
+          required: true
+          in: query
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertSpaceDto'
+      responses:
+        '201':
+          description: The space has been successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Space'
+      tags: &ref_0
+        - space
+  /spaces/{uuid}:
+    get:
+      operationId: SpaceController_show
+      parameters:
+        - name: uuid
+          required: true
+          in: path
+          description: space uuid
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The spaces has been successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Space'
+      tags: *ref_0
+    patch:
+      operationId: SpaceController_update
+      parameters:
+        - name: uuid
+          required: true
+          in: path
+          description: space uuid
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertSpaceDto'
+      responses:
+        '200':
+          description: The space has been successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Space'
+      tags: *ref_0
 info:
   title: reciperu api app
   description: API documents
@@ -23,4 +88,28 @@ components:
       scheme: bearer
       bearerFormat: JWT
       type: http
-  schemas: {}
+  schemas:
+    UpsertSpaceDto:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+    Space:
+      type: object
+      properties:
+        id:
+          type: number
+        uuid:
+          type: string
+        name:
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - uuid
+        - name
+        - createdAt
