@@ -12,11 +12,13 @@ export class UserService {
     const decodedToken = await this.firebaseService.admin
       .auth()
       .verifyIdToken(token);
-    await this.prismaService.user.create({
+
+    const user = await this.prismaService.user.create({
       data: {
         name: decodedToken.name,
-        imageUrl: decodedToken.imageUrl,
+        imageUrl: decodedToken.imageUrl || '',
       },
     });
+    return user;
   }
 }

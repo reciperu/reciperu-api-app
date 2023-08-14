@@ -7,7 +7,13 @@ paths:
       parameters: []
       responses:
         '201':
-          description: ''
+          description: The user has been successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserEntity'
+      tags:
+        - user
   /spaces:
     post:
       operationId: SpaceController_create
@@ -89,6 +95,25 @@ components:
       bearerFormat: JWT
       type: http
   schemas:
+    UserEntity:
+      type: object
+      properties:
+        id:
+          type: number
+        uuid:
+          type: string
+        name:
+          type: string
+        isOwner:
+          type: boolean
+        imageUrl:
+          type: string
+      required:
+        - id
+        - uuid
+        - name
+        - isOwner
+        - imageUrl
     UpsertSpaceDto:
       type: object
       properties:
