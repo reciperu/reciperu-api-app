@@ -6,9 +6,11 @@ const adminConfig: ServiceAccount = firebaseServiceAccount;
 @Injectable()
 export class FirebaseService implements OnModuleInit {
   onModuleInit() {
-    admin.initializeApp({
-      credential: admin.credential.cert(adminConfig),
-    });
+    if (admin.apps.length === 0) {
+      admin.initializeApp({
+        credential: admin.credential.cert(adminConfig),
+      });
+    }
   }
 
   get admin() {
