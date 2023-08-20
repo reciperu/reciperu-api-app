@@ -1,6 +1,7 @@
 import {
   Controller,
   Req,
+  Get,
   Post,
   Patch,
   HttpException,
@@ -17,6 +18,31 @@ import { UpdateUserDto } from './dto/updateUser.dto';
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Get(':uuid')
+  @ApiOperation({ operationId: 'getUser' })
+  @ApiParam({
+    name: 'uuid',
+    type: String,
+    required: true,
+    description: 'user uuid',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The user has been successfully retrieved.',
+    type: UserEntity,
+  })
+  async show(@Param('uuid') uuid: string) {
+    try {
+      const user = await this.userService.findOneByUuid(uuid);
+      return new UserEntity(user);
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'INTERNAL_SERVER_ERROR',
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 
   @Post()
   @ApiOperation({ operationId: 'createUser' })
@@ -44,7 +70,7 @@ export class UserController {
     name: 'uuid',
     type: String,
     required: true,
-    description: 'space uuid',
+    description: 'user uuid',
   })
   @ApiResponse({
     status: 200,

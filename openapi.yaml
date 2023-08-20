@@ -1,20 +1,25 @@
 openapi: 3.0.0
 paths:
-  /users:
-    post:
-      operationId: createUser
+  /users/{uuid}:
+    get:
+      operationId: getUser
       summary: ''
-      parameters: []
+      parameters:
+        - name: uuid
+          required: true
+          in: path
+          description: user uuid
+          schema:
+            type: string
       responses:
-        '201':
-          description: The user has been successfully created.
+        '200':
+          description: The user has been successfully retrieved.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserEntity'
       tags: &ref_0
         - user
-  /users/{uuid}:
     patch:
       operationId: updateUser
       summary: ''
@@ -22,7 +27,7 @@ paths:
         - name: uuid
           required: true
           in: path
-          description: space uuid
+          description: user uuid
           schema:
             type: string
       requestBody:
@@ -34,6 +39,19 @@ paths:
       responses:
         '200':
           description: The user has been successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserEntity'
+      tags: *ref_0
+  /users:
+    post:
+      operationId: createUser
+      summary: ''
+      parameters: []
+      responses:
+        '201':
+          description: The user has been successfully created.
           content:
             application/json:
               schema:
