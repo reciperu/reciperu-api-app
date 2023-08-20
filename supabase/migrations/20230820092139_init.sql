@@ -61,6 +61,7 @@ create table "public"."recipe_tags" (
 
 create table "public"."recipes" (
     "id" integer not null default nextval('recipes_id_seq'::regclass),
+    "uuid" uuid not null default gen_random_uuid(),
     "title" text not null,
     "cost" integer not null,
     "indication" text not null,
@@ -69,16 +70,15 @@ create table "public"."recipes" (
     "recipe_url" text not null,
     "created_at" timestamp(3) without time zone not null default CURRENT_TIMESTAMP,
     "updated_at" timestamp(3) without time zone not null,
-    "space_id" integer not null,
-    "uuid" uuid not null default uuid_generate_v4()
+    "space_id" integer not null
 );
 
 
 create table "public"."spaces" (
     "id" integer not null default nextval('spaces_id_seq'::regclass),
+    "uuid" uuid not null default gen_random_uuid(),
     "name" text not null,
-    "created_at" timestamp(3) without time zone not null default CURRENT_TIMESTAMP,
-    "uuid" uuid not null default uuid_generate_v4()
+    "created_at" timestamp(3) without time zone not null default CURRENT_TIMESTAMP
 );
 
 
@@ -99,13 +99,14 @@ create table "public"."tags" (
 
 create table "public"."users" (
     "id" integer not null default nextval('users_id_seq'::regclass),
+    "uuid" uuid not null default gen_random_uuid(),
     "name" text not null,
     "is_owner" boolean not null default false,
     "image_url" text not null,
     "created_at" timestamp(3) without time zone not null default CURRENT_TIMESTAMP,
     "updated_at" timestamp(3) without time zone not null,
-    "space_id" integer,
-    "uuid" uuid not null default uuid_generate_v4()
+    "uid" text not null,
+    "space_id" integer
 );
 
 
@@ -166,6 +167,8 @@ CREATE INDEX tags_name_id_idx ON public.tags USING btree (name, id);
 CREATE UNIQUE INDEX tags_pkey ON public.tags USING btree (id);
 
 CREATE UNIQUE INDEX users_pkey ON public.users USING btree (id);
+
+CREATE UNIQUE INDEX users_uid_key ON public.users USING btree (uid);
 
 CREATE INDEX users_uuid_id_idx ON public.users USING btree (uuid, id);
 
