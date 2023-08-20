@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { throwError } from 'rxjs';
 import { FirebaseService } from 'src/firebase/firebase.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UpdateUserDto } from './dto/updateUser.dto';
 
 @Injectable()
 export class UserService {
@@ -31,5 +31,16 @@ export class UserService {
       },
     });
     return newUser;
+  }
+
+  async update(uuid: string, updateUserDto: UpdateUserDto) {
+    return await this.prismaService.user.update({
+      where: {
+        uuid,
+      },
+      data: {
+        ...updateUserDto,
+      },
+    });
   }
 }

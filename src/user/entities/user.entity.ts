@@ -24,7 +24,7 @@ export class UserEntity implements User {
   @Exclude()
   uid: string;
 
-  @Exclude()
+  @ApiProperty()
   createdAt: Date;
 
   @Exclude()

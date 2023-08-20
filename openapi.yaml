@@ -12,8 +12,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserEntity'
-      tags:
+      tags: &ref_0
         - user
+  /users/{uuid}:
+    patch:
+      operationId: updateUser
+      summary: ''
+      parameters:
+        - name: uuid
+          required: true
+          in: path
+          description: space uuid
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDto'
+      responses:
+        '200':
+          description: The user has been successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserEntity'
+      tags: *ref_0
   /spaces:
     post:
       operationId: SpaceController_create
@@ -36,7 +61,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Space'
-      tags: &ref_0
+      tags: &ref_1
         - space
   /spaces/{uuid}:
     get:
@@ -55,7 +80,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Space'
-      tags: *ref_0
+      tags: *ref_1
     patch:
       operationId: SpaceController_update
       parameters:
@@ -78,7 +103,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Space'
-      tags: *ref_0
+      tags: *ref_1
 info:
   title: reciperu api app
   description: API documents
@@ -108,12 +133,23 @@ components:
           type: boolean
         imageUrl:
           type: string
+        createdAt:
+          format: date-time
+          type: string
       required:
         - id
         - uuid
         - name
         - isOwner
         - imageUrl
+        - createdAt
+    UpdateUserDto:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
     UpsertSpaceDto:
       type: object
       properties:
