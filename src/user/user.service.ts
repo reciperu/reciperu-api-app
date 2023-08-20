@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { throwError } from 'rxjs';
 import { FirebaseService } from 'src/firebase/firebase.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -13,13 +14,22 @@ export class UserService {
       .auth()
       .verifyIdToken(token);
 
-    const user = await this.prismaService.user.create({
-      data: {
-        name: decodedToken.name,
-        imageUrl: decodedToken.imageUrl || '',
+    const user = await this.prismaService.user.findUnique({
+      where: {
         uid: decodedToken.uid,
       },
     });
-    return user;
+    if (user) {
+      throw new HttpException('USER_ALREADY_EXISTS', HttpStatus.BAD_REQUEST);
+    }
+
+    const newUser = await this.prismaService.user.create({
+      data: {
+        name: decodedToken.name as string,
+        imageUrl: (decodedToken.imageUrl as string) || '',
+        uid: decodedToken.uid,
+      },
+    });
+    return newUser;
   }
 }

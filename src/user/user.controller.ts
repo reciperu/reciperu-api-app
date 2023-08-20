@@ -1,4 +1,10 @@
-import { Controller, Req, Post } from '@nestjs/common';
+import {
+  Controller,
+  Req,
+  Post,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { Request } from 'express';
 import { UserService } from './user.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -17,8 +23,15 @@ export class UserController {
     type: UserEntity,
   })
   async create(@Req() request: Request) {
-    const token = request.headers.authorization.split(' ')[1];
-    const user = await this.userService.create(token);
-    return new UserEntity(user);
+    try {
+      const token = request.headers.authorization.split(' ')[1];
+      const user = await this.userService.create(token);
+      return new UserEntity(user);
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'INTERNAL_SERVER_ERROR',
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
