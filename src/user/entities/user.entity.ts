@@ -21,7 +21,7 @@ export class UserEntity implements User {
   @ApiProperty()
   imageUrl: string;
 
-  @ApiProperty()
+  @Exclude()
   uid: string;
 
   @Exclude()
