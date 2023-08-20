@@ -17,6 +17,7 @@ export class UserService {
       data: {
         name: decodedToken.name,
         imageUrl: decodedToken.imageUrl || '',
+        uid: decodedToken.uid,
       },
     });
     return user;

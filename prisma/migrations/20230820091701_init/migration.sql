@@ -1,12 +1,13 @@
 -- CreateTable
 CREATE TABLE "users" (
     "id" SERIAL NOT NULL,
-    "uuid" TEXT NOT NULL,
+    "uuid" UUID NOT NULL DEFAULT gen_random_uuid(),
     "name" TEXT NOT NULL,
     "is_owner" BOOLEAN NOT NULL DEFAULT false,
     "image_url" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
+    "uid" TEXT NOT NULL,
     "space_id" INTEGER,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
@@ -15,7 +16,7 @@ CREATE TABLE "users" (
 -- CreateTable
 CREATE TABLE "spaces" (
     "id" SERIAL NOT NULL,
-    "uuid" TEXT NOT NULL,
+    "uuid" UUID NOT NULL DEFAULT gen_random_uuid(),
     "name" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -36,7 +37,7 @@ CREATE TABLE "invitations" (
 -- CreateTable
 CREATE TABLE "recipes" (
     "id" SERIAL NOT NULL,
-    "uuid" TEXT NOT NULL,
+    "uuid" UUID NOT NULL DEFAULT gen_random_uuid(),
     "title" TEXT NOT NULL,
     "cost" INTEGER NOT NULL,
     "indication" TEXT NOT NULL,
@@ -101,6 +102,9 @@ CREATE TABLE "suggestions" (
 CREATE UNIQUE INDEX "users_uuid_key" ON "users"("uuid");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "users_uid_key" ON "users"("uid");
+
+-- CreateIndex
 CREATE INDEX "users_uuid_id_idx" ON "users"("uuid", "id");
 
 -- CreateIndex
@@ -108,6 +112,9 @@ CREATE UNIQUE INDEX "spaces_uuid_key" ON "spaces"("uuid");
 
 -- CreateIndex
 CREATE INDEX "spaces_uuid_id_idx" ON "spaces"("uuid", "id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "invitations_code_key" ON "invitations"("code");
 
 -- CreateIndex
 CREATE INDEX "invitations_code_id_idx" ON "invitations"("code", "id");

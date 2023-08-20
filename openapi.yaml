@@ -108,12 +108,15 @@ components:
           type: boolean
         imageUrl:
           type: string
+        uid:
+          type: string
       required:
         - id
         - uuid
         - name
         - isOwner
         - imageUrl
+        - uid
     UpsertSpaceDto:
       type: object
       properties:
