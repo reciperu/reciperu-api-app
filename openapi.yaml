@@ -57,6 +57,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserEntity'
       tags: *ref_0
+  /users/icon/{uuid}:
+    post:
+      operationId: uploadIcon
+      summary: ''
+      parameters:
+        - name: uuid
+          required: true
+          in: path
+          description: user uuid
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadImageDto'
+      responses:
+        '200':
+          description: The user has been successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserEntity'
+      tags: *ref_0
   /spaces:
     post:
       operationId: SpaceController_create
@@ -166,8 +191,20 @@ components:
       properties:
         name:
           type: string
+        imageUrl:
+          type: string
       required:
         - name
+        - imageUrl
+    UploadImageDto:
+      type: object
+      properties:
+        file:
+          type: string
+          description: image
+          format: binary
+      required:
+        - file
     UpsertSpaceDto:
       type: object
       properties:
