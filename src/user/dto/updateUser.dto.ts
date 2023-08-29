@@ -5,4 +5,8 @@ export class UpdateUserDto {
   @IsString()
   @IsNotEmpty()
   name: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  imageUrl: string;
 }
