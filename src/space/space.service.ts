@@ -1,19 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable, HttpStatus } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpsertSpaceDto } from './dto/upsertSpace.dto';
 import { UserService } from 'src/user/user.service';
-
-// 後で修正
 @Injectable()
 export class SpaceService {
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly UserService: UserService,
+    private readonly userService: UserService,
   ) {}
 
-  async create(upsertSpaceDto: UpsertSpaceDto) {
+  async create({
+    userId,
+    upsertSpaceDto,
+  }: {
+    userId: number;
+    upsertSpaceDto: UpsertSpaceDto;
+  }) {
     const { name } = upsertSpaceDto;
-    await this.prismaService.$transaction(async (tx) => {
+    const user = await this.userService.findOneById(userId);
+    if (user.spaceId)
+      throw new HttpException('USER_ALREADY_HAS_SPACE', HttpStatus.BAD_REQUEST);
+    const createdSpace = await this.prismaService.$transaction(async (tx) => {
       const space = await tx.space.create({
         data: {
           name,
@@ -21,8 +28,7 @@ export class SpaceService {
       });
       await tx.user.update({
         where: {
-          id: 1,
-          // TODO: ここはログインユーザーのIDを取得する
+          id: userId,
         },
         data: {
           spaces: {
@@ -32,6 +38,8 @@ export class SpaceService {
           },
         },
       });
+      return space;
     });
+    return createdSpace;
   }
 }

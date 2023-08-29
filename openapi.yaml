@@ -78,7 +78,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Space'
+                $ref: '#/components/schemas/SpaceEntity'
       tags: &ref_1
         - space
   /spaces/{uuid}:
@@ -97,7 +97,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Space'
+                $ref: '#/components/schemas/SpaceEntity'
       tags: *ref_1
     patch:
       operationId: SpaceController_update
@@ -120,7 +120,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Space'
+                $ref: '#/components/schemas/SpaceEntity'
       tags: *ref_1
 info:
   title: reciperu api app
@@ -175,7 +175,7 @@ components:
           type: string
       required:
         - name
-    Space:
+    SpaceEntity:
       type: object
       properties:
         id:

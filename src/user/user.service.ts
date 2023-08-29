@@ -21,6 +21,18 @@ export class UserService {
     return user;
   }
 
+  async findOneById(id: number) {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (!user) {
+      throw new HttpException('USER_NOT_FOUND', HttpStatus.NOT_FOUND);
+    }
+    return user;
+  }
+
   async create(token: string) {
     const decodedToken = await this.firebaseService.admin
       .auth()
