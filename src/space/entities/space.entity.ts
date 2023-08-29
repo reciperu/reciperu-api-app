@@ -1,6 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Space } from '@prisma/client';
 
-export class Space {
+export class SpaceEntity implements Space {
+  constructor(partial: Partial<SpaceEntity>) {
+    Object.assign(this, partial);
+  }
   @ApiProperty()
   id: number;
 
