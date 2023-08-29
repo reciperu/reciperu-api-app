@@ -5,12 +5,12 @@ import {
   HttpException,
   Patch,
   Post,
-  Query,
+  Req,
 } from '@nestjs/common';
 import { UpsertSpaceDto } from './dto/upsertSpace.dto';
 import { SpaceService } from './space.service';
 import { ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Space } from './entities/space.entity';
+import { SpaceEntity } from './entities/space.entity';
 
 @ApiTags('space')
 @Controller('spaces')
@@ -24,13 +24,19 @@ export class SpaceController {
   @ApiResponse({
     status: 201,
     description: 'The space has been successfully created.',
-    type: Space,
+    type: SpaceEntity,
   })
   async create(
-    @Query('userUuid') userUuid: string,
+    @Req() request: Request,
     @Body() upsertSpaceDto: UpsertSpaceDto,
   ) {
     try {
+      const userId = request['currentUser'].id;
+      const newSpace = await this.spaceService.create({
+        userId,
+        upsertSpaceDto,
+      });
+      return new SpaceEntity(newSpace);
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }
@@ -46,7 +52,7 @@ export class SpaceController {
   @ApiResponse({
     status: 200,
     description: 'The spaces has been successfully retrieved.',
-    type: Space,
+    type: SpaceEntity,
   })
   async show() {
     try {
@@ -65,7 +71,7 @@ export class SpaceController {
   @ApiResponse({
     status: 200,
     description: 'The space has been successfully updated.',
-    type: Space,
+    type: SpaceEntity,
   })
   async update(@Body() upsertSpaceDto: UpsertSpaceDto) {
     try {
