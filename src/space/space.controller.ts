@@ -33,12 +33,12 @@ export class SpaceController {
     @Body() upsertSpaceDto: UpsertSpaceDto,
   ) {
     try {
-      const userId = request['currentUser'].id;
-      const newSpace = await this.spaceService.create({
-        userId,
-        upsertSpaceDto,
-      });
-      return new SpaceEntity(newSpace);
+      return new SpaceEntity(
+        await this.spaceService.create({
+          userId: request['currentUser'].id,
+          upsertSpaceDto,
+        }),
+      );
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }
@@ -78,8 +78,14 @@ export class SpaceController {
     description: 'The space has been successfully updated.',
     type: SpaceEntity,
   })
-  async update(@Body() upsertSpaceDto: UpsertSpaceDto) {
+  async update(
+    @Body() upsertSpaceDto: UpsertSpaceDto,
+    @Param('uuid') uuid: string,
+  ) {
     try {
+      return new SpaceEntity(
+        await this.spaceService.update({ uuid, upsertSpaceDto }),
+      );
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }

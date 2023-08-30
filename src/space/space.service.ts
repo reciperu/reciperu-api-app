@@ -54,4 +54,22 @@ export class SpaceService {
       },
     });
   }
+
+  async update({
+    uuid,
+    upsertSpaceDto,
+  }: {
+    uuid: string;
+    upsertSpaceDto: UpsertSpaceDto;
+  }) {
+    const { name } = upsertSpaceDto;
+    return await this.prismaService.space.update({
+      where: {
+        uuid,
+      },
+      data: {
+        name,
+      },
+    });
+  }
 }
