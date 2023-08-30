@@ -1,10 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Space } from '@prisma/client';
+import { UserEntity } from 'src/user/entities/user.entity';
 
 export class SpaceEntity implements Space {
-  constructor(partial: Partial<SpaceEntity>) {
-    Object.assign(this, partial);
-  }
   @ApiProperty()
   id: number;
 
@@ -16,4 +14,15 @@ export class SpaceEntity implements Space {
 
   @ApiProperty()
   createdAt: Date;
+
+  @ApiProperty({ required: false, type: UserEntity })
+  users?: UserEntity[];
+
+  constructor({ users, ...partial }: Partial<SpaceEntity>) {
+    Object.assign(this, partial);
+    if (users) {
+      console.log(users);
+      this.users = users.map((user) => new UserEntity(user));
+    }
+  }
 }
