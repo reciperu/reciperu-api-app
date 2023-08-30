@@ -78,8 +78,14 @@ export class SpaceController {
     description: 'The space has been successfully updated.',
     type: SpaceEntity,
   })
-  async update(@Body() upsertSpaceDto: UpsertSpaceDto) {
+  async update(
+    @Body() upsertSpaceDto: UpsertSpaceDto,
+    @Param('uuid') uuid: string,
+  ) {
     try {
+      return new SpaceEntity(
+        await this.spaceService.update({ uuid, upsertSpaceDto }),
+      );
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }
