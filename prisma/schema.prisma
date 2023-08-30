@@ -31,7 +31,7 @@ model Space {
   uuid       String        @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name       String
   createdAt  DateTime      @default(now()) @map("created_at")
-  user       User[]
+  users       User[]
   invitation Invitation[]
   recipe     Recipe[]
   suggestion Suggestions[]
@@ -67,7 +67,7 @@ model Recipe {
   spaces         Space              @relation(fields: [spaceId], references: [id])
   recipeMaterial RecipeMateritals[]
   recipeTags     RecipeTags[]
-  suggestion     Suggestions[]
+  suggestions     Suggestions[]
 
   @@index([uuid, id])
   @@map("recipes")
@@ -99,7 +99,7 @@ model RecipeTags {
 model Material {
   id              Int                @id @default(autoincrement())
   name            String
-  receipeMaterial RecipeMateritals[]
+  receipeMaterials RecipeMateritals[]
 
   @@index([name, id])
   @@map("materials")

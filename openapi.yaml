@@ -81,16 +81,16 @@ paths:
                 $ref: '#/components/schemas/SpaceEntity'
       tags: &ref_1
         - space
-  /spaces/{uuid}:
+  /spaces/{id}:
     get:
       operationId: SpaceController_show
       parameters:
-        - name: uuid
+        - name: id
           required: true
           in: path
-          description: space uuid
+          description: spaceId
           schema:
-            type: string
+            type: number
       responses:
         '200':
           description: The spaces has been successfully retrieved.
@@ -99,6 +99,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/SpaceEntity'
       tags: *ref_1
+  /spaces/{uuid}:
     patch:
       operationId: SpaceController_update
       parameters:
@@ -187,6 +188,8 @@ components:
         createdAt:
           format: date-time
           type: string
+        users:
+          $ref: '#/components/schemas/UserEntity'
       required:
         - id
         - uuid

@@ -2,6 +2,7 @@ import { HttpException, Injectable, HttpStatus } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpsertSpaceDto } from './dto/upsertSpace.dto';
 import { UserService } from 'src/user/user.service';
+import { Space } from '@prisma/client';
 @Injectable()
 export class SpaceService {
   constructor(
@@ -41,5 +42,16 @@ export class SpaceService {
       return space;
     });
     return createdSpace;
+  }
+
+  async findOneById(id: number) {
+    return await this.prismaService.space.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        users: true,
+      },
+    });
   }
 }

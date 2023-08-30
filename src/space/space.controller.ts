@@ -3,9 +3,11 @@ import {
   Controller,
   Get,
   HttpException,
+  Param,
   Patch,
   Post,
   Req,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UpsertSpaceDto } from './dto/upsertSpace.dto';
 import { SpaceService } from './space.service';
@@ -42,20 +44,23 @@ export class SpaceController {
     }
   }
 
-  @Get(':uuid')
+  @Get(':id')
   @ApiParam({
-    name: 'uuid',
-    type: String,
+    name: 'id',
+    type: Number,
     required: true,
-    description: 'space uuid',
+    description: 'spaceId',
   })
   @ApiResponse({
     status: 200,
     description: 'The spaces has been successfully retrieved.',
     type: SpaceEntity,
   })
-  async show() {
+  // request['currentUser'].spaceIdでもいけそうだが、API的にはidで明示しておく
+  async show(@Param('id', ParseIntPipe) id: number) {
     try {
+      const spaces = await this.spaceService.findOneById(id);
+      return new SpaceEntity(spaces);
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }
