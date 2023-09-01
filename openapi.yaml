@@ -123,6 +123,30 @@ paths:
               schema:
                 $ref: '#/components/schemas/SpaceEntity'
       tags: *ref_1
+  /spaces/join:
+    patch:
+      operationId: SpaceController_join
+      parameters:
+        - name: uuid
+          required: true
+          in: path
+          description: space uuid
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JoinSpaceDto'
+      responses:
+        '200':
+          description: The space has been successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpaceEntity'
+      tags: *ref_1
 info:
   title: reciperu api app
   description: API documents
@@ -202,6 +226,16 @@ components:
         - password
         - createdAt
     UpdateSpaceDto:
+      type: object
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+      required:
+        - name
+        - password
+    JoinSpaceDto:
       type: object
       properties:
         name:

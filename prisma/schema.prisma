@@ -29,8 +29,8 @@ model User {
 model Space {
   id         Int           @id @default(autoincrement())
   uuid       String        @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name       String
-  password   String
+  name       String        @unique
+  password   String        @unique  
   createdAt  DateTime      @default(now()) @map("created_at")
   users       User[]
   recipe     Recipe[]

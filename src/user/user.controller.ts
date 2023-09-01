@@ -54,6 +54,7 @@ export class UserController {
   async create(@Req() request: Request) {
     try {
       const token = request.headers.authorization.split(' ')[1];
+      // isOwnerはデフォルトでfalse
       const user = await this.userService.create(token);
       return new UserEntity(user);
     } catch (error) {

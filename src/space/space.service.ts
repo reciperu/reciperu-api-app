@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateSpaceDto } from './dto/updateSpace.dto';
 import { CreateSpaceDto } from './dto/createSpace.dto';
 import { UserService } from 'src/user/user.service';
+import { JoinSpaceDto } from './dto/joinSpace.dto';
 
 @Injectable()
 export class SpaceService {
@@ -67,5 +68,40 @@ export class SpaceService {
       },
       data: updateSpaceDto,
     });
+  }
+
+  async join({
+    userUuid,
+    joinSpaceDto,
+  }: {
+    userUuid: string;
+    joinSpaceDto: JoinSpaceDto;
+  }) {
+    const user = await this.userService.findOneByUuid(userUuid);
+    if (user.spaceId)
+      throw new HttpException('USER_ALREADY_HAS_SPACE', HttpStatus.BAD_REQUEST);
+
+    if (user.isOwner)
+      throw new HttpException('USER_IS_OWNER', HttpStatus.BAD_REQUEST);
+
+    const space = await this.prismaService.space.findUnique({
+      where: {
+        name: joinSpaceDto.name,
+        password: joinSpaceDto.password,
+      },
+    });
+
+    if (!space)
+      throw new HttpException('SPACE_NOT_FOUND', HttpStatus.NOT_FOUND);
+
+    await this.prismaService.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        spaceId: space.id,
+      },
+    });
+    return await this.findOneById(space.id);
   }
 }

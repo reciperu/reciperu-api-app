@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { UpdateSpaceDto } from './dto/updateSpace.dto';
 import { CreateSpaceDto } from './dto/createSpace.dto';
+import { JoinSpaceDto } from './dto/joinSpace.dto';
 import { SpaceService } from './space.service';
 import { ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SpaceEntity } from './entities/space.entity';
@@ -91,4 +92,35 @@ export class SpaceController {
       throw new HttpException(error.message, error.status);
     }
   }
+
+  @Patch('/join')
+  @ApiParam({
+    name: 'uuid',
+    type: String,
+    required: true,
+    description: 'space uuid',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The space has been successfully updated.',
+    type: SpaceEntity,
+  })
+  async join(@Req() request: Request, @Body() joinSpaceDto: JoinSpaceDto) {
+    try {
+      const userUuid = request['currentUser'].uuid;
+      return new SpaceEntity(
+        await this.spaceService.join({ userUuid, joinSpaceDto }),
+      );
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
+  }
 }
+
+// スペース参加のAPI
+// isOwner:false
+//
+// path: /spaces/join:/:uuid/
+
+// body: {name:string,password: string}
+// nameとpasswordがbodyデータと一緒であれば、userのspaceIdを更新する
