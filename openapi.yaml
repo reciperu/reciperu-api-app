@@ -49,6 +49,12 @@ paths:
       operationId: createUser
       summary: ''
       parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDto'
       responses:
         '201':
           description: The user has been successfully created.
@@ -186,6 +192,13 @@ components:
         - isOwner
         - imageUrl
         - createdAt
+    CreateUserDto:
+      type: object
+      properties:
+        isOwner:
+          type: boolean
+      required:
+        - isOwner
     UpdateUserDto:
       type: object
       properties:

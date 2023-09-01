@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { FirebaseService } from 'src/firebase/firebase.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateUserDto } from './dto/updateUser.dto';
+import { CreateUserDto } from './dto/createUser.dto';
 
 @Injectable()
 export class UserService {
@@ -33,7 +34,13 @@ export class UserService {
     return user;
   }
 
-  async create(token: string) {
+  async create({
+    token,
+    createUserDto,
+  }: {
+    token: string;
+    createUserDto: CreateUserDto;
+  }) {
     const decodedToken = await this.firebaseService.admin
       .auth()
       .verifyIdToken(token);
@@ -52,6 +59,7 @@ export class UserService {
         name: decodedToken.name as string,
         imageUrl: (decodedToken.imageUrl as string) || '',
         uid: decodedToken.uid,
+        isOwner: createUserDto.isOwner,
       },
     });
     return newUser;

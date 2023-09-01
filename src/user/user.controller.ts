@@ -14,6 +14,7 @@ import { UserService } from './user.service';
 import { ApiOperation, ApiResponse, ApiTags, ApiParam } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
 import { UpdateUserDto } from './dto/updateUser.dto';
+import { CreateUserDto } from './dto/createUser.dto';
 @ApiTags('user')
 @Controller('users')
 export class UserController {
@@ -51,11 +52,10 @@ export class UserController {
     description: 'The user has been successfully created.',
     type: UserEntity,
   })
-  async create(@Req() request: Request) {
+  async create(@Req() request: Request, @Body() createUserDto: CreateUserDto) {
     try {
       const token = request.headers.authorization.split(' ')[1];
-      // isOwnerはデフォルトでfalse
-      const user = await this.userService.create(token);
+      const user = await this.userService.create({ token, createUserDto });
       return new UserEntity(user);
     } catch (error) {
       throw new HttpException(
