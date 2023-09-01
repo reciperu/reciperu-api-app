@@ -30,9 +30,9 @@ model Space {
   id         Int           @id @default(autoincrement())
   uuid       String        @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name       String
+  password   String
   createdAt  DateTime      @default(now()) @map("created_at")
   users       User[]
-  invitation Invitation[]
   recipe     Recipe[]
   suggestion Suggestions[]
 
@@ -40,17 +40,6 @@ model Space {
   @@map("spaces")
 }
 
-model Invitation {
-  id        Int      @id @default(autoincrement())
-  code      String   @unique
-  joinedAt  DateTime @map("joined_at")
-  createdAt DateTime @default(now()) @map("created_at")
-  spaceId   Int      @map("space_id")
-  spaces    Space?   @relation(fields: [spaceId], references: [id])
-
-  @@index([code, id])
-  @@map("invitations")
-}
 
 model Recipe {
   id             Int                @id @default(autoincrement())
