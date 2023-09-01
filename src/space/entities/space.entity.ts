@@ -13,6 +13,9 @@ export class SpaceEntity implements Space {
   name: string;
 
   @ApiProperty()
+  password: string;
+
+  @ApiProperty()
   createdAt: Date;
 
   @ApiProperty({ required: false, type: UserEntity })

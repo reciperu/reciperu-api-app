@@ -9,7 +9,8 @@ import {
   Req,
   ParseIntPipe,
 } from '@nestjs/common';
-import { UpsertSpaceDto } from './dto/upsertSpace.dto';
+import { UpdateSpaceDto } from './dto/updateSpace.dto';
+import { CreateSpaceDto } from './dto/createSpace.dto';
 import { SpaceService } from './space.service';
 import { ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SpaceEntity } from './entities/space.entity';
@@ -30,13 +31,13 @@ export class SpaceController {
   })
   async create(
     @Req() request: Request,
-    @Body() upsertSpaceDto: UpsertSpaceDto,
+    @Body() createSpaceDto: CreateSpaceDto,
   ) {
     try {
       return new SpaceEntity(
         await this.spaceService.create({
           userId: request['currentUser'].id,
-          upsertSpaceDto,
+          createSpaceDto,
         }),
       );
     } catch (error) {
@@ -79,12 +80,12 @@ export class SpaceController {
     type: SpaceEntity,
   })
   async update(
-    @Body() upsertSpaceDto: UpsertSpaceDto,
+    @Body() updateSpaceDto: UpdateSpaceDto,
     @Param('uuid') uuid: string,
   ) {
     try {
       return new SpaceEntity(
-        await this.spaceService.update({ uuid, upsertSpaceDto }),
+        await this.spaceService.update({ uuid, updateSpaceDto }),
       );
     } catch (error) {
       throw new HttpException(error.message, error.status);

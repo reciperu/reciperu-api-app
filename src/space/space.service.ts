@@ -1,6 +1,7 @@
 import { HttpException, Injectable, HttpStatus } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UpsertSpaceDto } from './dto/upsertSpace.dto';
+import { UpdateSpaceDto } from './dto/updateSpace.dto';
+import { CreateSpaceDto } from './dto/createSpace.dto';
 import { UserService } from 'src/user/user.service';
 import { Space } from '@prisma/client';
 @Injectable()
@@ -12,26 +13,24 @@ export class SpaceService {
 
   async create({
     userId,
-    upsertSpaceDto,
+    createSpaceDto,
   }: {
     userId: number;
-    upsertSpaceDto: UpsertSpaceDto;
+    createSpaceDto: CreateSpaceDto;
   }) {
-    const { name } = upsertSpaceDto;
     const user = await this.userService.findOneById(userId);
     if (user.spaceId)
       throw new HttpException('USER_ALREADY_HAS_SPACE', HttpStatus.BAD_REQUEST);
     const createdSpace = await this.prismaService.$transaction(async (tx) => {
       const space = await tx.space.create({
-        data: {
-          name,
-        },
+        data: createSpaceDto,
       });
       await tx.user.update({
         where: {
           id: userId,
         },
         data: {
+          isOwner: true,
           spaces: {
             connect: {
               id: space.id,
@@ -57,19 +56,16 @@ export class SpaceService {
 
   async update({
     uuid,
-    upsertSpaceDto,
+    updateSpaceDto,
   }: {
     uuid: string;
-    upsertSpaceDto: UpsertSpaceDto;
+    updateSpaceDto: UpdateSpaceDto;
   }) {
-    const { name } = upsertSpaceDto;
     return await this.prismaService.space.update({
       where: {
         uuid,
       },
-      data: {
-        name,
-      },
+      data: updateSpaceDto,
     });
   }
 }
