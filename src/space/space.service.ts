@@ -3,7 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateSpaceDto } from './dto/updateSpace.dto';
 import { CreateSpaceDto } from './dto/createSpace.dto';
 import { UserService } from 'src/user/user.service';
-import { Space } from '@prisma/client';
+
 @Injectable()
 export class SpaceService {
   constructor(
