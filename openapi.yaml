@@ -49,12 +49,6 @@ paths:
       operationId: createUser
       summary: ''
       parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateUserDto'
       responses:
         '201':
           description: The user has been successfully created.
@@ -132,13 +126,7 @@ paths:
   /spaces/join:
     patch:
       operationId: SpaceController_join
-      parameters:
-        - name: uuid
-          required: true
-          in: path
-          description: space uuid
-          schema:
-            type: string
+      parameters: []
       requestBody:
         required: true
         content:
@@ -178,8 +166,8 @@ components:
           type: string
         name:
           type: string
-        isOwner:
-          type: boolean
+        spaceRole:
+          type: string
         imageUrl:
           type: string
         createdAt:
@@ -189,16 +177,9 @@ components:
         - id
         - uuid
         - name
-        - isOwner
+        - spaceRole
         - imageUrl
         - createdAt
-    CreateUserDto:
-      type: object
-      properties:
-        isOwner:
-          type: boolean
-      required:
-        - isOwner
     UpdateUserDto:
       type: object
       properties:

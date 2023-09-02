@@ -2,7 +2,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { FirebaseService } from 'src/firebase/firebase.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateUserDto } from './dto/updateUser.dto';
-import { CreateUserDto } from './dto/createUser.dto';
 
 @Injectable()
 export class UserService {
@@ -16,9 +15,6 @@ export class UserService {
         uuid,
       },
     });
-    if (!user) {
-      throw new HttpException('USER_NOT_FOUND', HttpStatus.NOT_FOUND);
-    }
     return user;
   }
 
@@ -28,19 +24,11 @@ export class UserService {
         id,
       },
     });
-    if (!user) {
-      throw new HttpException('USER_NOT_FOUND', HttpStatus.NOT_FOUND);
-    }
+
     return user;
   }
 
-  async create({
-    token,
-    createUserDto,
-  }: {
-    token: string;
-    createUserDto: CreateUserDto;
-  }) {
+  async create(token: string) {
     const decodedToken = await this.firebaseService.admin
       .auth()
       .verifyIdToken(token);
@@ -59,7 +47,6 @@ export class UserService {
         name: decodedToken.name as string,
         imageUrl: (decodedToken.imageUrl as string) || '',
         uid: decodedToken.uid,
-        isOwner: createUserDto.isOwner,
       },
     });
     return newUser;

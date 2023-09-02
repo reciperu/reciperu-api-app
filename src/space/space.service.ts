@@ -4,6 +4,8 @@ import { UpdateSpaceDto } from './dto/updateSpace.dto';
 import { CreateSpaceDto } from './dto/createSpace.dto';
 import { UserService } from 'src/user/user.service';
 import { JoinSpaceDto } from './dto/joinSpace.dto';
+import { UserEntity } from 'src/user/entities/user.entity';
+import { SpaceEntity } from './entities/space.entity';
 
 @Injectable()
 export class SpaceService {
@@ -22,6 +24,11 @@ export class SpaceService {
     const user = await this.userService.findOneById(userId);
     if (user.spaceId)
       throw new HttpException('USER_ALREADY_HAS_SPACE', HttpStatus.BAD_REQUEST);
+
+    const space = await this.findByNameAndPassword(createSpaceDto);
+    if (space)
+      throw new HttpException('SPACE_ALREADY_EXISTS', HttpStatus.BAD_REQUEST);
+
     const createdSpace = await this.prismaService.$transaction(async (tx) => {
       const space = await tx.space.create({
         data: createSpaceDto,
@@ -31,7 +38,6 @@ export class SpaceService {
           id: userId,
         },
         data: {
-          isOwner: true,
           spaces: {
             connect: {
               id: space.id,
@@ -77,22 +83,12 @@ export class SpaceService {
     userUuid: string;
     joinSpaceDto: JoinSpaceDto;
   }) {
-    const user = await this.userService.findOneByUuid(userUuid);
-    if (user.spaceId)
-      throw new HttpException('USER_ALREADY_HAS_SPACE', HttpStatus.BAD_REQUEST);
+    const [user, space] = await Promise.all([
+      this.userService.findOneByUuid(userUuid),
+      this.findByNameAndPassword(joinSpaceDto),
+    ]);
 
-    if (user.isOwner)
-      throw new HttpException('USER_IS_OWNER', HttpStatus.BAD_REQUEST);
-
-    const space = await this.prismaService.space.findUnique({
-      where: {
-        name: joinSpaceDto.name,
-        password: joinSpaceDto.password,
-      },
-    });
-
-    if (!space)
-      throw new HttpException('SPACE_NOT_FOUND', HttpStatus.NOT_FOUND);
+    this.validateJoin({ user, space });
 
     await this.prismaService.user.update({
       where: {
@@ -100,8 +96,43 @@ export class SpaceService {
       },
       data: {
         spaceId: space.id,
+        spaceRole: 'MEMBER',
       },
     });
     return await this.findOneById(space.id);
+  }
+
+  async findByNameAndPassword({
+    name,
+    password,
+  }: {
+    name: string;
+    password: string;
+  }) {
+    return await this.prismaService.space.findUnique({
+      where: {
+        space_identifier: {
+          name,
+          password,
+        },
+      },
+    });
+  }
+
+  async validateJoin({
+    user,
+    space,
+  }: {
+    user: UserEntity;
+    space: SpaceEntity;
+  }) {
+    if (!user) throw new HttpException('USER_NOT_FOUND', HttpStatus.NOT_FOUND);
+    if (user.spaceId)
+      throw new HttpException('USER_ALREADY_HAS_SPACE', HttpStatus.BAD_REQUEST);
+    if (user.spaceRole === 'OWNER')
+      throw new HttpException('USER_IS_OWNER', HttpStatus.BAD_REQUEST);
+    if (!space)
+      throw new HttpException('SPACE_NOT_FOUND', HttpStatus.NOT_FOUND);
+    return true;
   }
 }
