@@ -10,11 +10,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum SpaceRole {
+  OWNER
+  MEMBER
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   uuid      String   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String
-  isOwner   Boolean  @default(false) @map("is_owner")
+  spaceRole SpaceRole   @map("space_role") @default(OWNER)
   imageUrl  String   @map("image_url")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -29,15 +34,16 @@ model User {
 model Space {
   id         Int           @id @default(autoincrement())
   uuid       String        @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name       String        @unique
-  password   String        @unique  
+  name       String        
+  password   String          
   createdAt  DateTime      @default(now()) @map("created_at")
   users       User[]
   recipe     Recipe[]
-  suggestion Suggestions[]
+  recipeSuggestions RecipeSuggestions[]
 
   @@index([uuid, id])
   @@map("spaces")
+  @@unique([name, password], name: "space_identifier")
 }
 
 
@@ -56,7 +62,7 @@ model Recipe {
   spaces         Space              @relation(fields: [spaceId], references: [id])
   recipeMaterial RecipeMateritals[]
   recipeTags     RecipeTags[]
-  suggestions     Suggestions[]
+  recipeSuggestions     RecipeSuggestions[]
 
   @@index([uuid, id])
   @@map("recipes")
@@ -103,7 +109,7 @@ model Tag {
   @@map("tags")
 }
 
-model Suggestions {
+model RecipeSuggestions {
   id               Int      @id @default(autoincrement())
   rakutenRecipeUrl String   @map("rakuten_recipe_url")
   createdAt        DateTime @default(now()) @map("created_at")
@@ -113,5 +119,5 @@ model Suggestions {
   recipes          Recipe   @relation(fields: [recipeId], references: [id])
 
   @@index([rakutenRecipeUrl, id])
-  @@map("suggestions")
+  @@map("recipe_suggestions")
 }
