@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import { User } from '@prisma/client';
+import { User, SpaceRole } from '@prisma/client';
 
 export class UserEntity implements User {
   constructor(partial: Partial<UserEntity>) {
@@ -16,7 +16,7 @@ export class UserEntity implements User {
   name: string;
 
   @ApiProperty()
-  isOwner: boolean;
+  spaceRole: SpaceRole;
 
   @ApiProperty()
   imageUrl: string;
