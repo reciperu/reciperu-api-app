@@ -1,16 +1,16 @@
-create sequence "public"."invitations_id_seq";
+create type "public"."SpaceRole" as enum ('OWNER', 'MEMBER');
 
 create sequence "public"."materials_id_seq";
 
 create sequence "public"."recipe_materials_id_seq";
+
+create sequence "public"."recipe_suggestions_id_seq";
 
 create sequence "public"."recipe_tags_id_seq";
 
 create sequence "public"."recipes_id_seq";
 
 create sequence "public"."spaces_id_seq";
-
-create sequence "public"."suggestions_id_seq";
 
 create sequence "public"."tags_id_seq";
 
@@ -28,15 +28,6 @@ create table "public"."_prisma_migrations" (
 );
 
 
-create table "public"."invitations" (
-    "id" integer not null default nextval('invitations_id_seq'::regclass),
-    "code" text not null,
-    "joined_at" timestamp(3) without time zone not null,
-    "created_at" timestamp(3) without time zone not null default CURRENT_TIMESTAMP,
-    "space_id" integer not null
-);
-
-
 create table "public"."materials" (
     "id" integer not null default nextval('materials_id_seq'::regclass),
     "name" text not null
@@ -48,6 +39,15 @@ create table "public"."recipe_materials" (
     "created_at" timestamp(3) without time zone not null default CURRENT_TIMESTAMP,
     "recipe_id" integer not null,
     "material_id" integer not null
+);
+
+
+create table "public"."recipe_suggestions" (
+    "id" integer not null default nextval('recipe_suggestions_id_seq'::regclass),
+    "rakuten_recipe_url" text not null,
+    "created_at" timestamp(3) without time zone not null default CURRENT_TIMESTAMP,
+    "spaceId" integer not null,
+    "recipeId" integer not null
 );
 
 
@@ -78,16 +78,8 @@ create table "public"."spaces" (
     "id" integer not null default nextval('spaces_id_seq'::regclass),
     "uuid" uuid not null default gen_random_uuid(),
     "name" text not null,
+    "password" text not null,
     "created_at" timestamp(3) without time zone not null default CURRENT_TIMESTAMP
-);
-
-
-create table "public"."suggestions" (
-    "id" integer not null default nextval('suggestions_id_seq'::regclass),
-    "rakuten_recipe_url" text not null,
-    "created_at" timestamp(3) without time zone not null default CURRENT_TIMESTAMP,
-    "spaceId" integer not null,
-    "recipeId" integer not null
 );
 
 
@@ -101,7 +93,7 @@ create table "public"."users" (
     "id" integer not null default nextval('users_id_seq'::regclass),
     "uuid" uuid not null default gen_random_uuid(),
     "name" text not null,
-    "is_owner" boolean not null default false,
+    "space_role" "SpaceRole" not null default 'OWNER'::"SpaceRole",
     "image_url" text not null,
     "created_at" timestamp(3) without time zone not null default CURRENT_TIMESTAMP,
     "updated_at" timestamp(3) without time zone not null,
@@ -110,11 +102,11 @@ create table "public"."users" (
 );
 
 
-alter sequence "public"."invitations_id_seq" owned by "public"."invitations"."id";
-
 alter sequence "public"."materials_id_seq" owned by "public"."materials"."id";
 
 alter sequence "public"."recipe_materials_id_seq" owned by "public"."recipe_materials"."id";
+
+alter sequence "public"."recipe_suggestions_id_seq" owned by "public"."recipe_suggestions"."id";
 
 alter sequence "public"."recipe_tags_id_seq" owned by "public"."recipe_tags"."id";
 
@@ -122,25 +114,21 @@ alter sequence "public"."recipes_id_seq" owned by "public"."recipes"."id";
 
 alter sequence "public"."spaces_id_seq" owned by "public"."spaces"."id";
 
-alter sequence "public"."suggestions_id_seq" owned by "public"."suggestions"."id";
-
 alter sequence "public"."tags_id_seq" owned by "public"."tags"."id";
 
 alter sequence "public"."users_id_seq" owned by "public"."users"."id";
 
 CREATE UNIQUE INDEX _prisma_migrations_pkey ON public._prisma_migrations USING btree (id);
 
-CREATE INDEX invitations_code_id_idx ON public.invitations USING btree (code, id);
-
-CREATE UNIQUE INDEX invitations_code_key ON public.invitations USING btree (code);
-
-CREATE UNIQUE INDEX invitations_pkey ON public.invitations USING btree (id);
-
 CREATE INDEX materials_name_id_idx ON public.materials USING btree (name, id);
 
 CREATE UNIQUE INDEX materials_pkey ON public.materials USING btree (id);
 
 CREATE UNIQUE INDEX recipe_materials_pkey ON public.recipe_materials USING btree (id);
+
+CREATE UNIQUE INDEX recipe_suggestions_pkey ON public.recipe_suggestions USING btree (id);
+
+CREATE INDEX recipe_suggestions_rakuten_recipe_url_id_idx ON public.recipe_suggestions USING btree (rakuten_recipe_url, id);
 
 CREATE UNIQUE INDEX recipe_tags_pkey ON public.recipe_tags USING btree (id);
 
@@ -152,15 +140,13 @@ CREATE INDEX recipes_uuid_id_idx ON public.recipes USING btree (uuid, id);
 
 CREATE UNIQUE INDEX recipes_uuid_key ON public.recipes USING btree (uuid);
 
+CREATE UNIQUE INDEX spaces_name_password_key ON public.spaces USING btree (name, password);
+
 CREATE UNIQUE INDEX spaces_pkey ON public.spaces USING btree (id);
 
 CREATE INDEX spaces_uuid_id_idx ON public.spaces USING btree (uuid, id);
 
 CREATE UNIQUE INDEX spaces_uuid_key ON public.spaces USING btree (uuid);
-
-CREATE UNIQUE INDEX suggestions_pkey ON public.suggestions USING btree (id);
-
-CREATE INDEX suggestions_rakuten_recipe_url_id_idx ON public.suggestions USING btree (rakuten_recipe_url, id);
 
 CREATE INDEX tags_name_id_idx ON public.tags USING btree (name, id);
 
@@ -176,11 +162,11 @@ CREATE UNIQUE INDEX users_uuid_key ON public.users USING btree (uuid);
 
 alter table "public"."_prisma_migrations" add constraint "_prisma_migrations_pkey" PRIMARY KEY using index "_prisma_migrations_pkey";
 
-alter table "public"."invitations" add constraint "invitations_pkey" PRIMARY KEY using index "invitations_pkey";
-
 alter table "public"."materials" add constraint "materials_pkey" PRIMARY KEY using index "materials_pkey";
 
 alter table "public"."recipe_materials" add constraint "recipe_materials_pkey" PRIMARY KEY using index "recipe_materials_pkey";
+
+alter table "public"."recipe_suggestions" add constraint "recipe_suggestions_pkey" PRIMARY KEY using index "recipe_suggestions_pkey";
 
 alter table "public"."recipe_tags" add constraint "recipe_tags_pkey" PRIMARY KEY using index "recipe_tags_pkey";
 
@@ -188,15 +174,9 @@ alter table "public"."recipes" add constraint "recipes_pkey" PRIMARY KEY using i
 
 alter table "public"."spaces" add constraint "spaces_pkey" PRIMARY KEY using index "spaces_pkey";
 
-alter table "public"."suggestions" add constraint "suggestions_pkey" PRIMARY KEY using index "suggestions_pkey";
-
 alter table "public"."tags" add constraint "tags_pkey" PRIMARY KEY using index "tags_pkey";
 
 alter table "public"."users" add constraint "users_pkey" PRIMARY KEY using index "users_pkey";
-
-alter table "public"."invitations" add constraint "invitations_space_id_fkey" FOREIGN KEY (space_id) REFERENCES spaces(id) ON UPDATE CASCADE ON DELETE RESTRICT not valid;
-
-alter table "public"."invitations" validate constraint "invitations_space_id_fkey";
 
 alter table "public"."recipe_materials" add constraint "recipe_materials_material_id_fkey" FOREIGN KEY (material_id) REFERENCES materials(id) ON UPDATE CASCADE ON DELETE RESTRICT not valid;
 
@@ -205,6 +185,14 @@ alter table "public"."recipe_materials" validate constraint "recipe_materials_ma
 alter table "public"."recipe_materials" add constraint "recipe_materials_recipe_id_fkey" FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON UPDATE CASCADE ON DELETE RESTRICT not valid;
 
 alter table "public"."recipe_materials" validate constraint "recipe_materials_recipe_id_fkey";
+
+alter table "public"."recipe_suggestions" add constraint "recipe_suggestions_recipeId_fkey" FOREIGN KEY ("recipeId") REFERENCES recipes(id) ON UPDATE CASCADE ON DELETE RESTRICT not valid;
+
+alter table "public"."recipe_suggestions" validate constraint "recipe_suggestions_recipeId_fkey";
+
+alter table "public"."recipe_suggestions" add constraint "recipe_suggestions_spaceId_fkey" FOREIGN KEY ("spaceId") REFERENCES spaces(id) ON UPDATE CASCADE ON DELETE RESTRICT not valid;
+
+alter table "public"."recipe_suggestions" validate constraint "recipe_suggestions_spaceId_fkey";
 
 alter table "public"."recipe_tags" add constraint "recipe_tags_recipe_id_fkey" FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON UPDATE CASCADE ON DELETE RESTRICT not valid;
 
@@ -217,14 +205,6 @@ alter table "public"."recipe_tags" validate constraint "recipe_tags_tag_id_fkey"
 alter table "public"."recipes" add constraint "recipes_space_id_fkey" FOREIGN KEY (space_id) REFERENCES spaces(id) ON UPDATE CASCADE ON DELETE RESTRICT not valid;
 
 alter table "public"."recipes" validate constraint "recipes_space_id_fkey";
-
-alter table "public"."suggestions" add constraint "suggestions_recipeId_fkey" FOREIGN KEY ("recipeId") REFERENCES recipes(id) ON UPDATE CASCADE ON DELETE RESTRICT not valid;
-
-alter table "public"."suggestions" validate constraint "suggestions_recipeId_fkey";
-
-alter table "public"."suggestions" add constraint "suggestions_spaceId_fkey" FOREIGN KEY ("spaceId") REFERENCES spaces(id) ON UPDATE CASCADE ON DELETE RESTRICT not valid;
-
-alter table "public"."suggestions" validate constraint "suggestions_spaceId_fkey";
 
 alter table "public"."users" add constraint "users_space_id_fkey" FOREIGN KEY (space_id) REFERENCES spaces(id) ON UPDATE CASCADE ON DELETE SET NULL not valid;
 

@@ -1,9 +1,12 @@
+-- CreateEnum
+CREATE TYPE "SpaceRole" AS ENUM ('OWNER', 'MEMBER');
+
 -- CreateTable
 CREATE TABLE "users" (
     "id" SERIAL NOT NULL,
     "uuid" UUID NOT NULL DEFAULT gen_random_uuid(),
     "name" TEXT NOT NULL,
-    "is_owner" BOOLEAN NOT NULL DEFAULT false,
+    "space_role" "SpaceRole" NOT NULL DEFAULT 'OWNER',
     "image_url" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
@@ -18,20 +21,10 @@ CREATE TABLE "spaces" (
     "id" SERIAL NOT NULL,
     "uuid" UUID NOT NULL DEFAULT gen_random_uuid(),
     "name" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "spaces_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "invitations" (
-    "id" SERIAL NOT NULL,
-    "code" TEXT NOT NULL,
-    "joined_at" TIMESTAMP(3) NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "space_id" INTEGER NOT NULL,
-
-    CONSTRAINT "invitations_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -88,14 +81,14 @@ CREATE TABLE "tags" (
 );
 
 -- CreateTable
-CREATE TABLE "suggestions" (
+CREATE TABLE "recipe_suggestions" (
     "id" SERIAL NOT NULL,
     "rakuten_recipe_url" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "spaceId" INTEGER NOT NULL,
     "recipeId" INTEGER NOT NULL,
 
-    CONSTRAINT "suggestions_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "recipe_suggestions_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -114,10 +107,7 @@ CREATE UNIQUE INDEX "spaces_uuid_key" ON "spaces"("uuid");
 CREATE INDEX "spaces_uuid_id_idx" ON "spaces"("uuid", "id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "invitations_code_key" ON "invitations"("code");
-
--- CreateIndex
-CREATE INDEX "invitations_code_id_idx" ON "invitations"("code", "id");
+CREATE UNIQUE INDEX "spaces_name_password_key" ON "spaces"("name", "password");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "recipes_uuid_key" ON "recipes"("uuid");
@@ -135,13 +125,10 @@ CREATE INDEX "materials_name_id_idx" ON "materials"("name", "id");
 CREATE INDEX "tags_name_id_idx" ON "tags"("name", "id");
 
 -- CreateIndex
-CREATE INDEX "suggestions_rakuten_recipe_url_id_idx" ON "suggestions"("rakuten_recipe_url", "id");
+CREATE INDEX "recipe_suggestions_rakuten_recipe_url_id_idx" ON "recipe_suggestions"("rakuten_recipe_url", "id");
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_space_id_fkey" FOREIGN KEY ("space_id") REFERENCES "spaces"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "invitations" ADD CONSTRAINT "invitations_space_id_fkey" FOREIGN KEY ("space_id") REFERENCES "spaces"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "recipes" ADD CONSTRAINT "recipes_space_id_fkey" FOREIGN KEY ("space_id") REFERENCES "spaces"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -159,7 +146,7 @@ ALTER TABLE "recipe_tags" ADD CONSTRAINT "recipe_tags_recipe_id_fkey" FOREIGN KE
 ALTER TABLE "recipe_tags" ADD CONSTRAINT "recipe_tags_tag_id_fkey" FOREIGN KEY ("tag_id") REFERENCES "tags"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "suggestions" ADD CONSTRAINT "suggestions_spaceId_fkey" FOREIGN KEY ("spaceId") REFERENCES "spaces"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "recipe_suggestions" ADD CONSTRAINT "recipe_suggestions_spaceId_fkey" FOREIGN KEY ("spaceId") REFERENCES "spaces"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "suggestions" ADD CONSTRAINT "suggestions_recipeId_fkey" FOREIGN KEY ("recipeId") REFERENCES "recipes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "recipe_suggestions" ADD CONSTRAINT "recipe_suggestions_recipeId_fkey" FOREIGN KEY ("recipeId") REFERENCES "recipes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
