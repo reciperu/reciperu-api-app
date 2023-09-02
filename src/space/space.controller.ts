@@ -94,12 +94,6 @@ export class SpaceController {
   }
 
   @Patch('/join')
-  @ApiParam({
-    name: 'uuid',
-    type: String,
-    required: true,
-    description: 'space uuid',
-  })
   @ApiResponse({
     status: 200,
     description: 'The space has been successfully updated.',
@@ -116,11 +110,3 @@ export class SpaceController {
     }
   }
 }
-
-// スペース参加のAPI
-// isOwner:false
-//
-// path: /spaces/join:/:uuid/
-
-// body: {name:string,password: string}
-// nameとpasswordがbodyデータと一緒であれば、userのspaceIdを更新する
