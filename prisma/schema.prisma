@@ -16,53 +16,53 @@ enum SpaceRole {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  uuid      String   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id        Int       @id @default(autoincrement())
+  uuid      String    @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String
-  spaceRole SpaceRole   @map("space_role") @default(OWNER)
-  imageUrl  String   @map("image_url")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  uid       String   @unique
-  spaceId   Int?     @map("space_id")
-  spaces    Space?   @relation(fields: [spaceId], references: [id])
+  spaceRole SpaceRole @default(OWNER) @map("space_role")
+  imageUrl  String    @map("image_url")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  uid       String    @unique
+  spaceId   Int?      @map("space_id")
+  spaces    Space?    @relation(fields: [spaceId], references: [id])
 
   @@index([uuid, id])
   @@map("users")
 }
 
 model Space {
-  id         Int           @id @default(autoincrement())
-  uuid       String        @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name       String        
-  password   String          
-  createdAt  DateTime      @default(now()) @map("created_at")
-  users       User[]
-  recipe     Recipe[]
+  id                Int                 @id @default(autoincrement())
+  uuid              String              @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name              String
+  password          String
+  createdAt         DateTime            @default(now()) @map("created_at")
+  users             User[]
+  recipe            Recipe[]
   recipeSuggestions RecipeSuggestions[]
 
+  @@unique([name, password], name: "space_identifier")
   @@index([uuid, id])
   @@map("spaces")
-  @@unique([name, password], name: "space_identifier")
 }
 
-
 model Recipe {
-  id             Int                @id @default(autoincrement())
-  uuid           String             @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title          String
-  cost           Int
-  indication     String
-  genre          String
-  imageUrl       String             @map("image_url")
-  recipeUrl      String             @map("recipe_url")
-  createdAt      DateTime           @default(now()) @map("created_at")
-  updatedAt      DateTime           @updatedAt @map("updated_at")
-  spaceId        Int                @map("space_id")
-  spaces         Space              @relation(fields: [spaceId], references: [id])
-  recipeMaterial RecipeMateritals[]
-  recipeTags     RecipeTags[]
-  recipeSuggestions     RecipeSuggestions[]
+  id                Int                 @id @default(autoincrement())
+  uuid              String              @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title             String
+  cost              Int
+  indication        String
+  imageUrl          String              @map("image_url")
+  recipeUrl         String              @map("recipe_url")
+  createdAt         DateTime            @default(now()) @map("created_at")
+  updatedAt         DateTime            @updatedAt @map("updated_at")
+  spaceId           Int                 @map("space_id")
+  genreId           Int                 @map("genre_id")
+  spaces            Space               @relation(fields: [spaceId], references: [id])
+  genres            Genre               @relation(fields: [genreId], references: [id])
+  recipeMaterial    RecipeMateritals[]
+  recipeTags        RecipeTags[]
+  recipeSuggestions RecipeSuggestions[]
 
   @@index([uuid, id])
   @@map("recipes")
@@ -92,8 +92,8 @@ model RecipeTags {
 }
 
 model Material {
-  id              Int                @id @default(autoincrement())
-  name            String
+  id               Int                @id @default(autoincrement())
+  name             String
   receipeMaterials RecipeMateritals[]
 
   @@index([name, id])
@@ -120,4 +120,13 @@ model RecipeSuggestions {
 
   @@index([rakutenRecipeUrl, id])
   @@map("recipe_suggestions")
+}
+
+model Genre {
+  id      Int      @id @default(autoincrement())
+  name    String
+  recipes Recipe[]
+
+  @@index([name, id])
+  @@map("genres")
 }

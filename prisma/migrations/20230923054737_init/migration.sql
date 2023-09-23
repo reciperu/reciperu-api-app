@@ -34,12 +34,12 @@ CREATE TABLE "recipes" (
     "title" TEXT NOT NULL,
     "cost" INTEGER NOT NULL,
     "indication" TEXT NOT NULL,
-    "genre" TEXT NOT NULL,
     "image_url" TEXT NOT NULL,
     "recipe_url" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "space_id" INTEGER NOT NULL,
+    "genre_id" INTEGER NOT NULL,
 
     CONSTRAINT "recipes_pkey" PRIMARY KEY ("id")
 );
@@ -91,6 +91,14 @@ CREATE TABLE "recipe_suggestions" (
     CONSTRAINT "recipe_suggestions_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "genres" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+
+    CONSTRAINT "genres_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_uuid_key" ON "users"("uuid");
 
@@ -127,11 +135,17 @@ CREATE INDEX "tags_name_id_idx" ON "tags"("name", "id");
 -- CreateIndex
 CREATE INDEX "recipe_suggestions_rakuten_recipe_url_id_idx" ON "recipe_suggestions"("rakuten_recipe_url", "id");
 
+-- CreateIndex
+CREATE INDEX "genres_name_id_idx" ON "genres"("name", "id");
+
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_space_id_fkey" FOREIGN KEY ("space_id") REFERENCES "spaces"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "recipes" ADD CONSTRAINT "recipes_space_id_fkey" FOREIGN KEY ("space_id") REFERENCES "spaces"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "recipes" ADD CONSTRAINT "recipes_genre_id_fkey" FOREIGN KEY ("genre_id") REFERENCES "genres"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "recipe_materials" ADD CONSTRAINT "recipe_materials_recipe_id_fkey" FOREIGN KEY ("recipe_id") REFERENCES "recipes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
