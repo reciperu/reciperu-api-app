@@ -1,5 +1,7 @@
 create type "public"."SpaceRole" as enum ('OWNER', 'MEMBER');
 
+create sequence "public"."genres_id_seq";
+
 create sequence "public"."materials_id_seq";
 
 create sequence "public"."recipe_materials_id_seq";
@@ -25,6 +27,12 @@ create table "public"."_prisma_migrations" (
     "rolled_back_at" timestamp with time zone,
     "started_at" timestamp with time zone not null default now(),
     "applied_steps_count" integer not null default 0
+);
+
+
+create table "public"."genres" (
+    "id" integer not null default nextval('genres_id_seq'::regclass),
+    "name" text not null
 );
 
 
@@ -65,12 +73,12 @@ create table "public"."recipes" (
     "title" text not null,
     "cost" integer not null,
     "indication" text not null,
-    "genre" text not null,
     "image_url" text not null,
     "recipe_url" text not null,
     "created_at" timestamp(3) without time zone not null default CURRENT_TIMESTAMP,
     "updated_at" timestamp(3) without time zone not null,
-    "space_id" integer not null
+    "space_id" integer not null,
+    "genre_id" integer not null
 );
 
 
@@ -102,6 +110,8 @@ create table "public"."users" (
 );
 
 
+alter sequence "public"."genres_id_seq" owned by "public"."genres"."id";
+
 alter sequence "public"."materials_id_seq" owned by "public"."materials"."id";
 
 alter sequence "public"."recipe_materials_id_seq" owned by "public"."recipe_materials"."id";
@@ -119,6 +129,10 @@ alter sequence "public"."tags_id_seq" owned by "public"."tags"."id";
 alter sequence "public"."users_id_seq" owned by "public"."users"."id";
 
 CREATE UNIQUE INDEX _prisma_migrations_pkey ON public._prisma_migrations USING btree (id);
+
+CREATE INDEX genres_name_id_idx ON public.genres USING btree (name, id);
+
+CREATE UNIQUE INDEX genres_pkey ON public.genres USING btree (id);
 
 CREATE INDEX materials_name_id_idx ON public.materials USING btree (name, id);
 
@@ -162,6 +176,8 @@ CREATE UNIQUE INDEX users_uuid_key ON public.users USING btree (uuid);
 
 alter table "public"."_prisma_migrations" add constraint "_prisma_migrations_pkey" PRIMARY KEY using index "_prisma_migrations_pkey";
 
+alter table "public"."genres" add constraint "genres_pkey" PRIMARY KEY using index "genres_pkey";
+
 alter table "public"."materials" add constraint "materials_pkey" PRIMARY KEY using index "materials_pkey";
 
 alter table "public"."recipe_materials" add constraint "recipe_materials_pkey" PRIMARY KEY using index "recipe_materials_pkey";
@@ -201,6 +217,10 @@ alter table "public"."recipe_tags" validate constraint "recipe_tags_recipe_id_fk
 alter table "public"."recipe_tags" add constraint "recipe_tags_tag_id_fkey" FOREIGN KEY (tag_id) REFERENCES tags(id) ON UPDATE CASCADE ON DELETE RESTRICT not valid;
 
 alter table "public"."recipe_tags" validate constraint "recipe_tags_tag_id_fkey";
+
+alter table "public"."recipes" add constraint "recipes_genre_id_fkey" FOREIGN KEY (genre_id) REFERENCES genres(id) ON UPDATE CASCADE ON DELETE RESTRICT not valid;
+
+alter table "public"."recipes" validate constraint "recipes_genre_id_fkey";
 
 alter table "public"."recipes" add constraint "recipes_space_id_fkey" FOREIGN KEY (space_id) REFERENCES spaces(id) ON UPDATE CASCADE ON DELETE RESTRICT not valid;
 
