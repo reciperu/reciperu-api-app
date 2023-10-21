@@ -1,33 +1,66 @@
 openapi: 3.0.0
 paths:
-  /users/{uuid}:
+  /users:
+    get:
+      operationId: getUserList
+      summary: ''
+      parameters: []
+      responses:
+        '200':
+          description: ユーザー一覧取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserPresenter'
+      tags: &ref_0
+        - user
+    post:
+      operationId: createUser
+      summary: ''
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDto'
+      responses:
+        '201':
+          description: ユーザー登録
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPresenter'
+      tags: *ref_0
+  /users/{id}:
     get:
       operationId: getUser
       summary: ''
       parameters:
-        - name: uuid
+        - name: id
           required: true
           in: path
-          description: user uuid
+          description: userId
           schema:
             type: string
       responses:
         '200':
-          description: The user has been successfully retrieved.
+          description: ユーザー詳細取得
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserEntity'
-      tags: &ref_0
-        - user
+                $ref: '#/components/schemas/UserPresenter'
+      tags: *ref_0
     patch:
       operationId: updateUser
       summary: ''
       parameters:
-        - name: uuid
+        - name: id
           required: true
           in: path
-          description: user uuid
+          description: userId
           schema:
             type: string
       requestBody:
@@ -38,109 +71,298 @@ paths:
               $ref: '#/components/schemas/UpdateUserDto'
       responses:
         '200':
-          description: The user has been successfully updated.
+          description: ユーザーの情報更新
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserEntity'
+                $ref: '#/components/schemas/UserPresenter'
       tags: *ref_0
-  /users:
-    post:
-      operationId: createUser
-      summary: ''
-      parameters: []
-      responses:
-        '201':
-          description: The user has been successfully created.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserEntity'
-      tags: *ref_0
-  /spaces:
-    post:
-      operationId: SpaceController_create
-      parameters:
-        - name: userUuid
-          required: true
-          in: query
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateSpaceDto'
-      responses:
-        '201':
-          description: The space has been successfully created.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SpaceEntity'
-      tags: &ref_1
-        - space
-  /spaces/{id}:
-    get:
-      operationId: SpaceController_show
+    delete:
+      operationId: UserController_delete
       parameters:
         - name: id
           required: true
           in: path
-          description: spaceId
-          schema:
-            type: number
-      responses:
-        '200':
-          description: The spaces has been successfully retrieved.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SpaceEntity'
-      tags: *ref_1
-  /spaces/{uuid}:
-    patch:
-      operationId: SpaceController_update
-      parameters:
-        - name: uuid
-          required: true
-          in: path
-          description: space uuid
+          description: userId
           schema:
             type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateSpaceDto'
+      responses:
+        '204':
+          description: ユーザー削除
+      tags: *ref_0
+  /recipes:
+    get:
+      operationId: getRecipe
+      summary: ''
+      parameters: []
       responses:
         '200':
-          description: The space has been successfully updated.
+          description: レシピ一覧取得
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SpaceEntity'
-      tags: *ref_1
-  /spaces/join:
-    patch:
-      operationId: SpaceController_join
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecipePresenter'
+      tags: &ref_1
+        - recipes
+    post:
+      operationId: bulkInsertRecipes
+      summary: ''
       parameters: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/JoinSpaceDto'
+              type: array
+              items:
+                $ref: '#/components/schemas/CreateRecipeDto'
       responses:
-        '200':
-          description: The space has been successfully updated.
+        '201':
+          description: レシピ一括登録
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SpaceEntity'
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecipePresenter'
       tags: *ref_1
+  /recipes/favorite:
+    get:
+      operationId: getRecipeByFavorite
+      summary: ''
+      parameters: []
+      responses:
+        '200':
+          description: お気に入りレシピ一覧取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecipePresenter'
+      tags: *ref_1
+  /recipes/{id}:
+    get:
+      operationId: getRecipe
+      summary: ''
+      parameters: []
+      responses:
+        '200':
+          description: レシピ詳細取得
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipePresenter'
+      tags: *ref_1
+    patch:
+      operationId: updateRecipe
+      summary: ''
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRecipeDto'
+      responses:
+        '200':
+          description: レシピ更新
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipePresenter'
+      tags: *ref_1
+  /recipes/meta-data:
+    get:
+      operationId: getRecipeMetaData
+      summary: ''
+      parameters:
+        - name: recipeIds
+          required: true
+          in: query
+          description: レシピID
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: レシピメタデータ取得
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipePresenter'
+      tags: *ref_1
+  /recipe-books:
+    post:
+      operationId: createRecipeBook
+      summary: ''
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRecipeBookDto'
+      responses:
+        '201':
+          description: 料理本作成
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipePresenter'
+      tags: &ref_2
+        - recipe-books
+  /recipe-books/{id}:
+    put:
+      operationId: updateRecipeBook
+      summary: ''
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRecipeBookDto'
+      responses:
+        '200':
+          description: 料理本更新
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipePresenter'
+      tags: *ref_2
+  /invitations/invitation:
+    post:
+      operationId: invitationSpace
+      summary: ''
+      parameters: []
+      responses:
+        '200':
+          description: スペース招待
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvitationPresenter'
+      tags: &ref_3
+        - invitations
+  /invitations:
+    put:
+      operationId: validateInvitation
+      summary: ''
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateInvitationDto'
+      responses:
+        '200':
+          description: スペース参加の検証
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvitationPresenter'
+      tags: *ref_3
+  /menus:
+    get:
+      operationId: getMenu
+      summary: ''
+      parameters: []
+      responses:
+        '200':
+          description: 献立ー一覧取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MenuPresenter'
+      tags: &ref_4
+        - menus
+    post:
+      operationId: createMenu
+      summary: ''
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMenuDto'
+      responses:
+        '200':
+          description: 献立の作成
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MenuPresenter'
+      tags: *ref_4
+  /menus/pending:
+    get:
+      operationId: getPendingMenu
+      summary: ''
+      parameters: []
+      responses:
+        '200':
+          description: 提案メニュー一覧取得
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MenuPresenter'
+      tags: *ref_4
+  /menus/{id}:
+    put:
+      operationId: updateMenu
+      summary: ''
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMenuDto'
+      responses:
+        '200':
+          description: 献立の更新
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MenuPresenter'
+      tags: *ref_4
+    delete:
+      operationId: deleteMenu
+      summary: ''
+      parameters: []
+      responses:
+        '200':
+          description: 献立の削除
+      tags: *ref_4
+  /media/image:
+    post:
+      operationId: uploadImage
+      summary: ''
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadFilesDto'
+      responses:
+        '200':
+          description: 画像のアップロード
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaPresenter'
+      tags:
+        - media
 info:
   title: reciperu api app
   description: API documents
@@ -157,85 +379,236 @@ components:
       bearerFormat: JWT
       type: http
   schemas:
-    UserEntity:
+    RecipeBookPresenter:
       type: object
       properties:
         id:
-          type: number
-        uuid:
           type: string
         name:
           type: string
-        spaceRole:
-          type: string
-        imageUrl:
-          type: string
-        createdAt:
-          format: date-time
+        spaceId:
           type: string
       required:
         - id
-        - uuid
         - name
-        - spaceRole
+        - spaceId
+    UserPresenter:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        recipeBookRole:
+          type: string
+        imageUrl:
+          type: string
+        recipeBook:
+          $ref: '#/components/schemas/RecipeBookPresenter'
+      required:
+        - id
+        - name
+        - recipeBookRole
         - imageUrl
-        - createdAt
+        - recipeBook
+    CreateUserDto:
+      type: object
+      properties:
+        name:
+          type: string
+        imageUrl:
+          type: string
+      required:
+        - name
+        - imageUrl
     UpdateUserDto:
       type: object
       properties:
         name:
           type: string
+        imageUrl:
+          type: string
       required:
         - name
-    CreateSpaceDto:
+        - imageUrl
+    User:
       type: object
       properties:
+        id:
+          type: string
         name:
           type: string
-        password:
+        imageUrl:
           type: string
       required:
+        - id
         - name
-        - password
-    SpaceEntity:
+        - imageUrl
+    RecipePresenter:
       type: object
       properties:
         id:
           type: number
-        uuid:
+        title:
           type: string
+        thumbnailUrl:
+          type: string
+        imageUrls:
+          type: array
+          items:
+            type: string
+        memo:
+          type: string
+        appName:
+          type: string
+        faviconUrl:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+      required:
+        - id
+        - title
+        - thumbnailUrl
+        - imageUrls
+        - memo
+        - appName
+        - faviconUrl
+        - user
+    CreateRecipeDto:
+      type: object
+      properties:
+        title:
+          type: string
+        thumbnailUrl:
+          type: string
+        imageUrls:
+          type: array
+          items:
+            type: string
+        memo:
+          type: string
+      required:
+        - title
+        - thumbnailUrl
+        - imageUrls
+        - memo
+    UpdateRecipeDto:
+      type: object
+      properties:
+        title:
+          type: string
+        thumbnailUrl:
+          type: string
+        imageUrls:
+          type: array
+          items:
+            type: string
+        memo:
+          type: string
+      required:
+        - title
+        - thumbnailUrl
+        - imageUrls
+        - memo
+    CreateRecipeBookDto:
+      type: object
+      properties:
         name:
           type: string
-        password:
+      required:
+        - name
+    UpdateRecipeBookDto:
+      type: object
+      properties:
+        name:
           type: string
+      required:
+        - name
+    InvitationPresenter:
+      type: object
+      properties:
+        id:
+          type: string
+        token:
+          type: string
+        spaceId:
+          type: string
+      required:
+        - id
+        - token
+        - spaceId
+    ValidateInvitationDto:
+      type: object
+      properties:
+        token:
+          type: string
+        spaceId:
+          type: string
+      required:
+        - token
+        - spaceId
+    MenuPresenter:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        thumbnailUrl:
+          type: string
+        imageUrls:
+          type: array
+          items:
+            type: string
+        memo:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
         createdAt:
           format: date-time
           type: string
-        users:
-          $ref: '#/components/schemas/UserEntity'
       required:
         - id
-        - uuid
-        - name
-        - password
+        - title
+        - thumbnailUrl
+        - imageUrls
+        - memo
+        - user
         - createdAt
-    UpdateSpaceDto:
+    CreateMenuDto:
       type: object
       properties:
-        name:
-          type: string
-        password:
+        recipeId:
+          type: number
+        scheduledAt:
+          format: date-time
           type: string
       required:
-        - name
-        - password
-    JoinSpaceDto:
+        - recipeId
+        - scheduledAt
+    UpdateMenuDto:
       type: object
       properties:
-        name:
-          type: string
-        password:
+        status:
           type: string
       required:
-        - name
-        - password
+        - status
+    UploadFilesDto:
+      type: object
+      properties:
+        files:
+          type: array
+          items:
+            type: string
+            format: binary
+      required:
+        - files
+    MediaPresenter:
+      type: object
+      properties:
+        url:
+          type: array
+          items:
+            type: string
+      required:
+        - url
