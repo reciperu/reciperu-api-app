@@ -1,35 +1,35 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
-import { User, SpaceRole } from '@prisma/client';
+// import { ApiProperty } from '@nestjs/swagger';
+// import { Exclude } from 'class-transformer';
+// import { User, SpaceRole } from '@prisma/client';
 
-export class UserEntity implements User {
-  constructor(partial: Partial<UserEntity>) {
-    Object.assign(this, partial);
-  }
-  @ApiProperty()
-  id: number;
+// export class UserEntity implements User {
+//   constructor(partial: Partial<UserEntity>) {
+//     Object.assign(this, partial);
+//   }
+//   @ApiProperty()
+//   id: number;
 
-  @ApiProperty()
-  uuid: string;
+//   @ApiProperty()
+//   uuid: string;
 
-  @ApiProperty()
-  name: string;
+//   @ApiProperty()
+//   name: string;
 
-  @ApiProperty()
-  spaceRole: SpaceRole;
+//   @ApiProperty()
+//   spaceRole: SpaceRole;
 
-  @ApiProperty()
-  imageUrl: string;
+//   @ApiProperty()
+//   imageUrl: string;
 
-  @Exclude()
-  uid: string;
+//   @Exclude()
+//   uid: string;
 
-  @ApiProperty()
-  createdAt: Date;
+//   @ApiProperty()
+//   createdAt: Date;
 
-  @Exclude()
-  updatedAt: Date;
+//   @Exclude()
+//   updatedAt: Date;
 
-  @Exclude()
-  spaceId: number | null;
-}
+//   @Exclude()
+//   spaceId: number | null;
+// }
