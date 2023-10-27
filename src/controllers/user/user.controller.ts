@@ -11,7 +11,6 @@ import {
   Delete,
 } from '@nestjs/common';
 import { Request } from 'express';
-// import { UserService } from '../../user/user.service';
 import {
   ApiOperation,
   ApiResponse,
@@ -19,14 +18,14 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
-// import { UserEntity } from '../../user/entities/user.entity';
 import { UserPresenter } from './user.presenter';
-import { CreateUserDto, UpdateUserDto } from './dto';
+import { CreateUserDto, UpdateUserDto } from './user.dto';
+import { CreateUserUseCase } from 'src/use-cases/create-user.use-case';
 
 @ApiTags('user')
 @Controller('users')
 export class UserController {
-  // constructor(private readonly userService: UserService) {}
+  constructor(private readonly createUserUseCase: CreateUserUseCase) {}
 
   @Get()
   @ApiOperation({ operationId: 'getUserList' })
@@ -81,11 +80,13 @@ export class UserController {
     description: 'ユーザー登録',
     type: UserPresenter,
   })
-  async create(@Req() request: Request) {
+  async create(@Req() request: Request, @Body() createUserDto: CreateUserDto) {
     try {
-      // const token = request.headers.authorization.split(' ')[1];
-      // const user = await this.userService.create(token);
-      // return new UserEntity(user);
+      const user = await this.createUserUseCase.execute(
+        createUserDto,
+        request.headers.authorization.split(' ')[1],
+      );
+      return new UserPresenter(user);
     } catch (error) {
       throw new HttpException(
         error.message || 'INTERNAL_SERVER_ERROR',

@@ -4,6 +4,18 @@ export class CreateUserDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
+  readonly name: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  readonly imageUrl: string;
+}
+
+export class UpdateUserDto {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
   name: string;
 
   @ApiProperty()

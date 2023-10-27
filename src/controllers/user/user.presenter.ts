@@ -1,24 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { RecipeBookPresenter } from '../recipe-book/recipe-book.presenter';
-
-enum RecipeBookRole {
-  OWNER = 'OWNER',
-  MEMBER = 'MEMBER',
-}
-
+import { User } from 'src/domain/models';
 export class UserPresenter {
   @ApiProperty()
-  id: string;
+  readonly id: string;
 
   @ApiProperty()
-  name: string;
+  readonly name: string;
 
   @ApiProperty()
-  recipeBookRole: RecipeBookRole;
+  readonly imageUrl: string;
 
-  @ApiProperty()
-  imageUrl: string;
-
-  @ApiProperty()
-  recipeBook: RecipeBookPresenter;
+  constructor(user: User) {
+    this.id = user.id;
+    this.name = user.name;
+    this.imageUrl = user.imageUrl;
+  }
 }
