@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum RecipeBookRole {
+enum SpaceRole {
   OWNER
   MEMBER
 }
@@ -34,12 +34,13 @@ model Space {
 }
 
 model User {
-  id             String         @unique @default(cuid())
-  name           String
-  recipeBookRole RecipeBookRole @default(OWNER) @map("recipe_book_role")
-  imageUrl       String         @map("image_url")
-  spaceUsers     SpaceUser[]
-  menus          Menu[]
+  id         String      @unique @default(cuid())
+  name       String
+  spaceRole  SpaceRole?  @default(OWNER) @map("space_role")
+  imageUrl   String      @map("image_url")
+  identifier String      @unique
+  spaceUsers SpaceUser[]
+  menus      Menu[]
 
   @@index([id])
   @@map("users")
