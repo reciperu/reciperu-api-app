@@ -371,26 +371,6 @@ paths:
           description: 献立の削除
       tags: *ref_9
       security: *ref_10
-  /media/image:
-    post:
-      operationId: uploadImage
-      summary: ''
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/UploadFilesDto'
-      responses:
-        '200':
-          description: 画像のアップロード
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MediaPresenter'
-      tags:
-        - media
 info:
   title: reciperu api app
   description: API documents
@@ -602,22 +582,3 @@ components:
           type: string
       required:
         - status
-    UploadFilesDto:
-      type: object
-      properties:
-        files:
-          type: array
-          items:
-            type: string
-            format: binary
-      required:
-        - files
-    MediaPresenter:
-      type: object
-      properties:
-        url:
-          type: array
-          items:
-            type: string
-      required:
-        - url
