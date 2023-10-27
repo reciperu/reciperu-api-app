@@ -379,19 +379,6 @@ components:
       bearerFormat: JWT
       type: http
   schemas:
-    RecipeBookPresenter:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        spaceId:
-          type: string
-      required:
-        - id
-        - name
-        - spaceId
     UserPresenter:
       type: object
       properties:
@@ -399,18 +386,12 @@ components:
           type: string
         name:
           type: string
-        recipeBookRole:
-          type: string
         imageUrl:
           type: string
-        recipeBook:
-          $ref: '#/components/schemas/RecipeBookPresenter'
       required:
         - id
         - name
-        - recipeBookRole
         - imageUrl
-        - recipeBook
     CreateUserDto:
       type: object
       properties:
