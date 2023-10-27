@@ -1,5 +1,6 @@
 import { Controller, Get, Patch, Post } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiQuery,
@@ -10,6 +11,7 @@ import { RecipePresenter } from './presenter/recipe.presenter';
 import { CreateRecipeDto, UpdateRecipeDto } from './dto';
 
 @ApiTags('recipes')
+@ApiBearerAuth()
 @Controller('recipes')
 export class RecipeController {
   @Get()

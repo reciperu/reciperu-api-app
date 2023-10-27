@@ -1,9 +1,16 @@
 import { Controller, Post, Put } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { InvitationPresenter } from './invitation.presenter';
 import { ValidateInvitationDto } from './dto';
 
 @ApiTags('invitations')
+@ApiBearerAuth()
 @Controller('invitations')
 export class InvitationController {
   @Post('invitation')

@@ -1,9 +1,16 @@
 import { Controller, Delete, Get, Post, Put } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { MenuPresenter } from './menu.presenter';
 import { CreateMenuDto, UpdateMenuDto } from './dto';
 
 @ApiTags('menus')
+@ApiBearerAuth()
 @Controller('menus')
 export class MenuController {
   @Get()

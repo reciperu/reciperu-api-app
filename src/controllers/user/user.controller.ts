@@ -17,12 +17,14 @@ import {
   ApiTags,
   ApiParam,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { UserPresenter } from './user.presenter';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { CreateUserUseCase } from 'src/use-cases/create-user.use-case';
 
 @ApiTags('user')
+@ApiBearerAuth()
 @Controller('users')
 export class UserController {
   constructor(private readonly createUserUseCase: CreateUserUseCase) {}
@@ -46,6 +48,7 @@ export class UserController {
   }
 
   @Get(':id')
+  @ApiBearerAuth()
   @ApiOperation({ operationId: 'getUser' })
   @ApiParam({
     name: 'id',

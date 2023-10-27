@@ -1,9 +1,16 @@
 import { Controller, Post, Put } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateRecipeBookDto, UpdateRecipeBookDto } from './dto';
 import { RecipePresenter } from '../recipe/presenter/recipe.presenter';
 
 @ApiTags('recipe-books')
+@ApiBearerAuth()
 @Controller('recipe-books')
 export class RecipeBookController {
   @Post()
