@@ -9,6 +9,7 @@ import {
   Param,
   Body,
   Delete,
+  BadRequestException,
 } from '@nestjs/common';
 import { Request } from 'express';
 import {
@@ -38,13 +39,7 @@ export class UserController {
     isArray: true,
   })
   async index() {
-    try {
-    } catch (error) {
-      throw new HttpException(
-        error.message || 'INTERNAL_SERVER_ERROR',
-        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    console.log('index');
   }
 
   @Get(':id')
@@ -84,18 +79,11 @@ export class UserController {
     type: UserPresenter,
   })
   async create(@Req() request: Request, @Body() createUserDto: CreateUserDto) {
-    try {
-      const user = await this.createUserUseCase.execute(
-        createUserDto,
-        request.headers.authorization.split(' ')[1],
-      );
-      return new UserPresenter(user);
-    } catch (error) {
-      throw new HttpException(
-        error.message || 'INTERNAL_SERVER_ERROR',
-        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    const user = await this.createUserUseCase.execute(
+      createUserDto,
+      request.headers.authorization.split(' ')[1],
+    );
+    return new UserPresenter(user);
   }
 
   @Patch(':id')
