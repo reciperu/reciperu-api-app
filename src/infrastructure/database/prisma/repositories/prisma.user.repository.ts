@@ -3,14 +3,13 @@ import { PrismaService } from 'src/infrastructure/database/prisma/prisma.service
 import { IUserRepository } from 'src/domain/repositories';
 import { User, UserBeforePersist } from 'src/domain/models';
 import { User as PrismaUser } from '@prisma/client';
-
 @Injectable()
 export class PrismaUserRepository implements IUserRepository {
   constructor(private readonly prismaService: PrismaService) {
     this.prismaService = prismaService;
   }
 
-  async findAll(spaceId: string): Promise<User[]> {
+  async findMany(spaceId: string): Promise<User[]> {
     const users = await this.prismaService.user.findMany({
       where: {
         spaceUsers: {
@@ -28,7 +27,7 @@ export class PrismaUserRepository implements IUserRepository {
       data: {
         name: user.name,
         imageUrl: user.imageUrl,
-        identifier: user.identifier,
+        uid: user.uid,
       },
     });
     return this.toUser(prismaUser);

@@ -7,26 +7,26 @@ export class User {
   readonly id: string;
   readonly name: string;
   readonly imageUrl: string;
-  readonly identifier: string;
+  readonly uid: string;
   constructor({
     id,
     name,
     imageUrl,
-    identifier,
+    uid,
   }: {
     id: string;
     name: string;
     imageUrl: string;
-    identifier: string;
+    uid: string;
   }) {
     this.id = id;
     this.name = name;
     this.imageUrl = imageUrl;
-    this.identifier = identifier;
+    this.uid = uid;
     if (!this.id) throw new Error('id is required');
     if (!this.name) throw new Error('name is required');
     if (!this.imageUrl) throw new Error('imageUrl is required');
-    if (!this.identifier) throw new Error('identifier is required');
+    if (!this.uid) throw new Error('uid is required');
   }
 }
 

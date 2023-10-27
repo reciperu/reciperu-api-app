@@ -17,7 +17,7 @@ export class CreateUserUseCase {
       .verifyIdToken(token);
     return await this.userRepository.create({
       ...dto,
-      identifier: decodedToken.uid,
+      uid: decodedToken.uid,
     });
   }
 }

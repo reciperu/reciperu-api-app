@@ -38,7 +38,7 @@ model User {
   name       String
   spaceRole  SpaceRole?  @default(OWNER) @map("space_role")
   imageUrl   String      @map("image_url")
-  identifier String      @unique
+  uid        String      @unique
   spaceUsers SpaceUser[]
   menus      Menu[]
 
