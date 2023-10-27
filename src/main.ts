@@ -4,11 +4,12 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as fs from 'fs';
 import { dump } from 'js-yaml';
 import { ValidationPipe } from '@nestjs/common';
+import { HttpExceptionFilter } from './infrastructure/filter/http-exception.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   app.enableShutdownHooks();
-
+  app.useGlobalFilters(new HttpExceptionFilter());
   const config = new DocumentBuilder()
     .setTitle('reciperu api app')
     .setDescription('API documents')
