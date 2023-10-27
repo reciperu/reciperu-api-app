@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-http-bearer';
-import { FirebaseService } from 'src/firebase/firebase.service';
+import { FirebaseService } from 'src/infrastructure/firebase/firebase.service';
 
 @Injectable()
 export class FirebaseStrategy extends PassportStrategy(Strategy) {
