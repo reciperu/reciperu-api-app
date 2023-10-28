@@ -14,6 +14,6 @@ import { UseCaseModule } from 'src/use-cases/use-case.module';
     InvitationController,
     MenuController,
   ],
-  imports: [UseCaseModule],
+  imports: [UseCaseModule.resister()],
 })
 export class ControllersModule {}

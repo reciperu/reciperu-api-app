@@ -9,7 +9,8 @@ import {
   Param,
   Body,
   Delete,
-  BadRequestException,
+  // BadRequestException,
+  Inject,
 } from '@nestjs/common';
 import { Request } from 'express';
 import {
@@ -23,12 +24,16 @@ import {
 import { UserPresenter } from './user.presenter';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { CreateUserUseCase } from 'src/use-cases/create-user.use-case';
+import { UseCaseModule } from 'src/use-cases/use-case.module';
 
 @ApiTags('user')
 @ApiBearerAuth()
 @Controller('users')
 export class UserController {
-  constructor(private readonly createUserUseCase: CreateUserUseCase) {}
+  constructor(
+    @Inject(UseCaseModule.CREATE_USER_USE_CASE)
+    private readonly createUserUseCase: CreateUserUseCase,
+  ) {}
 
   @Get()
   @ApiOperation({ operationId: 'getUserList' })
