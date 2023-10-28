@@ -9,7 +9,6 @@ import {
   Param,
   Body,
   Delete,
-  // BadRequestException,
   Inject,
 } from '@nestjs/common';
 import { Request } from 'express';
