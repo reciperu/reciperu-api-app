@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { User, ActiveStatus } from 'src/domain/models';
-export class UserPresenter {
+
+export class UserPresenter implements Partial<User> {
   @ApiProperty()
   readonly id: string;
 
