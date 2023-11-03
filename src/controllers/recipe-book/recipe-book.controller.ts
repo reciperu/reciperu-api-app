@@ -1,4 +1,4 @@
-import { Controller, Post, Put } from '@nestjs/common';
+import { Body, Controller, Post, Put, Req } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -6,8 +6,9 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateRecipeBookDto, UpdateRecipeBookDto } from './dto';
+import { CreateRecipeBookDto, UpdateRecipeBookDto } from './recipe-book.dto';
 import { RecipePresenter } from '../recipe/presenter/recipe.presenter';
+import { Request } from 'express';
 
 @ApiTags('recipe-books')
 @ApiBearerAuth()
@@ -23,10 +24,8 @@ export class RecipeBookController {
     description: '料理本作成',
     type: RecipePresenter,
   })
-  async create() {
-    try {
-      // Todo:スペース作成の処理もここに書く
-    } catch (error) {}
+  async create(@Body() createRecipeBookDto: CreateRecipeBookDto) {
+    // Todo:スペース作成の処理もここに書く
   }
 
   @Put(':id')

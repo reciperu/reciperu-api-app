@@ -7,3 +7,10 @@ export class CreateRecipeBookDto {
   @IsNotEmpty()
   name: string;
 }
+
+export class UpdateRecipeBookDto {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+}
