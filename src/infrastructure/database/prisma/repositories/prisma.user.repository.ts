@@ -33,6 +33,16 @@ export class PrismaUserRepository implements IUserRepository {
     return this.toUser(prismaUser);
   }
 
+  async findUnique(uid: string): Promise<null | User> {
+    const user = await this.prismaService.user.findUnique({
+      where: { uid: uid },
+    });
+    if (!user) {
+      return null;
+    }
+    return this.toUser(user);
+  }
+
   private toUser(user: PrismaUser) {
     return new User(user);
   }

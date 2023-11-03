@@ -1,12 +1,12 @@
 import { HttpException, Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { PrismaService } from 'src/infrastructure/database/prisma/prisma.service';
+import { PrismaUserRepository } from 'src/infrastructure/database/prisma/repositories/prisma.user.repository';
 import { FirebaseService } from 'src/infrastructure/firebase/firebase.service';
 
 @Injectable()
 export class SetCurrentUserMiddleware implements NestMiddleware {
   constructor(
-    private readonly prismService: PrismaService,
+    private readonly prismUserRepository: PrismaUserRepository,
     private readonly firebaseService: FirebaseService,
   ) {}
   async use(req: Request, res: Response, next: NextFunction) {
@@ -15,9 +15,9 @@ export class SetCurrentUserMiddleware implements NestMiddleware {
       const decodedToken = await this.firebaseService.admin
         .auth()
         .verifyIdToken(token);
-      req['currentUser'] = await this.prismService.user.findUnique({
-        where: { uid: decodedToken.uid },
-      });
+      req.currentUser = await this.prismUserRepository.findUnique(
+        decodedToken.uid,
+      );
       next();
     } catch (error) {
       throw new HttpException(error, 401);
