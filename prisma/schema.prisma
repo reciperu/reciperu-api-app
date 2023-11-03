@@ -21,8 +21,14 @@ enum MenuStatus {
   CONFIRMED
 }
 
+enum ActiveStatus {
+  ONBOARDING
+  JOINED_SPACE
+  NOT_JOINED_SPACE
+}
+
 model Space {
-  id               String            @unique @default(cuid())
+  id               String            @id @default(cuid())
   name             String?
   spaceUsers       SpaceUser[]
   spaceInvitations SpaceInvitation[]
@@ -34,13 +40,14 @@ model Space {
 }
 
 model User {
-  id         String      @unique @default(cuid())
-  name       String
-  spaceRole  SpaceRole?  @default(OWNER) @map("space_role")
-  imageUrl   String      @map("image_url")
-  uid        String      @unique
-  spaceUsers SpaceUser[]
-  menus      Menu[]
+  id           String       @id @default(cuid())
+  name         String
+  spaceRole    SpaceRole?   @default(OWNER) @map("space_role")
+  imageUrl     String       @map("image_url")
+  activeStatus ActiveStatus @default(ONBOARDING) @map("active_status")
+  uid          String       @unique
+  spaceUsers   SpaceUser[]
+  menus        Menu[]
 
   @@index([id])
   @@map("users")
@@ -58,7 +65,7 @@ model SpaceUser {
 }
 
 model RecipeBook {
-  id      String   @unique @default(cuid())
+  id      String   @id @default(cuid())
   name    String
   spaceId String   @map("space_id")
   space   Space    @relation(fields: [spaceId], references: [id], onDelete: Cascade)
