@@ -57,16 +57,8 @@ export class UserController {
     description: 'プロフィール情報取得',
     type: UserPresenter,
   })
-  async getProfile() {
-    try {
-      // const user = await this.userService.findOneByUuid(uuid);
-      // return new UserEntity(user);
-    } catch (error) {
-      throw new HttpException(
-        error.message || 'INTERNAL_SERVER_ERROR',
-        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+  async getProfile(@Req() req: Request) {
+    return new UserPresenter(req.currentUser);
   }
 
   @Patch(':id')
