@@ -37,4 +37,4 @@ export class User {
   }
 }
 
-export type UserBeforePersist = Omit<User, 'id'>;
+export type UserBeforePersist = Omit<User, 'id' | 'activeStatus'>;
