@@ -211,28 +211,6 @@ paths:
                 $ref: '#/components/schemas/RecipePresenter'
       tags: *ref_3
       security: *ref_4
-  /recipe-books:
-    post:
-      operationId: createRecipeBook
-      summary: ''
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateRecipeBookDto'
-      responses:
-        '201':
-          description: 料理本作成
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RecipePresenter'
-      tags: &ref_5
-        - recipe-books
-      security: &ref_6
-        - bearer: []
   /recipe-books/{id}:
     put:
       operationId: updateRecipeBook
@@ -251,8 +229,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecipePresenter'
-      tags: *ref_5
-      security: *ref_6
+      tags:
+        - recipe-books
+      security:
+        - bearer: []
   /invitations/invitation:
     post:
       operationId: invitationSpace
@@ -265,9 +245,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvitationPresenter'
-      tags: &ref_7
+      tags: &ref_5
         - invitations
-      security: &ref_8
+      security: &ref_6
         - bearer: []
   /invitations:
     put:
@@ -287,8 +267,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvitationPresenter'
-      tags: *ref_7
-      security: *ref_8
+      tags: *ref_5
+      security: *ref_6
   /menus:
     get:
       operationId: getMenu
@@ -303,9 +283,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/MenuPresenter'
-      tags: &ref_9
+      tags: &ref_7
         - menus
-      security: &ref_10
+      security: &ref_8
         - bearer: []
     post:
       operationId: createMenu
@@ -324,8 +304,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MenuPresenter'
-      tags: *ref_9
-      security: *ref_10
+      tags: *ref_7
+      security: *ref_8
   /menus/pending:
     get:
       operationId: getPendingMenu
@@ -340,8 +320,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/MenuPresenter'
-      tags: *ref_9
-      security: *ref_10
+      tags: *ref_7
+      security: *ref_8
   /menus/{id}:
     put:
       operationId: updateMenu
@@ -360,8 +340,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MenuPresenter'
-      tags: *ref_9
-      security: *ref_10
+      tags: *ref_7
+      security: *ref_8
     delete:
       operationId: deleteMenu
       summary: ''
@@ -369,8 +349,8 @@ paths:
       responses:
         '200':
           description: 献立の削除
-      tags: *ref_9
-      security: *ref_10
+      tags: *ref_7
+      security: *ref_8
   /spaces:
     post:
       operationId: createSpace
@@ -521,13 +501,6 @@ components:
         - thumbnailUrl
         - imageUrls
         - memo
-    CreateRecipeBookDto:
-      type: object
-      properties:
-        name:
-          type: string
-      required:
-        - name
     UpdateRecipeBookDto:
       type: object
       properties:
