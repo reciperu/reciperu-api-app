@@ -10,7 +10,7 @@ export class CheckUserUseCase {
     private readonly firebaseService: FirebaseService,
   ) {}
   async execute(user: User | null, token: string): Promise<User> {
-    if (user) return user;
+    if (user) return new User(user);
     const decodedToken = await this.firebaseService.admin
       .auth()
       .verifyIdToken(token);

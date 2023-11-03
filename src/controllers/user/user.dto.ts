@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty } from 'class-validator';
+import { ActiveStatus } from 'src/domain/models';
 export class UpdateUserDto {
   @ApiProperty()
   @IsString()
@@ -10,4 +11,9 @@ export class UpdateUserDto {
   @IsString()
   @IsNotEmpty()
   imageUrl: string;
+
+  @ApiProperty({ enum: ActiveStatus })
+  @IsString()
+  @IsNotEmpty()
+  activeStatus: ActiveStatus;
 }

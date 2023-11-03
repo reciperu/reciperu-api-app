@@ -34,7 +34,7 @@ import { Request } from 'express';
 export class UserController {
   constructor(
     @Inject(UseCaseProxyModule.CHECK_USER_USE_CASE)
-    private readonly createUserUseCase: UseCaseProxy<CheckUserUseCase>,
+    private readonly checkUserUseCase: UseCaseProxy<CheckUserUseCase>,
   ) {}
 
   @Get()
@@ -122,7 +122,7 @@ export class UserController {
     const user = req.currentUser;
     const token = req.headers.authorization.split(' ')[1];
     return new UserPresenter(
-      await this.createUserUseCase.getInstance().execute(user, token),
+      await this.checkUserUseCase.getInstance().execute(user, token),
     );
   }
   // TODO:退会処理のAPI

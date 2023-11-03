@@ -406,9 +406,16 @@ components:
           type: string
         imageUrl:
           type: string
+        activeStatus:
+          type: string
+          enum:
+            - ONBOARDING
+            - JOINED_SPACE
+            - NOT_JOINED_SPACE
       required:
         - name
         - imageUrl
+        - activeStatus
     User:
       type: object
       properties:
