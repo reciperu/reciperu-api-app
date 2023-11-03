@@ -49,21 +49,15 @@ export class UserController {
     console.log('index');
   }
 
-  @Get(':id')
+  @Get('profile')
   @ApiBearerAuth()
-  @ApiOperation({ operationId: 'getUser' })
-  @ApiParam({
-    name: 'id',
-    type: String,
-    required: true,
-    description: 'userId',
-  })
+  @ApiOperation({ operationId: 'getProfile' })
   @ApiResponse({
     status: 200,
-    description: 'ユーザー詳細取得',
+    description: 'プロフィール情報取得',
     type: UserPresenter,
   })
-  async show(@Param('id') id: string) {
+  async getProfile() {
     try {
       // const user = await this.userService.findOneByUuid(uuid);
       // return new UserEntity(user);

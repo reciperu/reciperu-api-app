@@ -38,20 +38,14 @@ paths:
                 $ref: '#/components/schemas/UserPresenter'
       tags: *ref_0
       security: *ref_1
-  /users/{id}:
+  /users/profile:
     get:
-      operationId: getUser
+      operationId: getProfile
       summary: ''
-      parameters:
-        - name: id
-          required: true
-          in: path
-          description: userId
-          schema:
-            type: string
+      parameters: []
       responses:
         '200':
-          description: ユーザー詳細取得
+          description: プロフィール情報取得
           content:
             application/json:
               schema:
@@ -60,6 +54,7 @@ paths:
       security:
         - *ref_2
         - bearer: []
+  /users/{id}:
     patch:
       operationId: updateUser
       summary: ''
@@ -414,6 +409,10 @@ components:
           type: string
         activeStatus:
           type: string
+          enum:
+            - ONBOARDING
+            - JOINED_SPACE
+            - NOT_JOINED_SPACE
       required:
         - id
         - name
