@@ -14,15 +14,15 @@ export class UseCaseProxy<T> {
 @Module({
   imports: [DatabaseModule, FirebaseModule],
 })
-export class UseCaseModule {
+export class UseCaseProxyModule {
   static readonly CREATE_USER_USE_CASE = 'CREATE_USER_USE_CASE';
   static resister(): DynamicModule {
     return {
-      module: UseCaseModule,
+      module: UseCaseProxyModule,
       providers: [
         {
           inject: [PrismaUserRepository, FirebaseService],
-          provide: UseCaseModule.CREATE_USER_USE_CASE,
+          provide: UseCaseProxyModule.CREATE_USER_USE_CASE,
           useFactory: (
             userRepository: PrismaUserRepository,
             firebaseService: FirebaseService,
@@ -33,7 +33,7 @@ export class UseCaseModule {
           },
         },
       ],
-      exports: [UseCaseModule.CREATE_USER_USE_CASE],
+      exports: [UseCaseProxyModule.CREATE_USER_USE_CASE],
     };
   }
 }

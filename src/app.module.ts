@@ -9,7 +9,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ClassSerializerInterceptor } from '@nestjs/common';
 import { ControllersModule } from './controllers';
 import { DatabaseModule } from './infrastructure/database/database.module';
-import { UseCaseModule } from './use-cases/use-case.module';
+import { UseCaseProxyModule } from './use-cases/use-case.module';
 import { AuthModule } from './infrastructure/auth/auth.module';
 import { SetCurrentUserMiddleware } from './middleware/setCurrentUser.middleware';
 import { FirebaseService } from './infrastructure/firebase/firebase.service';
@@ -20,7 +20,7 @@ import { PrismaService } from './infrastructure/database/prisma/prisma.service';
     FirebaseModule,
     ControllersModule,
     DatabaseModule,
-    UseCaseModule,
+    UseCaseProxyModule,
     AuthModule,
   ],
   providers: [

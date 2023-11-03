@@ -8,9 +8,7 @@ export class CreateUserUseCase {
   constructor(
     private readonly userRepository: IUserRepository,
     private readonly firebaseService: FirebaseService,
-  ) {
-    this.userRepository = userRepository;
-  }
+  ) {}
   async execute(dto: CreateUserDto, token: string) {
     const decodedToken = await this.firebaseService.admin
       .auth()

@@ -23,15 +23,18 @@ import {
 import { UserPresenter } from './user.presenter';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { CreateUserUseCase } from 'src/use-cases/create-user.use-case';
-import { UseCaseModule } from 'src/use-cases/use-case.module';
+import {
+  UseCaseProxyModule,
+  UseCaseProxy,
+} from 'src/use-cases/use-case.module';
 
 @ApiTags('user')
 @ApiBearerAuth()
 @Controller('users')
 export class UserController {
   constructor(
-    @Inject(UseCaseModule.CREATE_USER_USE_CASE)
-    private readonly createUserUseCase: CreateUserUseCase,
+    @Inject(UseCaseProxyModule.CREATE_USER_USE_CASE)
+    private readonly createUserUseCase: UseCaseProxy<CreateUserUseCase>,
   ) {}
 
   @Get()
@@ -83,10 +86,9 @@ export class UserController {
     type: UserPresenter,
   })
   async create(@Req() request: Request, @Body() createUserDto: CreateUserDto) {
-    const user = await this.createUserUseCase.execute(
-      createUserDto,
-      request.headers.authorization.split(' ')[1],
-    );
+    const user = await this.createUserUseCase
+      .getInstance()
+      .execute(createUserDto, request.headers.authorization.split(' ')[1]);
     return new UserPresenter(user);
   }
 
