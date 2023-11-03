@@ -371,6 +371,28 @@ paths:
           description: 献立の削除
       tags: *ref_9
       security: *ref_10
+  /spaces:
+    post:
+      operationId: createSpace
+      summary: ''
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSpaceDto'
+      responses:
+        '201':
+          description: スペースと料理本を作成
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpacePresenter'
+      tags:
+        - spaces
+      security:
+        - bearer: []
 info:
   title: reciperu api app
   description: API documents
@@ -582,3 +604,23 @@ components:
           type: string
       required:
         - status
+    CreateSpaceDto:
+      type: object
+      properties:
+        recipeBookName:
+          type: string
+      required:
+        - recipeBookName
+    SpacePresenter:
+      type: object
+      properties:
+        id:
+          type: string
+        recipeBookName:
+          type: string
+        recipeBookId:
+          type: string
+      required:
+        - id
+        - recipeBookName
+        - recipeBookId

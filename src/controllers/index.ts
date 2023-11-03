@@ -5,6 +5,7 @@ import { RecipeController } from './recipe';
 import { InvitationController } from './invitation';
 import { MenuController } from './menu';
 import { UseCaseProxyModule } from 'src/use-cases/use-case.module';
+import { SpaceController } from './space';
 
 @Module({
   controllers: [
@@ -13,6 +14,7 @@ import { UseCaseProxyModule } from 'src/use-cases/use-case.module';
     RecipeBookController,
     InvitationController,
     MenuController,
+    SpaceController,
   ],
   imports: [UseCaseProxyModule.resister()],
 })
