@@ -99,6 +99,20 @@ paths:
           description: ユーザー削除
       tags: *ref_0
       security: *ref_1
+  /users/check:
+    post:
+      operationId: checkUser
+      summary: ''
+      parameters: []
+      responses:
+        '200':
+          description: ユーザー情報のチェック
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPresenter'
+      tags: *ref_0
+      security: *ref_1
   /recipes:
     get:
       operationId: getRecipe
@@ -398,10 +412,13 @@ components:
           type: string
         imageUrl:
           type: string
+        activeStatus:
+          type: string
       required:
         - id
         - name
         - imageUrl
+        - activeStatus
     CreateUserDto:
       type: object
       properties:

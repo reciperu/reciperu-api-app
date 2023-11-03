@@ -141,4 +141,15 @@ export class UserController {
       );
     }
   }
+
+  @ApiOperation({ operationId: 'checkUser' })
+  @Post('check')
+  @ApiResponse({
+    status: 200,
+    description: 'ユーザー情報のチェック',
+    type: UserPresenter,
+  })
+  async check() {
+    // TODO: implement
+  }
 }

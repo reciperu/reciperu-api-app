@@ -3,11 +3,18 @@ enum SpaceRole {
   MEMBER = 'MEMBER',
 }
 
+export enum ActiveStatus {
+  ONBOARDING = 'ONBOARDING',
+  JOINED_SPACE = 'JOINED_SPACE',
+  NOT_JOINED_SPACE = 'NOT_JOINED_SPACE',
+}
+
 export class User {
   readonly id: string;
   readonly name: string;
   readonly imageUrl: string;
   readonly uid: string;
+  readonly activeStatus: ActiveStatus;
   constructor({
     id,
     name,
