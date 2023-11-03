@@ -1,5 +1,5 @@
 import { Module, DynamicModule } from '@nestjs/common';
-import { CreateUserUseCase } from './create-user.use-case';
+import { CheckUserUseCase } from './check-user.use-case';
 import { DatabaseModule } from 'src/infrastructure/database/database.module';
 import { FirebaseModule } from 'src/infrastructure/firebase/firebase.module';
 import { FirebaseService } from 'src/infrastructure/firebase/firebase.service';
@@ -15,25 +15,25 @@ export class UseCaseProxy<T> {
   imports: [DatabaseModule, FirebaseModule],
 })
 export class UseCaseProxyModule {
-  static readonly CREATE_USER_USE_CASE = 'CREATE_USER_USE_CASE';
+  static readonly CHECK_USER_USE_CASE = 'CHECK_USER_USE_CASE';
   static resister(): DynamicModule {
     return {
       module: UseCaseProxyModule,
       providers: [
         {
           inject: [PrismaUserRepository, FirebaseService],
-          provide: UseCaseProxyModule.CREATE_USER_USE_CASE,
+          provide: UseCaseProxyModule.CHECK_USER_USE_CASE,
           useFactory: (
             userRepository: PrismaUserRepository,
             firebaseService: FirebaseService,
           ) => {
             return new UseCaseProxy(
-              new CreateUserUseCase(userRepository, firebaseService),
+              new CheckUserUseCase(userRepository, firebaseService),
             );
           },
         },
       ],
-      exports: [UseCaseProxyModule.CREATE_USER_USE_CASE],
+      exports: [UseCaseProxyModule.CHECK_USER_USE_CASE],
     };
   }
 }

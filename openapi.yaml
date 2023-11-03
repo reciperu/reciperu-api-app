@@ -16,28 +16,9 @@ paths:
                   $ref: '#/components/schemas/UserPresenter'
       tags: &ref_0
         - user
-      security: &ref_1
-        - &ref_2
+      security: &ref_2
+        - &ref_1
           bearer: []
-    post:
-      operationId: createUser
-      summary: ''
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateUserDto'
-      responses:
-        '201':
-          description: ユーザー登録
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserPresenter'
-      tags: *ref_0
-      security: *ref_1
   /users/profile:
     get:
       operationId: getProfile
@@ -52,7 +33,7 @@ paths:
                 $ref: '#/components/schemas/UserPresenter'
       tags: *ref_0
       security:
-        - *ref_2
+        - *ref_1
         - bearer: []
   /users/{id}:
     patch:
@@ -79,7 +60,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserPresenter'
       tags: *ref_0
-      security: *ref_1
+      security: *ref_2
     delete:
       operationId: UserController_delete
       parameters:
@@ -93,7 +74,7 @@ paths:
         '204':
           description: ユーザー削除
       tags: *ref_0
-      security: *ref_1
+      security: *ref_2
   /users/check:
     post:
       operationId: checkUser
@@ -107,7 +88,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserPresenter'
       tags: *ref_0
-      security: *ref_1
+      security: *ref_2
   /recipes:
     get:
       operationId: getRecipe
@@ -418,16 +399,6 @@ components:
         - name
         - imageUrl
         - activeStatus
-    CreateUserDto:
-      type: object
-      properties:
-        name:
-          type: string
-        imageUrl:
-          type: string
-      required:
-        - name
-        - imageUrl
     UpdateUserDto:
       type: object
       properties:
