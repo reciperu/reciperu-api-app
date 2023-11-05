@@ -1,4 +1,9 @@
-import { HttpException, Injectable, NestMiddleware } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  NestMiddleware,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { User } from 'src/domain/models';
 import { PrismaUserRepository } from 'src/infrastructure/database/prisma/repositories/prisma.user.repository';
@@ -30,7 +35,7 @@ export class SetCurrentUserMiddleware implements NestMiddleware {
         : null;
       next();
     } catch (error) {
-      throw new HttpException(error, 401);
+      throw new UnauthorizedException();
     }
   }
 }
