@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { User, ActiveStatus } from 'src/domain/models';
 
-export class UserPresenter implements Partial<User> {
+export class UserPresenter {
   @ApiProperty()
   readonly id: string;
 
@@ -15,9 +15,9 @@ export class UserPresenter implements Partial<User> {
   readonly activeStatus: ActiveStatus;
 
   constructor(user: User) {
-    this.id = user.id;
-    this.name = user.name;
-    this.imageUrl = user.imageUrl;
-    this.activeStatus = user.activeStatus;
+    this.id = user.getId;
+    this.name = user.getName;
+    this.imageUrl = user.getImageUrl;
+    this.activeStatus = user.getActiveStatus;
   }
 }
