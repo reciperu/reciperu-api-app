@@ -8,6 +8,7 @@ import {
   Body,
   Delete,
   Inject,
+  BadRequestException,
 } from '@nestjs/common';
 import {
   ApiOperation,
@@ -59,7 +60,9 @@ export class UserController {
     type: UserPresenter,
   })
   async getProfile(@Req() req: Request) {
-    return new UserPresenter(req.currentUser);
+    return req.currentUser
+      ? new UserPresenter(req.currentUser)
+      : new BadRequestException();
   }
 
   @Patch(':id')
