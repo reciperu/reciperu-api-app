@@ -16,7 +16,9 @@ export class SetCurrentUserMiddleware implements NestMiddleware {
       const decodedToken = await this.firebaseService.admin
         .auth()
         .verifyIdToken(token);
-      const user = await this.prismUserRepository.findById(decodedToken.uid);
+      const user = await this.prismUserRepository.findUser({
+        uid: decodedToken.uid,
+      });
       req.currentUser = user
         ? new User(
             user.getId,
