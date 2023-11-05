@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infrastructure/database/prisma/prisma.service';
 import { IUserRepository } from 'src/domain/repositories';
-import { User, UserBeforePersist } from 'src/domain/models';
+import { ActiveStatus, User, UserBeforePersist } from 'src/domain/models';
 import { User as PrismaUser } from '@prisma/client';
 @Injectable()
 export class PrismaUserRepository implements IUserRepository {
@@ -33,7 +33,7 @@ export class PrismaUserRepository implements IUserRepository {
     return this.toUser(prismaUser);
   }
 
-  async findUnique(uid: string): Promise<null | User> {
+  async findById(uid: string): Promise<null | User> {
     const user = await this.prismaService.user.findUnique({
       where: { uid: uid },
     });
@@ -44,6 +44,12 @@ export class PrismaUserRepository implements IUserRepository {
   }
 
   private toUser(user: PrismaUser) {
-    return new User(user);
+    return new User(
+      user.id,
+      user.name,
+      user.imageUrl,
+      user.uid,
+      user.activeStatus as ActiveStatus,
+    );
   }
 }

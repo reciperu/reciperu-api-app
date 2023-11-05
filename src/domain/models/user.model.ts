@@ -10,22 +10,13 @@ export enum ActiveStatus {
 }
 
 export class User {
-  readonly id: string;
-  readonly name: string;
-  readonly imageUrl: string;
-  readonly uid: string;
-  readonly activeStatus: ActiveStatus;
-  constructor({
-    id,
-    name,
-    imageUrl,
-    uid,
-  }: {
-    id: string;
-    name: string;
-    imageUrl: string;
-    uid: string;
-  }) {
+  constructor(
+    private id: string,
+    private name: string,
+    private imageUrl: string,
+    private uid: string,
+    private activeStatus: ActiveStatus,
+  ) {
     this.id = id;
     this.name = name;
     this.imageUrl = imageUrl;
@@ -35,6 +26,31 @@ export class User {
     if (!this.imageUrl) throw new Error('imageUrl is required');
     if (!this.uid) throw new Error('uid is required');
   }
+  get getId(): string {
+    return this.id;
+  }
+  get getName(): string {
+    return this.name;
+  }
+  get getImageUrl(): string {
+    return this.imageUrl;
+  }
+  get getUid(): string {
+    return this.uid;
+  }
+  get getActiveStatus(): ActiveStatus {
+    return this.activeStatus;
+  }
 }
 
-export type UserBeforePersist = Omit<User, 'id' | 'activeStatus'>;
+export class UserBeforePersist {
+  constructor(
+    readonly name: string,
+    readonly imageUrl: string,
+    readonly uid: string,
+  ) {
+    this.name = name;
+    this.imageUrl = imageUrl;
+    this.uid = uid;
+  }
+}

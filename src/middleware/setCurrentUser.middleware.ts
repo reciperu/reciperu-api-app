@@ -1,5 +1,6 @@
 import { HttpException, Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
+import { User } from 'src/domain/models';
 import { PrismaUserRepository } from 'src/infrastructure/database/prisma/repositories/prisma.user.repository';
 import { FirebaseService } from 'src/infrastructure/firebase/firebase.service';
 
@@ -15,9 +16,16 @@ export class SetCurrentUserMiddleware implements NestMiddleware {
       const decodedToken = await this.firebaseService.admin
         .auth()
         .verifyIdToken(token);
-      req.currentUser = await this.prismUserRepository.findUnique(
-        decodedToken.uid,
-      );
+      const user = await this.prismUserRepository.findById(decodedToken.uid);
+      req.currentUser = user
+        ? new User(
+            user.getId,
+            user.getName,
+            user.getImageUrl,
+            user.getUid,
+            user.getActiveStatus,
+          )
+        : null;
       next();
     } catch (error) {
       throw new HttpException(error, 401);
