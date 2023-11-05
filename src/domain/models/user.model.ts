@@ -21,10 +21,6 @@ export class User {
     this.name = name;
     this.imageUrl = imageUrl;
     this.uid = uid;
-    if (!this.id) throw new Error('id is required');
-    if (!this.name) throw new Error('name is required');
-    if (!this.imageUrl) throw new Error('imageUrl is required');
-    if (!this.uid) throw new Error('uid is required');
   }
   get getId(): string {
     return this.id;
@@ -52,10 +48,10 @@ export class User {
     this.activeStatus = activeStatus;
   }
 
-  update(name?: string, imageUrl?: string, activeStatus?: ActiveStatus): void {
-    if (name) this.setName = name;
-    if (imageUrl) this.setImageUrl = imageUrl;
-    if (activeStatus) this.setActiveStatus = activeStatus;
+  update(name: string, imageUrl: string, activeStatus: ActiveStatus): void {
+    this.setName = name;
+    this.setImageUrl = imageUrl;
+    this.setActiveStatus = activeStatus;
   }
 }
 
