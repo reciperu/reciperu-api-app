@@ -49,7 +49,15 @@ export class User {
     this.activeStatus = activeStatus;
   }
 
-  update(name: string, imageUrl: string, activeStatus: ActiveStatus): void {
+  update({
+    name,
+    imageUrl,
+    activeStatus,
+  }: {
+    name: string;
+    imageUrl: string;
+    activeStatus: ActiveStatus;
+  }): void {
     this.setName = name;
     this.setImageUrl = imageUrl;
     this.setActiveStatus = activeStatus;
@@ -65,5 +73,14 @@ export class UserBeforePersist {
     this.name = name;
     this.imageUrl = imageUrl;
     this.uid = uid;
+  }
+}
+
+class SpaceUser {
+  private name: string;
+  private imageUrl: string;
+  constructor({ name, imageUrl }: { name: string; imageUrl: string }) {
+    this.name = name;
+    this.imageUrl = imageUrl;
   }
 }

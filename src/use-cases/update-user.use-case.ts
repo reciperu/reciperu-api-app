@@ -12,11 +12,11 @@ export class UpdateUserUseCase {
     const user = await this.userRepository.findUser({ id });
     if (!user) throw new HttpException('User not found', 404);
 
-    user.update(
-      updateUserDto.name,
-      updateUserDto.imageUrl,
-      updateUserDto.activeStatus,
-    );
+    user.update({
+      name: updateUserDto.name,
+      imageUrl: updateUserDto.imageUrl,
+      activeStatus: updateUserDto.activeStatus,
+    });
     return await this.userRepository.update(user);
   }
 }
