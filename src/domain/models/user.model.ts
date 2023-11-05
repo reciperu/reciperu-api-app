@@ -41,6 +41,22 @@ export class User {
   get getActiveStatus(): ActiveStatus {
     return this.activeStatus;
   }
+
+  set setName(name: string) {
+    this.name = name;
+  }
+  set setImageUrl(imageUrl: string) {
+    this.imageUrl = imageUrl;
+  }
+  set setActiveStatus(activeStatus: ActiveStatus) {
+    this.activeStatus = activeStatus;
+  }
+
+  update(name?: string, imageUrl?: string, activeStatus?: ActiveStatus): void {
+    if (name) this.setName = name;
+    if (imageUrl) this.setImageUrl = imageUrl;
+    if (activeStatus) this.setActiveStatus = activeStatus;
+  }
 }
 
 export class UserBeforePersist {

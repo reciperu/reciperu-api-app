@@ -4,8 +4,6 @@ import {
   Get,
   Post,
   Patch,
-  HttpException,
-  HttpStatus,
   Param,
   Body,
   Delete,
@@ -25,6 +23,7 @@ import {
   UseCaseProxyModule,
   UseCaseProxy,
   CheckUserUseCase,
+  UpdateUserUseCase,
 } from 'src/use-cases';
 import { Request } from 'express';
 
@@ -35,6 +34,8 @@ export class UserController {
   constructor(
     @Inject(UseCaseProxyModule.CHECK_USER_USE_CASE)
     private readonly checkUserUseCase: UseCaseProxy<CheckUserUseCase>,
+    @Inject(UseCaseProxyModule.UPDATE_USER_USE_CASE)
+    private readonly updateUserUseCase: UseCaseProxy<UpdateUserUseCase>,
   ) {}
 
   @Get()
@@ -78,15 +79,10 @@ export class UserController {
     type: UserPresenter,
   })
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    try {
-      // const user = await this.userService.update(uuid, updateUserDto);
-      // return new UserEntity(user);
-    } catch (error) {
-      throw new HttpException(
-        error.message || 'INTERNAL_SERVER_ERROR',
-        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    const updatedUser = await this.updateUserUseCase
+      .getInstance()
+      .execute(updateUserDto, id);
+    return new UserPresenter(updatedUser);
   }
 
   @Delete(':id')
@@ -104,10 +100,10 @@ export class UserController {
     try {
       // await this.userService.delete(uuid);
     } catch (error) {
-      throw new HttpException(
-        error.message || 'INTERNAL_SERVER_ERROR',
-        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      // throw new HttpException(
+      //   error.message || 'INTERNAL_SERVER_ERROR',
+      //   error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      // );
     }
   }
 
