@@ -21,6 +21,7 @@ export class User {
     this.name = name;
     this.imageUrl = imageUrl;
     this.uid = uid;
+    this.activeStatus = activeStatus;
   }
   get getId(): string {
     return this.id;
