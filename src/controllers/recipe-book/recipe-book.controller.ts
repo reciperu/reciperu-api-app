@@ -7,7 +7,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { UpdateRecipeBookDto } from './recipe-book.dto';
-import { RecipePresenter } from '../recipe/presenter/recipe.presenter';
+import { RecipePresenter } from '../recipe/recipe.presenter';
 @ApiTags('recipe-books')
 @ApiBearerAuth()
 @Controller('recipe-books')

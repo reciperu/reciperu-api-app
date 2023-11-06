@@ -108,7 +108,7 @@ paths:
       security: &ref_4
         - bearer: []
     post:
-      operationId: bulkInsertRecipes
+      operationId: createRecipe
       summary: ''
       parameters: []
       requestBody:
@@ -116,18 +116,14 @@ paths:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/CreateRecipeDto'
+              $ref: '#/components/schemas/CreateRecipeDto'
       responses:
         '201':
-          description: レシピ一括登録
+          description: レシピ登録
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/RecipePresenter'
+                $ref: '#/components/schemas/RecipePresenter'
       tags: *ref_3
       security: *ref_4
   /recipes/favorite:
@@ -199,6 +195,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecipePresenter'
+      tags: *ref_3
+      security: *ref_4
+  /recipes/bulk:
+    post:
+      operationId: bulkInsertRecipes
+      summary: ''
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreateRecipeDto'
+      responses:
+        '201':
+          description: レシピ一括登録
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecipePresenter'
       tags: *ref_3
       security: *ref_4
   /recipe-books/{id}:
@@ -478,11 +498,14 @@ components:
             type: string
         memo:
           type: string
+        recipeBookId:
+          type: string
       required:
         - title
         - thumbnailUrl
         - imageUrls
         - memo
+        - recipeBookId
     UpdateRecipeDto:
       type: object
       properties:

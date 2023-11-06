@@ -7,8 +7,8 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { RecipePresenter } from './presenter/recipe.presenter';
-import { CreateRecipeDto, UpdateRecipeDto } from './dto';
+import { RecipePresenter } from './recipe.presenter';
+import { CreateRecipeDto, UpdateRecipeDto } from './recipe.dto';
 
 @ApiTags('recipes')
 @ApiBearerAuth()
@@ -100,7 +100,7 @@ export class RecipeController {
     } catch (error) {}
   }
 
-  @Post()
+  @Post('bulk')
   @ApiOperation({ operationId: 'bulkInsertRecipes' })
   @ApiBody({
     type: CreateRecipeDto,
