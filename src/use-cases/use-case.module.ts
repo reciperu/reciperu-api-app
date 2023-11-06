@@ -1,9 +1,13 @@
 import { Module, DynamicModule } from '@nestjs/common';
-import { CheckUserUseCase, UpdateUserUseCase } from './';
+import { CheckUserUseCase, CreateSpaceUseCase, UpdateUserUseCase } from './';
 import { DatabaseModule } from 'src/infrastructure/database/database.module';
 import { FirebaseModule } from 'src/infrastructure/firebase/firebase.module';
 import { FirebaseService } from 'src/infrastructure/firebase/firebase.service';
-import { PrismaUserRepository } from 'src/infrastructure/database/prisma/repositories/prisma.user.repository';
+import {
+  PrismaSpaceRepository,
+  PrismaUserRepository,
+} from 'src/infrastructure/database/prisma';
+import { type } from 'os';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -17,6 +21,7 @@ export class UseCaseProxy<T> {
 export class UseCaseProxyModule {
   static readonly CHECK_USER_USE_CASE = 'CHECK_USER_USE_CASE';
   static readonly UPDATE_USER_USE_CASE = 'UPDATE_USER_USE_CASE';
+  static readonly CREATE_SPACE_USE_CASE = 'CREATE_SPACE_USE_CASE';
   static resister(): DynamicModule {
     return {
       module: UseCaseProxyModule,
@@ -40,10 +45,18 @@ export class UseCaseProxyModule {
             return new UseCaseProxy(new UpdateUserUseCase(userRepository));
           },
         },
+        {
+          inject: [PrismaSpaceRepository],
+          provide: UseCaseProxyModule.CREATE_SPACE_USE_CASE,
+          useFactory: (spaceRepository: PrismaSpaceRepository) => {
+            return new UseCaseProxy(new CreateSpaceUseCase(spaceRepository));
+          },
+        },
       ],
       exports: [
         UseCaseProxyModule.CHECK_USER_USE_CASE,
         UseCaseProxyModule.UPDATE_USER_USE_CASE,
+        UseCaseProxyModule.CREATE_SPACE_USE_CASE,
       ],
     };
   }

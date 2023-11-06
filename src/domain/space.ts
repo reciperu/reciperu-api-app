@@ -1,27 +1,44 @@
+import { User } from './models';
+import { RecipeBook } from './recipe-book';
+
 export class Space {
-  readonly id: string;
-  readonly recipeBookName: string;
-  readonly recipeBookId: string;
+  private id: string;
+  private recipeBook: RecipeBook;
+  private users: User[];
   constructor({
     id,
-    recipeBookName,
-    recipeBookId,
+    recipeBook,
+    users,
   }: {
     id: string;
-    recipeBookName: string;
-    recipeBookId: string;
+    recipeBook: RecipeBook;
+    users: User[];
   }) {
     this.id = id;
-    this.recipeBookName = recipeBookName;
-    this.recipeBookId = recipeBookId;
-    if (!this.id) throw new Error('id is required');
-    if (!this.recipeBookName) throw new Error('recipeBookName is required');
-    if (!this.recipeBookId) throw new Error('recipeBookId is required');
+    this.recipeBook = recipeBook;
+    this.users = users;
+  }
+  get getId(): string {
+    return this.id;
+  }
+
+  get getRecipeBook(): RecipeBook {
+    return this.recipeBook;
+  }
+  get getUsers(): User[] {
+    return this.users;
   }
 }
 
-export type SpaceBeforePersist = Omit<Space, 'id'>;
+export class SpaceBeforePersist {
+  recipeBookName: string;
+  userId: string;
+  constructor(recipeBookName: string, userId: string) {
+    this.recipeBookName = recipeBookName;
+    this.userId = userId;
+  }
+}
 
-export type SpaceRepository = {
-  create(space: SpaceBeforePersist): Promise<Space>;
+export type ISpaceRepository = {
+  insert(space: SpaceBeforePersist): Promise<Space>;
 };

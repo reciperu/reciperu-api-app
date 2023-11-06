@@ -578,16 +578,21 @@ components:
           type: string
       required:
         - recipeBookName
+    RecipeBook:
+      type: object
+      properties: {}
     SpacePresenter:
       type: object
       properties:
         id:
           type: string
-        recipeBookName:
-          type: string
-        recipeBookId:
-          type: string
+        recipeBook:
+          $ref: '#/components/schemas/RecipeBook'
+        users:
+          type: array
+          items:
+            type: string
       required:
         - id
-        - recipeBookName
-        - recipeBookId
+        - recipeBook
+        - users
