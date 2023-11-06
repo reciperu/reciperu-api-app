@@ -76,7 +76,7 @@ paths:
       tags: *ref_0
       security: *ref_2
   /users/check:
-    post:
+    get:
       operationId: checkUser
       summary: ''
       parameters: []

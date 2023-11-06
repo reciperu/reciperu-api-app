@@ -111,7 +111,7 @@ export class UserController {
   }
 
   @ApiOperation({ operationId: 'checkUser' })
-  @Post('check')
+  @Get('check')
   @ApiResponse({
     status: 200,
     description: 'ユーザー情報のチェック',
