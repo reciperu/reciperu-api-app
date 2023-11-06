@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Space, RecipeBook } from 'src/domain';
-import { User } from 'src/domain/models';
+import { Space, RecipeBook, User } from 'src/domain';
 
 export class SpacePresenter {
   @ApiProperty()

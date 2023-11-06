@@ -1,4 +1,4 @@
-import { User } from './models';
+import { User } from './';
 import { RecipeBook } from './recipe-book';
 
 export class Space {

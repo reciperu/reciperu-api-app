@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { User } from 'src/domain/models';
+import { User } from 'src/domain';
 import { PrismaUserRepository } from 'src/infrastructure/database/prisma/repositories/prisma.user.repository';
 import { FirebaseService } from 'src/infrastructure/firebase/firebase.service';
 

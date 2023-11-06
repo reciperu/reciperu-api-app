@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User, UserBeforePersist } from 'src/domain/models';
-import { IUserRepository } from 'src/domain/repositories';
+import { User, UserBeforePersist, IUserRepository } from 'src/domain';
 import { FirebaseService } from 'src/infrastructure/firebase/firebase.service';
 
 @Injectable()

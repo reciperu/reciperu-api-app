@@ -4,10 +4,11 @@ import {
   Space,
   SpaceBeforePersist,
   RecipeBook,
+  User,
+  ActiveStatus,
 } from 'src/domain';
 import { PrismaService } from 'src/infrastructure/database/prisma/prisma.service';
 import { PrismaClient } from '@prisma/client';
-import { ActiveStatus, User } from 'src/domain/models';
 
 const prismaSpaceType = async (prisma: PrismaClient, id: string) =>
   await prisma.space.findUnique({

@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infrastructure/database/prisma/prisma.service';
-import { IUserRepository } from 'src/domain/repositories';
-import { ActiveStatus, User, UserBeforePersist } from 'src/domain/models';
+import {
+  ActiveStatus,
+  User,
+  UserBeforePersist,
+  IUserRepository,
+} from 'src/domain';
 import { User as PrismaUser } from '@prisma/client';
 
 export type FindOptions = { uid: string } | { id: string };

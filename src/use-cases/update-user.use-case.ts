@@ -1,8 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { UpdateUserDto } from 'src/controllers/user/user.dto';
-import { User } from 'src/domain/models';
+import { User, IUserRepository } from 'src/domain';
 
-import { IUserRepository } from 'src/domain/repositories';
 @Injectable()
 export class UpdateUserUseCase {
   constructor(private readonly userRepository: IUserRepository) {}

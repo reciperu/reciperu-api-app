@@ -76,11 +76,9 @@ export class UserBeforePersist {
   }
 }
 
-class SpaceUser {
-  private name: string;
-  private imageUrl: string;
-  constructor({ name, imageUrl }: { name: string; imageUrl: string }) {
-    this.name = name;
-    this.imageUrl = imageUrl;
-  }
-}
+export type IUserRepository = {
+  findManyUsers(spaceId: string): Promise<User[]>;
+  create(user: UserBeforePersist): Promise<User>;
+  findUser(findOptions: { uid: string } | { id: string }): Promise<User | null>;
+  update(user: User): Promise<User>;
+};
