@@ -394,11 +394,17 @@ components:
             - ONBOARDING
             - JOINED_SPACE
             - NOT_JOINED_SPACE
+        spaceRole:
+          type: string
+          enum:
+            - OWNER
+            - MEMBER
       required:
         - id
         - name
         - imageUrl
         - activeStatus
+        - spaceRole
     UpdateUserDto:
       type: object
       properties:
