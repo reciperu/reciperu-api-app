@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty } from 'class-validator';
-import { ActiveStatus } from 'src/domain/models';
+import { ActiveStatus } from 'src/domain';
 export class UpdateUserDto {
   @ApiProperty()
   @IsString()
