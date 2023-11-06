@@ -5,6 +5,7 @@ import {
   User,
   UserBeforePersist,
   IUserRepository,
+  SpaceRole,
 } from 'src/domain';
 import { User as PrismaUser } from '@prisma/client';
 
@@ -63,12 +64,13 @@ export class PrismaUserRepository implements IUserRepository {
   }
 
   private toUser(user: PrismaUser) {
-    return new User(
-      user.id,
-      user.name,
-      user.imageUrl,
-      user.uid,
-      user.activeStatus as ActiveStatus,
-    );
+    return new User({
+      id: user.id,
+      name: user.name,
+      imageUrl: user.imageUrl,
+      uid: user.uid,
+      activeStatus: user.activeStatus as ActiveStatus,
+      spaceRole: user.spaceRole as SpaceRole,
+    });
   }
 }

@@ -1,4 +1,4 @@
-enum SpaceRole {
+export enum SpaceRole {
   OWNER = 'OWNER',
   MEMBER = 'MEMBER',
 }
@@ -10,18 +10,33 @@ export enum ActiveStatus {
 }
 
 export class User {
-  constructor(
-    private id: string,
-    private name: string,
-    private imageUrl: string,
-    private uid: string,
-    private activeStatus: ActiveStatus,
-  ) {
+  private id: string;
+  private name: string;
+  private imageUrl: string;
+  private uid: string;
+  private activeStatus: ActiveStatus;
+  private spaceRole: SpaceRole;
+  constructor({
+    id,
+    name,
+    imageUrl,
+    uid,
+    activeStatus,
+    spaceRole,
+  }: {
+    id: string;
+    name: string;
+    imageUrl: string;
+    uid: string;
+    activeStatus: ActiveStatus;
+    spaceRole: SpaceRole;
+  }) {
     this.id = id;
     this.name = name;
     this.imageUrl = imageUrl;
     this.uid = uid;
     this.activeStatus = activeStatus;
+    this.spaceRole = spaceRole;
   }
   get getId(): string {
     return this.id;
@@ -37,6 +52,10 @@ export class User {
   }
   get getActiveStatus(): ActiveStatus {
     return this.activeStatus;
+  }
+
+  get getSpaceRole(): SpaceRole {
+    return this.spaceRole;
   }
 
   set setName(name: string) {

@@ -24,14 +24,16 @@ export class SetCurrentUserMiddleware implements NestMiddleware {
         uid: decodedToken.uid,
       });
       req.currentUser = user
-        ? new User(
-            user.getId,
-            user.getName,
-            user.getImageUrl,
-            user.getUid,
-            user.getActiveStatus,
-          )
+        ? new User({
+            id: user.getId,
+            name: user.getName,
+            imageUrl: user.getImageUrl,
+            uid: user.getUid,
+            activeStatus: user.setActiveStatus,
+            spaceRole: user.getSpaceRole,
+          })
         : null;
+
       next();
     } catch (error) {
       throw new UnauthorizedException();

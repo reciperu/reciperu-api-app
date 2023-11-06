@@ -6,6 +6,7 @@ import {
   RecipeBook,
   User,
   ActiveStatus,
+  SpaceRole,
 } from 'src/domain';
 import { PrismaService } from 'src/infrastructure/database/prisma/prisma.service';
 import { PrismaClient } from '@prisma/client';
@@ -64,13 +65,14 @@ export class PrismaSpaceRepository implements ISpaceRepository {
       }),
       users: space.spaceUsers.map(
         (spaceUser) =>
-          new User(
-            spaceUser.user.id,
-            spaceUser.user.name,
-            spaceUser.user.imageUrl,
-            spaceUser.user.uid,
-            spaceUser.user.activeStatus as ActiveStatus,
-          ),
+          new User({
+            id: spaceUser.user.id,
+            name: spaceUser.user.name,
+            imageUrl: spaceUser.user.imageUrl,
+            uid: spaceUser.user.uid,
+            activeStatus: spaceUser.user.activeStatus as ActiveStatus,
+            spaceRole: spaceUser.user.spaceRole as SpaceRole,
+          }),
       ),
     });
   }
