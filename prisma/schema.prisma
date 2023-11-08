@@ -48,6 +48,7 @@ model User {
   uid          String       @unique
   spaceUsers   SpaceUser[]
   menus        Menu[]
+  recipes      Recipe[]
 
   @@index([id])
   @@map("users")
@@ -98,8 +99,11 @@ model Recipe {
   faviconUrl   String?    @map("favicon_url")
   appName      String?    @map("app_name")
   recipeBookId String     @map("recipe_book_id")
+  userId       String     @map("user_id")
+  createdAt    DateTime   @default(now()) @map("created_at")
   recipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id], onDelete: Cascade)
   menus        Menu[]
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([id])
   @@map("recipes")
@@ -112,6 +116,7 @@ model Menu {
   spaceId     String     @map("space_id")
   recipeId    Int        @map("recipe_id")
   userId      String     @map("user_id")
+  createdAt   DateTime   @default(now()) @map("created_at")
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   space       Space      @relation(fields: [spaceId], references: [id], onDelete: Cascade)
   recipe      Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
