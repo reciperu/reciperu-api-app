@@ -8,7 +8,7 @@ export enum ActiveStatus {
   JOINED_SPACE = 'JOINED_SPACE',
   NOT_JOINED_SPACE = 'NOT_JOINED_SPACE',
 }
-
+// TODO:SpaceIdを追加する
 export class User {
   private id: string;
   private name: string;
