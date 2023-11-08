@@ -6,14 +6,6 @@
 $ pnpm install
 ```
 
-## Generate Schema
-
-.env ファイルに DATABASE_URL を載せる
-
-```bash
-$ pnpm prisma db push
-```
-
 ## Run Supabase
 
 ```bash
@@ -24,10 +16,17 @@ $ cd supabase
 
 $ supabase start
 
-
 ```
 
 `http://localhost:54323`にアクセスすると、ローカルの管理画面にアクセスできる
+
+## Generate Schema
+
+.env ファイルに DATABASE_URL を載せる
+
+```bash
+$ pnpm prisma db push
+```
 
 ## Running the app
 
