@@ -27,7 +27,7 @@ $ supabase start
 
 ```
 
-`http://localhost:54323/projects`にアクセスすると、ローカルの管理画面にアクセスできる
+`http://localhost:54323`にアクセスすると、ローカルの管理画面にアクセスできる
 
 ## Running the app
 
