@@ -6,12 +6,12 @@
 $ pnpm install
 ```
 
-## Migration
+## Generate Schema
 
 .env ファイルに DATABASE_URL を載せる
 
 ```bash
-$ npx prisma migrate dev
+$ pnpm prisma db push
 ```
 
 ## Run Supabase
