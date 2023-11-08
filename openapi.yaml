@@ -442,19 +442,6 @@ components:
         - name
         - imageUrl
         - activeStatus
-    User:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        imageUrl:
-          type: string
-      required:
-        - id
-        - name
-        - imageUrl
     RecipePresenter:
       type: object
       properties:
@@ -462,6 +449,12 @@ components:
           type: number
         title:
           type: string
+        recipeBookId:
+          type: string
+        userId:
+          type: string
+        isFavorite:
+          type: boolean
         thumbnailUrl:
           type: string
         imageUrls:
@@ -470,21 +463,24 @@ components:
             type: string
         memo:
           type: string
+        recipeUrl:
+          type: string
         appName:
           type: string
         faviconUrl:
           type: string
-        user:
-          $ref: '#/components/schemas/User'
       required:
         - id
         - title
+        - recipeBookId
+        - userId
+        - isFavorite
         - thumbnailUrl
         - imageUrls
         - memo
+        - recipeUrl
         - appName
         - faviconUrl
-        - user
     CreateRecipeDto:
       type: object
       properties:
@@ -500,12 +496,15 @@ components:
           type: string
         recipeBookId:
           type: string
+        userId:
+          type: string
       required:
         - title
         - thumbnailUrl
         - imageUrls
         - memo
         - recipeBookId
+        - userId
     UpdateRecipeDto:
       type: object
       properties:
@@ -554,6 +553,19 @@ components:
       required:
         - token
         - spaceId
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        imageUrl:
+          type: string
+      required:
+        - id
+        - name
+        - imageUrl
     MenuPresenter:
       type: object
       properties:

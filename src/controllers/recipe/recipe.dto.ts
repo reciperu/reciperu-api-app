@@ -23,6 +23,11 @@ export class CreateRecipeDto {
   @IsNotEmpty()
   @IsString()
   recipeBookId: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  userId: string;
 }
 
 export class UpdateRecipeDto {
