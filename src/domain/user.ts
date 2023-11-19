@@ -1,42 +1,46 @@
-export enum SpaceRole {
+export enum RecipeBookRole {
   OWNER = 'OWNER',
-  MEMBER = 'MEMBER',
+  PARTICIPANT = 'PARTICIPANT',
 }
 
 export enum ActiveStatus {
   ONBOARDING = 'ONBOARDING',
-  JOINED_SPACE = 'JOINED_SPACE',
-  NOT_JOINED_SPACE = 'NOT_JOINED_SPACE',
+  JOINED_RECIPE_BOOK = 'JOINED_RECIPE_BOOK',
+  NOT_JOINED_RECIPE_BOOK = 'NOT_JOINED_RECIPE_BOOK',
 }
-// TODO:SpaceIdを追加する
 export class User {
   private id: string;
   private name: string;
   private imageUrl: string;
   private uid: string;
   private activeStatus: ActiveStatus;
-  private spaceRole: SpaceRole;
+  private recipeBookId: string;
+  private recipeBookRole: RecipeBookRole;
+
   constructor({
     id,
     name,
     imageUrl,
     uid,
     activeStatus,
-    spaceRole,
+    recipeBookId,
+    recipeBookRole,
   }: {
     id: string;
     name: string;
     imageUrl: string;
     uid: string;
     activeStatus: ActiveStatus;
-    spaceRole: SpaceRole;
+    recipeBookId: string;
+    recipeBookRole: RecipeBookRole;
   }) {
     this.id = id;
     this.name = name;
     this.imageUrl = imageUrl;
     this.uid = uid;
     this.activeStatus = activeStatus;
-    this.spaceRole = spaceRole;
+    this.recipeBookId = recipeBookId;
+    this.recipeBookRole = recipeBookRole;
   }
   get getId(): string {
     return this.id;
@@ -53,9 +57,11 @@ export class User {
   get getActiveStatus(): ActiveStatus {
     return this.activeStatus;
   }
-
-  get getSpaceRole(): SpaceRole {
-    return this.spaceRole;
+  get getRecipeBookId(): string {
+    return this.recipeBookId;
+  }
+  get getRecipeBookRole(): RecipeBookRole {
+    return this.recipeBookRole;
   }
 
   set setName(name: string) {
@@ -96,7 +102,6 @@ export class UserBeforePersist {
 }
 
 export type IUserRepository = {
-  findManyUsers(spaceId: string): Promise<User[]>;
   create(user: UserBeforePersist): Promise<User>;
   findUser(findOptions: { uid: string } | { id: string }): Promise<User | null>;
   update(user: User): Promise<User>;
