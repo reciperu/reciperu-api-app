@@ -361,28 +361,6 @@ paths:
           description: 献立の削除
       tags: *ref_7
       security: *ref_8
-  /spaces:
-    post:
-      operationId: createSpace
-      summary: ''
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateSpaceDto'
-      responses:
-        '201':
-          description: スペースと料理本を作成
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SpacePresenter'
-      tags:
-        - spaces
-      security:
-        - bearer: []
 info:
   title: reciperu api app
   description: API documents
@@ -412,19 +390,22 @@ components:
           type: string
           enum:
             - ONBOARDING
-            - JOINED_SPACE
-            - NOT_JOINED_SPACE
-        spaceRole:
+            - JOINED_RECIPE_BOOK
+            - NOT_JOINED_RECIPE_BOOK
+        recipeBookId:
+          type: string
+        recipeBookRole:
           type: string
           enum:
             - OWNER
-            - MEMBER
+            - PARTICIPANT
       required:
         - id
         - name
         - imageUrl
         - activeStatus
-        - spaceRole
+        - recipeBookId
+        - recipeBookRole
     UpdateUserDto:
       type: object
       properties:
@@ -436,8 +417,8 @@ components:
           type: string
           enum:
             - ONBOARDING
-            - JOINED_SPACE
-            - NOT_JOINED_SPACE
+            - JOINED_RECIPE_BOOK
+            - NOT_JOINED_RECIPE_BOOK
       required:
         - name
         - imageUrl
@@ -612,28 +593,3 @@ components:
           type: string
       required:
         - status
-    CreateSpaceDto:
-      type: object
-      properties:
-        recipeBookName:
-          type: string
-      required:
-        - recipeBookName
-    RecipeBook:
-      type: object
-      properties: {}
-    SpacePresenter:
-      type: object
-      properties:
-        id:
-          type: string
-        recipeBook:
-          $ref: '#/components/schemas/RecipeBook'
-        users:
-          type: array
-          items:
-            type: string
-      required:
-        - id
-        - recipeBook
-        - users
