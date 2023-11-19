@@ -2,7 +2,6 @@ import {
   Controller,
   Req,
   Get,
-  Post,
   Patch,
   Param,
   Body,
@@ -38,18 +37,6 @@ export class UserController {
     @Inject(UseCaseProxyModule.UPDATE_USER_USE_CASE)
     private readonly updateUserUseCase: UseCaseProxy<UpdateUserUseCase>,
   ) {}
-
-  @Get()
-  @ApiOperation({ operationId: 'getUserList' })
-  @ApiResponse({
-    status: 200,
-    description: 'ユーザー一覧取得',
-    type: UserPresenter,
-    isArray: true,
-  })
-  async index() {
-    console.log('index');
-  }
 
   @Get('profile')
   @ApiBearerAuth()

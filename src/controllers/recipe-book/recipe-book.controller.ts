@@ -1,4 +1,4 @@
-import { Controller, Put } from '@nestjs/common';
+import { Controller, Get, Put } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -25,5 +25,16 @@ export class RecipeBookController {
   async update() {
     try {
     } catch (error) {}
+  }
+
+  @Get(':id')
+  @ApiOperation({ operationId: 'getRecipeBook' })
+  @ApiResponse({
+    status: 200,
+    description: '料理本とユーザー一覧取得',
+    type: RecipePresenter,
+  })
+  async show() {
+    // TODO: 料理本とユーザー一覧取得
   }
 }

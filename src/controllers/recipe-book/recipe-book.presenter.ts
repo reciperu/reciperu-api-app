@@ -1,12 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { RecipeBook, User } from 'src/domain';
 
 export class RecipeBookPresenter {
   @ApiProperty()
-  id: string;
+  readonly id: string;
 
   @ApiProperty()
-  name: string;
+  readonly name: string;
 
   @ApiProperty()
-  spaceId: string;
+  readonly users: User[];
+
+  constructor(recipeBook: RecipeBook) {
+    this.id = recipeBook.getId;
+    this.name = recipeBook.getName;
+    this.users = recipeBook.getUsers;
+  }
 }
