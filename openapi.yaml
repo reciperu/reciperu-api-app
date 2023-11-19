@@ -222,7 +222,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RecipePresenter'
+                $ref: '#/components/schemas/RecipeBookPresenter'
       tags: &ref_5
         - recipe-books
       security: &ref_6
@@ -230,14 +230,20 @@ paths:
     get:
       operationId: getRecipeBook
       summary: ''
-      parameters: []
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: recipeBookId
+          schema:
+            type: string
       responses:
         '200':
           description: 料理本とユーザー一覧取得
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RecipePresenter'
+                $ref: '#/components/schemas/RecipeBookPresenter'
       tags: *ref_5
       security: *ref_6
   /invitations/invitation:
@@ -508,6 +514,21 @@ components:
           type: string
       required:
         - name
+    RecipeBookPresenter:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        users:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - name
+        - users
     InvitationPresenter:
       type: object
       properties:

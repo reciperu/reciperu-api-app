@@ -27,3 +27,7 @@ export class RecipeBook {
     return this.users;
   }
 }
+
+export type IRecipeBookRepository = {
+  findRecipeBook(id: string): Promise<RecipeBook>;
+};
