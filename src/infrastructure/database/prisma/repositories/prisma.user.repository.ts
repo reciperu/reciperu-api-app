@@ -5,7 +5,7 @@ import {
   User,
   UserBeforePersist,
   IUserRepository,
-  SpaceRole,
+  RecipeBookRole,
 } from 'src/domain';
 import { User as PrismaUser } from '@prisma/client';
 
@@ -16,27 +16,31 @@ export class PrismaUserRepository implements IUserRepository {
     this.prismaService = prismaService;
   }
 
-  async findManyUsers(spaceId: string): Promise<User[]> {
-    const users = await this.prismaService.user.findMany({
-      where: {
-        spaceUsers: {
-          some: {
-            spaceId: spaceId,
+  async create(user: UserBeforePersist): Promise<User> {
+    const prismaUser = await this.prismaService.$transaction(async (tx) => {
+      const recipeBook = await tx.recipeBook.create({
+        data: {
+          name: `${user.name}の料理本`,
+        },
+      });
+      return await tx.user.create({
+        data: {
+          name: user.name,
+          imageUrl: user.imageUrl,
+          uid: user.uid,
+          currentRecipeBookId: recipeBook.id,
+          recipeBookUsers: {
+            create: {
+              recipeBookId: recipeBook.id,
+            },
           },
         },
-      },
+        include: {
+          recipeBookUsers: true,
+        },
+      });
     });
-    return users.map((user) => this.toUser(user));
-  }
 
-  async create(user: UserBeforePersist): Promise<User> {
-    const prismaUser = await this.prismaService.user.create({
-      data: {
-        name: user.name,
-        imageUrl: user.imageUrl,
-        uid: user.uid,
-      },
-    });
     return this.toUser(prismaUser);
   }
 
@@ -57,7 +61,8 @@ export class PrismaUserRepository implements IUserRepository {
       data: {
         name: user.getName,
         imageUrl: user.getImageUrl,
-        activeStatus: user.getActiveStatus,
+        activeStatus: user.getActiveStatus as ActiveStatus,
+        currentRecipeBookRole: user.getRecipeBookRole as RecipeBookRole,
       },
     });
     return this.toUser(updatedUser);
@@ -70,7 +75,8 @@ export class PrismaUserRepository implements IUserRepository {
       imageUrl: user.imageUrl,
       uid: user.uid,
       activeStatus: user.activeStatus as ActiveStatus,
-      spaceRole: user.spaceRole as SpaceRole,
+      recipeBookId: user.currentRecipeBookId,
+      recipeBookRole: user.currentRecipeBookRole as RecipeBookRole,
     });
   }
 }
