@@ -5,7 +5,6 @@ import { IRecipeRepository, RecipeBeforePersist } from 'src/domain';
 export class CreateRecipesUseCase {
   constructor(private readonly recipeRepository: IRecipeRepository) {}
   async execute(createRecipesDto: CreateRecipeDto[]) {
-    // const { createRecipesDto } = arg;
     const recipesBeforePersist = createRecipesDto.map(
       (x) =>
         new RecipeBeforePersist({

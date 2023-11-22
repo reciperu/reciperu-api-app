@@ -35,6 +35,9 @@ export class RecipePresenter {
   @ApiProperty()
   faviconUrl?: string;
 
+  @ApiProperty()
+  createdAt: Date;
+
   constructor(recipe: Recipe) {
     this.id = recipe.getId;
     this.title = recipe.getTitle;
@@ -47,6 +50,7 @@ export class RecipePresenter {
     this.recipeUrl = recipe.getRecipeUrl;
     this.appName = recipe.getAppName;
     this.faviconUrl = recipe.getFaviconUrl;
+    this.createdAt = recipe.getCreatedAt;
   }
 }
 

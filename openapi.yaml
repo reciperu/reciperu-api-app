@@ -453,6 +453,9 @@ components:
           type: string
         faviconUrl:
           type: string
+        createdAt:
+          format: date-time
+          type: string
       required:
         - id
         - title
@@ -465,6 +468,7 @@ components:
         - recipeUrl
         - appName
         - faviconUrl
+        - createdAt
     CreateRecipeDto:
       type: object
       properties:
@@ -597,7 +601,7 @@ components:
       type: object
       properties:
         recipeId:
-          type: number
+          type: string
         scheduledAt:
           format: date-time
           type: string

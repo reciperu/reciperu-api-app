@@ -10,6 +10,7 @@ export class Recipe {
   private isFavorite: boolean;
   private faviconUrl?: string;
   private appName?: string;
+  private createdAt: Date;
 
   constructor({
     id,
@@ -23,6 +24,7 @@ export class Recipe {
     isFavorite,
     faviconUrl,
     appName,
+    createdAt,
   }: {
     id: string;
     title: string;
@@ -35,6 +37,7 @@ export class Recipe {
     isFavorite: boolean;
     faviconUrl?: string;
     appName?: string;
+    createdAt: Date;
   }) {
     this.id = id;
     this.title = title;
@@ -47,6 +50,7 @@ export class Recipe {
     this.isFavorite = isFavorite;
     this.faviconUrl = faviconUrl;
     this.appName = appName;
+    this.createdAt = createdAt;
   }
 
   get getId(): string {
@@ -90,6 +94,10 @@ export class Recipe {
 
   get getAppName(): string | undefined {
     return this.appName;
+  }
+
+  get getCreatedAt(): Date {
+    return this.createdAt;
   }
 
   set setTitle(title: string) {

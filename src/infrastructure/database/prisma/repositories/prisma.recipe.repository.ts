@@ -41,6 +41,7 @@ export class PrismaRecipeRepository implements IRecipeRepository {
       recipeUrl: recipe.recipeUrl,
       faviconUrl: recipe.faviconUrl,
       appName: recipe.appName,
+      createdAt: recipe.createdAt,
     });
   }
 }
