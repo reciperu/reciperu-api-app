@@ -59,7 +59,7 @@ export class UseCaseProxyModule {
           },
         },
         {
-          inject: [PrismaRecipeRepository],
+          inject: [PrismaRecipeBookRepository],
           provide: UseCaseProxyModule.GET_RECIPE_BOOK_USE_CASE,
           useFactory: (recipeBookRepository: PrismaRecipeBookRepository) => {
             return new UseCaseProxy(
