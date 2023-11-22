@@ -32,7 +32,6 @@ model RecipeBook {
   name                  String?
   recipeBookUsers       RecipeBookUser[]
   recipeBookInvitations RecipeBookInvitation[]
-  menus                 Menu[]
   recipes               Recipe[]
 
   @@index([id])
@@ -56,7 +55,7 @@ model User {
 }
 
 model RecipeBookUser {
-  id             Int            @id @default(autoincrement())
+  id             String         @id @default(cuid())
   userId         String         @map("user_id")
   recipeBookId   String         @map("recipe_book_id")
   recipeBookRole RecipeBookRole @default(OWNER) @map("recipe_book_role")
@@ -69,7 +68,7 @@ model RecipeBookUser {
 }
 
 model RecipeBookInvitation {
-  id           Int        @id @default(autoincrement())
+  id           String     @id @default(cuid())
   token        String     @unique
   expiredAt    DateTime   @map("expired_at")
   usedAt       DateTime?  @map("used_at")
@@ -81,7 +80,7 @@ model RecipeBookInvitation {
 }
 
 model Recipe {
-  id           Int        @id @default(autoincrement())
+  id           String     @id @default(cuid())
   title        String
   thumbnailUrl String?    @map("thumbnail_url")
   imageUrls    String?    @map("image_urls")
@@ -102,16 +101,14 @@ model Recipe {
 }
 
 model Menu {
-  id           Int        @id @default(autoincrement())
-  status       MenuStatus @default(PENDING)
-  scheduledAt  DateTime?  @map("scheduledAt")
-  recipeBookId String     @map("RecipeBook_id")
-  recipeId     Int        @map("recipe_id")
-  userId       String     @map("user_id")
-  createdAt    DateTime   @default(now()) @map("created_at")
-  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  RecipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id], onDelete: Cascade)
-  recipe       Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  id          String     @id @default(cuid())
+  status      MenuStatus @default(PENDING)
+  scheduledAt DateTime?  @map("scheduledAt")
+  recipeId    String     @map("recipe_id")
+  userId      String     @map("user_id")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe      Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 
   @@index([id])
   @@map("menus")

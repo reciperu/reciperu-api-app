@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateMenuDto {
   @ApiProperty()
-  recipeId: number;
+  recipeId: string;
 
   @ApiProperty()
   scheduledAt: Date;

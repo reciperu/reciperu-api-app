@@ -1,5 +1,5 @@
 export class Recipe {
-  private id: number;
+  private id: string;
   private title: string;
   private recipeBookId: string;
   private userId: string;
@@ -24,7 +24,7 @@ export class Recipe {
     faviconUrl,
     appName,
   }: {
-    id: number;
+    id: string;
     title: string;
     recipeBookId: string;
     userId: string;
@@ -49,7 +49,7 @@ export class Recipe {
     this.appName = appName;
   }
 
-  get getId(): number {
+  get getId(): string {
     return this.id;
   }
   get getTitle(): string {

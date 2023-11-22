@@ -3,7 +3,7 @@ import { Recipe } from 'src/domain';
 
 export class RecipePresenter {
   @ApiProperty()
-  id: number;
+  id: string;
 
   @ApiProperty()
   title: string;
