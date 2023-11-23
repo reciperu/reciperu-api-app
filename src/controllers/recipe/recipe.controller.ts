@@ -3,7 +3,8 @@ import {
   Controller,
   Get,
   Inject,
-  Patch,
+  Param,
+  Put,
   Post,
   Req,
 } from '@nestjs/common';
@@ -22,6 +23,7 @@ import {
   UseCaseProxy,
   CreateRecipesUseCase,
   CreateRecipeUseCase,
+  UpdateRecipeUseCase,
 } from 'src/use-cases';
 import { Request } from 'express';
 
@@ -34,6 +36,8 @@ export class RecipeController {
     private readonly createRecipesUseCase: UseCaseProxy<CreateRecipesUseCase>,
     @Inject(UseCaseProxyModule.CREATE_RECIPE_USE_CASE)
     private readonly createRecipeUseCase: UseCaseProxy<CreateRecipeUseCase>,
+    @Inject(UseCaseProxyModule.UPDATE_RECIPE_USE_CASE)
+    private readonly updateRecipeUseCase: UseCaseProxy<UpdateRecipeUseCase>,
   ) {}
   @Get()
   @ApiOperation({ operationId: 'getRecipe' })
@@ -113,7 +117,7 @@ export class RecipeController {
     );
   }
 
-  @Patch(':id')
+  @Put(':id')
   @ApiOperation({ operationId: 'updateRecipe' })
   @ApiResponse({
     status: 200,
@@ -123,9 +127,13 @@ export class RecipeController {
   @ApiBody({
     type: UpdateRecipeDto,
   })
-  async update() {
-    try {
-    } catch (error) {}
+  async update(
+    @Param('id') id: string,
+    @Body() updateRecipeDto: UpdateRecipeDto,
+  ) {
+    return new RecipePresenter(
+      await this.updateRecipeUseCase.getInstance().execute(id, updateRecipeDto),
+    );
   }
 
   @Post('bulk')

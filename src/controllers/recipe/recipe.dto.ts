@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsArray, IsOptional } from 'class-validator';
-
+import {
+  IsString,
+  IsNotEmpty,
+  IsArray,
+  IsOptional,
+  IsBoolean,
+} from 'class-validator';
+import type { UpdateRecipeDto as DomainUpdateRecipeDto } from 'src/domain';
 export class CreateRecipeDto {
   @ApiProperty()
   @IsString()
@@ -38,11 +44,15 @@ export class CreateRecipeDto {
   appName?: string;
 }
 
-export class UpdateRecipeDto {
+export class UpdateRecipeDto implements DomainUpdateRecipeDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   title: string;
+
+  @ApiProperty()
+  @IsBoolean()
+  isFavorite: boolean;
 
   @ApiProperty()
   @IsString()

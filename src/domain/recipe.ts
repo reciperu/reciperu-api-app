@@ -163,9 +163,42 @@ export class Recipe extends RecipeBeforePersist {
   set setIsFavorite(isFavorite: boolean) {
     this.isFavorite = isFavorite;
   }
+
+  update(updateRecipeDto: UpdateRecipeDto) {
+    const {
+      title,
+      thumbnailUrl,
+      imageUrls,
+      memo,
+      recipeUrl,
+      faviconUrl,
+      appName,
+      isFavorite,
+    } = updateRecipeDto;
+    this.setTitle = title;
+    this.setThumbnailUrl = thumbnailUrl;
+    this.setImageUrls = imageUrls;
+    this.setMemo = memo;
+    this.setRecipeUrl = recipeUrl;
+    this.setFaviconUrl = faviconUrl;
+    this.setAppName = appName;
+    this.setIsFavorite = isFavorite;
+  }
 }
 
 export type IRecipeRepository = {
+  findRecipe(id: string): Promise<Recipe>;
   bulkInsert(recipes: RecipeBeforePersist[]): Promise<Recipe[]>;
   save(recipe: Recipe | RecipeBeforePersist): Promise<Recipe>;
+};
+
+export type UpdateRecipeDto = {
+  title: string;
+  isFavorite: boolean;
+  thumbnailUrl?: string;
+  imageUrls?: string[];
+  memo?: string;
+  recipeUrl?: string;
+  faviconUrl?: string;
+  appName?: string;
 };

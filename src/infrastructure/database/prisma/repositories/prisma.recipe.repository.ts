@@ -7,6 +7,16 @@ import { Recipe as PrismaRecipe } from '@prisma/client';
 export class PrismaRecipeRepository implements IRecipeRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
+  async findRecipe(id: string): Promise<Recipe> {
+    const prismaRecipe = await this.prismaService.recipe.findUnique({
+      where: { id },
+    });
+    if (!prismaRecipe) {
+      return null;
+    }
+    return this.toRecipe(prismaRecipe);
+  }
+
   async bulkInsert(recipes: RecipeBeforePersist[]): Promise<Recipe[]> {
     const prismaRecipes = await this.prismaService.$transaction(
       recipes.map((recipe) =>
@@ -59,8 +69,6 @@ export class PrismaRecipeRepository implements IRecipeRepository {
   }
 
   toRecipe(recipe: PrismaRecipe) {
-    console.log(recipe, 'recipe');
-
     return new Recipe({
       id: recipe.id,
       title: recipe.title,
@@ -74,6 +82,7 @@ export class PrismaRecipeRepository implements IRecipeRepository {
       faviconUrl: recipe.faviconUrl,
       appName: recipe.appName,
       createdAt: recipe.createdAt,
+      // menus: recipe.menus,
     });
   }
 }
