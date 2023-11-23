@@ -5,3 +5,5 @@ export * from './create-recipes.use-case';
 export * from './get-recipe-book.use-case';
 export * from './create-recipe.use-case';
 export * from './update-recipe.use-case';
+export * from './update-recipe-book.use-case';
+export * from './get-recipe-detail.use-case';

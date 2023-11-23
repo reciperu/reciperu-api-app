@@ -24,6 +24,7 @@ import {
   CreateRecipesUseCase,
   CreateRecipeUseCase,
   UpdateRecipeUseCase,
+  GetRecipeDetailUseCase,
 } from 'src/use-cases';
 import { Request } from 'express';
 
@@ -38,6 +39,8 @@ export class RecipeController {
     private readonly createRecipeUseCase: UseCaseProxy<CreateRecipeUseCase>,
     @Inject(UseCaseProxyModule.UPDATE_RECIPE_USE_CASE)
     private readonly updateRecipeUseCase: UseCaseProxy<UpdateRecipeUseCase>,
+    @Inject(UseCaseProxyModule.GET_RECIPE_DETAIL_USE_CASE)
+    private readonly getRecipeDetailUseCase: UseCaseProxy<GetRecipeDetailUseCase>,
   ) {}
   @Get()
   @ApiOperation({ operationId: 'getRecipe' })
@@ -72,9 +75,10 @@ export class RecipeController {
     description: 'レシピ詳細取得',
     type: RecipePresenter,
   })
-  async show() {
-    try {
-    } catch (error) {}
+  async show(@Param('id') id: string) {
+    return new RecipePresenter(
+      await this.getRecipeDetailUseCase.getInstance().execute(id),
+    );
   }
 
   @Get('meta-data')
