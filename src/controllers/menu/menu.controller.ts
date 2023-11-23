@@ -1,4 +1,13 @@
-import { Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  Post,
+  Put,
+  Req,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -7,12 +16,22 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { MenuPresenter } from './menu.presenter';
-import { CreateMenuDto, UpdateMenuDto } from './dto';
+import { CreateMenuDto, UpdateMenuDto } from './menu.dto';
+import {
+  UseCaseProxyModule,
+  CreateMenuUseCase,
+  UseCaseProxy,
+} from 'src/use-cases';
+import { Request } from 'express';
 
 @ApiTags('menus')
 @ApiBearerAuth()
 @Controller('menus')
 export class MenuController {
+  constructor(
+    @Inject(UseCaseProxyModule.CREATE_MENU_USE_CASE)
+    private readonly createMenuUseCase: UseCaseProxy<CreateMenuUseCase>,
+  ) {}
   @Get()
   @ApiOperation({ operationId: 'getMenu' })
   @ApiResponse({
@@ -47,9 +66,12 @@ export class MenuController {
     description: '献立の作成',
     type: MenuPresenter,
   })
-  async create() {
-    try {
-    } catch (error) {}
+  async create(@Req() req: Request, @Body() createMenuDto: CreateMenuDto) {
+    return new MenuPresenter(
+      await this.createMenuUseCase
+        .getInstance()
+        .execute(createMenuDto, req.currentUser.getId),
+    );
   }
 
   @Put(':id')

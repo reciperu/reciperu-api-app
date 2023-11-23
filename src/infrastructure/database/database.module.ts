@@ -6,6 +6,7 @@ import {
   PrismaUserRepository,
   PrismaRecipeBookInvitationRepository,
 } from './prisma';
+import { PrismaMenuRepository } from './prisma/repositories/prisma.menu.repository';
 
 @Module({
   providers: [
@@ -14,12 +15,14 @@ import {
     PrismaRecipeRepository,
     PrismaRecipeBookRepository,
     PrismaRecipeBookInvitationRepository,
+    PrismaMenuRepository,
   ],
   exports: [
     PrismaUserRepository,
     PrismaRecipeRepository,
     PrismaRecipeBookRepository,
     PrismaRecipeBookInvitationRepository,
+    PrismaMenuRepository,
   ],
 })
 export class DatabaseModule {}

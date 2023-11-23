@@ -606,47 +606,32 @@ components:
       required:
         - token
         - spaceId
-    User:
+    Recipe:
       type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        imageUrl:
-          type: string
-      required:
-        - id
-        - name
-        - imageUrl
+      properties: {}
     MenuPresenter:
       type: object
       properties:
         id:
           type: string
-        title:
+        status:
           type: string
-        thumbnailUrl:
-          type: string
-        imageUrls:
-          type: array
-          items:
-            type: string
-        memo:
-          type: string
-        user:
-          $ref: '#/components/schemas/User'
-        createdAt:
+        scheduledAt:
           format: date-time
           type: string
+        userId:
+          type: string
+        recipeId:
+          type: string
+        recipe:
+          $ref: '#/components/schemas/Recipe'
       required:
         - id
-        - title
-        - thumbnailUrl
-        - imageUrls
-        - memo
-        - user
-        - createdAt
+        - status
+        - scheduledAt
+        - userId
+        - recipeId
+        - recipe
     CreateMenuDto:
       type: object
       properties:

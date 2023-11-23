@@ -1,35 +1,31 @@
 import { ApiProperty } from '@nestjs/swagger';
-
-class User {
-  @ApiProperty()
-  id: string;
-
-  @ApiProperty()
-  name: string;
-
-  @ApiProperty()
-  imageUrl?: string;
-}
+import { Menu, Recipe, MenuStatus } from 'src/domain';
 
 export class MenuPresenter {
   @ApiProperty()
   id: string;
 
   @ApiProperty()
-  title: string;
+  status: MenuStatus;
 
   @ApiProperty()
-  thumbnailUrl?: string;
+  scheduledAt?: Date;
 
   @ApiProperty()
-  imageUrls?: string[];
+  userId: string;
 
   @ApiProperty()
-  memo?: string;
+  recipeId: string;
 
   @ApiProperty()
-  user: User;
+  recipe: Recipe;
 
-  @ApiProperty()
-  createdAt: Date;
+  constructor(menu: Menu) {
+    this.id = menu.getId;
+    this.status = menu.getStatus;
+    this.scheduledAt = menu.getScheduledAt;
+    this.userId = menu.getUserId;
+    this.recipeId = menu.getRecipeId;
+    this.recipe = menu.getRecipe;
+  }
 }

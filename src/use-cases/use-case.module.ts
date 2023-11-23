@@ -9,6 +9,7 @@ import {
   UpdateRecipeBookUseCase,
   UpdateRecipeUseCase,
   InviteRecipeBookUseCase,
+  CreateMenuUseCase,
 } from './';
 import { DatabaseModule } from 'src/infrastructure/database/database.module';
 import { FirebaseModule } from 'src/infrastructure/firebase/firebase.module';
@@ -18,6 +19,7 @@ import {
   PrismaRecipeRepository,
   PrismaRecipeBookRepository,
   PrismaRecipeBookInvitationRepository,
+  PrismaMenuRepository,
 } from 'src/infrastructure/database/prisma';
 
 export class UseCaseProxy<T> {
@@ -39,6 +41,7 @@ export class UseCaseProxyModule {
   static readonly UPDATE_RECIPE_USE_CASE = 'UPDATE_RECIPE_USE_CASE';
   static readonly GET_RECIPE_DETAIL_USE_CASE = 'GET_RECIPE_DETAIL_USE_CASE';
   static readonly INVITE_RECIPE_BOOK_USE_CASE = 'INVITE_RECIPE_BOOK_USE_CASE';
+  static readonly CREATE_MENU_USE_CASE = 'CREATE_MENU_USE_CASE';
   static resister(): DynamicModule {
     return {
       module: UseCaseProxyModule,
@@ -122,6 +125,12 @@ export class UseCaseProxyModule {
               ),
             ),
         },
+        {
+          inject: [PrismaMenuRepository],
+          provide: UseCaseProxyModule.CREATE_MENU_USE_CASE,
+          useFactory: (menuRepository: PrismaMenuRepository) =>
+            new UseCaseProxy(new CreateMenuUseCase(menuRepository)),
+        },
       ],
       exports: [
         UseCaseProxyModule.CHECK_USER_USE_CASE,
@@ -133,6 +142,7 @@ export class UseCaseProxyModule {
         UseCaseProxyModule.UPDATE_RECIPE_USE_CASE,
         UseCaseProxyModule.GET_RECIPE_DETAIL_USE_CASE,
         UseCaseProxyModule.INVITE_RECIPE_BOOK_USE_CASE,
+        UseCaseProxyModule.CREATE_MENU_USE_CASE,
       ],
     };
   }
