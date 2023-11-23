@@ -72,11 +72,11 @@ model RecipeBookInvitation {
   token        String     @unique
   expiredAt    DateTime   @map("expired_at")
   usedAt       DateTime?  @map("used_at")
-  recipeBookId String     @map("RecipeBook_id")
+  recipeBookId String     @map("recipe_book_id")
   recipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id], onDelete: Cascade)
 
   @@index([id])
-  @@map("RecipeBook_invitations")
+  @@map("recipe_book_invitations")
 }
 
 model Recipe {
