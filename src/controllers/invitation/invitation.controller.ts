@@ -13,11 +13,11 @@ import { ValidateInvitationDto } from './dto';
 @ApiBearerAuth()
 @Controller('invitations')
 export class InvitationController {
-  @Post('invitation')
+  @Post()
   @ApiOperation({ operationId: 'invitationSpace' })
   @ApiResponse({
     status: 200,
-    description: 'スペース招待',
+    description: '料理本の招待',
     type: InvitationPresenter,
   })
   async invitation() {

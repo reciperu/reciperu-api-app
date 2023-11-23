@@ -111,6 +111,12 @@ export class User extends UserBeforePersist {
       throw new BadRequestException('USER_NOT_OWNER');
     }
   }
+
+  canInviteRecipeBook(): void {
+    if (this.getRecipeBookRole !== RecipeBookRole.OWNER) {
+      throw new BadRequestException('USER_NOT_OWNER');
+    }
+  }
 }
 
 export type IUserRepository = {

@@ -24,7 +24,7 @@ import {
 import {
   GetRecipeBookUseCase,
   UpdateRecipeBookUseCase,
-  InvitationRecipeBookUseCase,
+  InviteRecipeBookUseCase,
   UseCaseProxy,
   UseCaseProxyModule,
 } from 'src/use-cases';
@@ -39,8 +39,8 @@ export class RecipeBookController {
     private readonly getRecipeBookUseCase: UseCaseProxy<GetRecipeBookUseCase>,
     @Inject(UseCaseProxyModule.UPDATE_RECIPE_BOOK_USE_CASE)
     private readonly updateRecipeBookUseCase: UseCaseProxy<UpdateRecipeBookUseCase>,
-    @Inject(UseCaseProxyModule.INVITATION_RECIPE_BOOK_USE_CASE)
-    private readonly invitationRecipeBookUseCase: UseCaseProxy<InvitationRecipeBookUseCase>,
+    @Inject(UseCaseProxyModule.INVITE_RECIPE_BOOK_USE_CASE)
+    private readonly inviteRecipeBookUseCase: UseCaseProxy<InviteRecipeBookUseCase>,
   ) {}
   @Put(':id')
   @ApiOperation({ operationId: 'updateRecipeBook' })
@@ -94,9 +94,9 @@ export class RecipeBookController {
   })
   async invitation(@Req() req: Request) {
     return new RecipeBookInvitationPresenter(
-      await this.invitationRecipeBookUseCase
+      await this.inviteRecipeBookUseCase
         .getInstance()
-        .execute(req.currentUser.getRecipeBookId),
+        .execute(req.currentUser.getRecipeBookId, req.currentUser.getId),
     );
   }
 }

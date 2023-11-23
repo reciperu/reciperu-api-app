@@ -2,20 +2,23 @@ import { Injectable } from '@nestjs/common';
 import {
   IRecipeBookInvitationRepository,
   RecipeBookInvitationBeforePersist,
+  IUserRepository,
 } from 'src/domain';
-import * as dayjs from 'dayjs';
 @Injectable()
-export class InvitationRecipeBookUseCase {
+export class InviteRecipeBookUseCase {
   constructor(
     private readonly recipeBookInvitationRepository: IRecipeBookInvitationRepository,
+    private readonly userRepository: IUserRepository,
   ) {
     this.recipeBookInvitationRepository = recipeBookInvitationRepository;
   }
 
-  async execute(recipeBookId: string): Promise<{ token: string }> {
-    console.log(dayjs().add(1, 'day').toDate());
-    console.log(recipeBookId, 'recipeBookId');
-
+  async execute(
+    recipeBookId: string,
+    useId: string,
+  ): Promise<{ token: string }> {
+    const user = await this.userRepository.findUser({ id: useId });
+    user.canInviteRecipeBook();
     return await this.recipeBookInvitationRepository.create(
       new RecipeBookInvitationBeforePersist(recipeBookId),
     );

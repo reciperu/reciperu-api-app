@@ -8,7 +8,7 @@ import {
   GetRecipeDetailUseCase,
   UpdateRecipeBookUseCase,
   UpdateRecipeUseCase,
-  InvitationRecipeBookUseCase,
+  InviteRecipeBookUseCase,
 } from './';
 import { DatabaseModule } from 'src/infrastructure/database/database.module';
 import { FirebaseModule } from 'src/infrastructure/firebase/firebase.module';
@@ -38,8 +38,7 @@ export class UseCaseProxyModule {
   static readonly CREATE_RECIPE_USE_CASE = 'CREATE_RECIPE_USE_CASE';
   static readonly UPDATE_RECIPE_USE_CASE = 'UPDATE_RECIPE_USE_CASE';
   static readonly GET_RECIPE_DETAIL_USE_CASE = 'GET_RECIPE_DETAIL_USE_CASE';
-  static readonly INVITATION_RECIPE_BOOK_USE_CASE =
-    'INVITATION_RECIPE_BOOK_USE_CASE';
+  static readonly INVITE_RECIPE_BOOK_USE_CASE = 'INVITE_RECIPE_BOOK_USE_CASE';
   static resister(): DynamicModule {
     return {
       module: UseCaseProxyModule,
@@ -110,13 +109,17 @@ export class UseCaseProxyModule {
             new UseCaseProxy(new GetRecipeDetailUseCase(recipeRepository)),
         },
         {
-          inject: [PrismaRecipeBookInvitationRepository],
-          provide: UseCaseProxyModule.INVITATION_RECIPE_BOOK_USE_CASE,
+          inject: [PrismaRecipeBookInvitationRepository, PrismaUserRepository],
+          provide: UseCaseProxyModule.INVITE_RECIPE_BOOK_USE_CASE,
           useFactory: (
             recipeBookInvitationRepository: PrismaRecipeBookInvitationRepository,
+            userRepository: PrismaUserRepository,
           ) =>
             new UseCaseProxy(
-              new InvitationRecipeBookUseCase(recipeBookInvitationRepository),
+              new InviteRecipeBookUseCase(
+                recipeBookInvitationRepository,
+                userRepository,
+              ),
             ),
         },
       ],
@@ -129,7 +132,7 @@ export class UseCaseProxyModule {
         UseCaseProxyModule.CREATE_RECIPE_USE_CASE,
         UseCaseProxyModule.UPDATE_RECIPE_USE_CASE,
         UseCaseProxyModule.GET_RECIPE_DETAIL_USE_CASE,
-        UseCaseProxyModule.INVITATION_RECIPE_BOOK_USE_CASE,
+        UseCaseProxyModule.INVITE_RECIPE_BOOK_USE_CASE,
       ],
     };
   }
