@@ -1,4 +1,3 @@
-import { UpdateRecipeBookDto } from 'src/controllers/recipe-book';
 import { User } from '.';
 
 export class RecipeBook {
@@ -41,4 +40,12 @@ export class RecipeBook {
 export type IRecipeBookRepository = {
   findRecipeBook(id: string): Promise<RecipeBook>;
   updateRecipeBook(recipeBook: RecipeBook): Promise<RecipeBook>;
+};
+
+export type CreateRecipeBookDto = {
+  name: string;
+};
+
+export type UpdateRecipeBookDto = {
+  name: string;
 };

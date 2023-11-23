@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { IRecipeBookRepository, IUserRepository } from 'src/domain';
-import { UpdateRecipeBookDto } from 'src/controllers/recipe-book';
+import {
+  IRecipeBookRepository,
+  IUserRepository,
+  UpdateRecipeBookDto,
+} from 'src/domain';
 
 @Injectable()
 export class UpdateRecipeBookUseCase {

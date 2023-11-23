@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRecipeDto } from 'src/controllers/recipe';
-import { IRecipeRepository, RecipeBeforePersist } from 'src/domain';
+import {
+  IRecipeRepository,
+  RecipeBeforePersist,
+  CreateRecipeDto,
+} from 'src/domain';
 @Injectable()
 export class CreateRecipesUseCase {
   constructor(private readonly recipeRepository: IRecipeRepository) {}

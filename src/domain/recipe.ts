@@ -202,3 +202,13 @@ export type UpdateRecipeDto = {
   faviconUrl?: string;
   appName?: string;
 };
+
+export type CreateRecipeDto = {
+  title: string;
+  thumbnailUrl?: string;
+  imageUrls?: string[];
+  memo?: string;
+  recipeUrl?: string;
+  faviconUrl?: string;
+  appName?: string;
+};

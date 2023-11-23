@@ -6,8 +6,11 @@ import {
   IsOptional,
   IsBoolean,
 } from 'class-validator';
-import type { UpdateRecipeDto as DomainUpdateRecipeDto } from 'src/domain';
-export class CreateRecipeDto {
+import type {
+  UpdateRecipeDto as DomainUpdateRecipeDto,
+  CreateRecipeDto as DomainCreateRecipeDto,
+} from 'src/domain';
+export class CreateRecipeDto implements DomainCreateRecipeDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
