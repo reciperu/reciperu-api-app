@@ -20,14 +20,16 @@ export class CreateRecipeDto {
   memo?: string;
 
   @ApiProperty()
-  @IsNotEmpty()
   @IsString()
-  recipeBookId: string;
+  recipeUrl?: string;
 
   @ApiProperty()
-  @IsNotEmpty()
   @IsString()
-  userId: string;
+  faviconUrl?: string;
+
+  @ApiProperty()
+  @IsString()
+  appName?: string;
 }
 
 export class UpdateRecipeDto {

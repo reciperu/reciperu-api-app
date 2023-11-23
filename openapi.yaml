@@ -487,17 +487,20 @@ components:
             type: string
         memo:
           type: string
-        recipeBookId:
+        recipeUrl:
           type: string
-        userId:
+        faviconUrl:
+          type: string
+        appName:
           type: string
       required:
         - title
         - thumbnailUrl
         - imageUrls
         - memo
-        - recipeBookId
-        - userId
+        - recipeUrl
+        - faviconUrl
+        - appName
     UpdateRecipeDto:
       type: object
       properties:

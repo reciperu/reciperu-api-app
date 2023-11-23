@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Inject, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Patch,
+  Post,
+  Req,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -14,6 +22,7 @@ import {
   UseCaseProxy,
   CreateRecipesUseCase,
 } from 'src/use-cases';
+import { Request } from 'express';
 
 @ApiTags('recipes')
 @ApiBearerAuth()
@@ -121,10 +130,17 @@ export class RecipeController {
     type: RecipePresenter,
     isArray: true,
   })
-  async createMany(@Body() createRecipesDto: CreateRecipeDto[]) {
+  async createMany(
+    @Req() req: Request,
+    @Body() createRecipesDto: CreateRecipeDto[],
+  ) {
     const createRecipes = await this.createRecipesUseCase
       .getInstance()
-      .execute(createRecipesDto);
+      .execute(
+        createRecipesDto,
+        req.currentUser.getId,
+        req.currentUser.getRecipeBookId,
+      );
     return createRecipes.map((x) => new RecipePresenter(x));
   }
 }
