@@ -7,3 +7,4 @@ export * from './create-recipe.use-case';
 export * from './update-recipe.use-case';
 export * from './update-recipe-book.use-case';
 export * from './get-recipe-detail.use-case';
+export * from './invitation-recipe-book.use-case';

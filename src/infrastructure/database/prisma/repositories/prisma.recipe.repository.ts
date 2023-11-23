@@ -17,6 +17,16 @@ export class PrismaRecipeRepository implements IRecipeRepository {
     return this.toRecipe(prismaRecipe);
   }
 
+  async findRecipes() {
+    const prismaRecipes = await this.prismaService.recipe.findMany({
+      take: 10,
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    return prismaRecipes.map((prismaRecipe) => this.toRecipe(prismaRecipe));
+  }
+
   async bulkInsert(recipes: RecipeBeforePersist[]): Promise<Recipe[]> {
     const prismaRecipes = await this.prismaService.$transaction(
       recipes.map((recipe) =>
@@ -82,7 +92,6 @@ export class PrismaRecipeRepository implements IRecipeRepository {
       faviconUrl: recipe.faviconUrl,
       appName: recipe.appName,
       createdAt: recipe.createdAt,
-      // menus: recipe.menus,
     });
   }
 }

@@ -4,6 +4,7 @@ import {
   PrismaRecipeBookRepository,
   PrismaRecipeRepository,
   PrismaUserRepository,
+  PrismaRecipeBookInvitationRepository,
 } from './prisma';
 
 @Module({
@@ -12,11 +13,13 @@ import {
     PrismaUserRepository,
     PrismaRecipeRepository,
     PrismaRecipeBookRepository,
+    PrismaRecipeBookInvitationRepository,
   ],
   exports: [
     PrismaUserRepository,
     PrismaRecipeRepository,
     PrismaRecipeBookRepository,
+    PrismaRecipeBookInvitationRepository,
   ],
 })
 export class DatabaseModule {}

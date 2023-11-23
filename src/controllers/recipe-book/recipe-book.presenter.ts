@@ -17,3 +17,12 @@ export class RecipeBookPresenter {
     this.users = recipeBook.getUsers;
   }
 }
+
+export class RecipeBookInvitationPresenter {
+  @ApiProperty()
+  readonly token: string;
+
+  constructor({ token }: { token: string }) {
+    this.token = token;
+  }
+}

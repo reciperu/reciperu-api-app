@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Inject, Param, Put, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Put,
+  Post,
+  Req,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -8,13 +17,18 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { UpdateRecipeBookDto } from './recipe-book.dto';
-import { RecipeBookPresenter } from './recipe-book.presenter';
+import {
+  RecipeBookPresenter,
+  RecipeBookInvitationPresenter,
+} from './recipe-book.presenter';
 import {
   GetRecipeBookUseCase,
+  UpdateRecipeBookUseCase,
+  InvitationRecipeBookUseCase,
   UseCaseProxy,
   UseCaseProxyModule,
 } from 'src/use-cases';
-import { UpdateRecipeBookUseCase } from 'src/use-cases/update-recipe-book.use-case';
+
 import { Request } from 'express';
 @ApiTags('recipe-books')
 @ApiBearerAuth()
@@ -25,6 +39,8 @@ export class RecipeBookController {
     private readonly getRecipeBookUseCase: UseCaseProxy<GetRecipeBookUseCase>,
     @Inject(UseCaseProxyModule.UPDATE_RECIPE_BOOK_USE_CASE)
     private readonly updateRecipeBookUseCase: UseCaseProxy<UpdateRecipeBookUseCase>,
+    @Inject(UseCaseProxyModule.INVITATION_RECIPE_BOOK_USE_CASE)
+    private readonly invitationRecipeBookUseCase: UseCaseProxy<InvitationRecipeBookUseCase>,
   ) {}
   @Put(':id')
   @ApiOperation({ operationId: 'updateRecipeBook' })
@@ -66,6 +82,21 @@ export class RecipeBookController {
   async show(@Param('id') id: string) {
     return new RecipeBookPresenter(
       await this.getRecipeBookUseCase.getInstance().execute(id),
+    );
+  }
+
+  @Post('invitations')
+  @ApiOperation({ operationId: 'invitationSpace' })
+  @ApiResponse({
+    status: 200,
+    description: '料理本の招待',
+    type: RecipeBookInvitationPresenter,
+  })
+  async invitation(@Req() req: Request) {
+    return new RecipeBookInvitationPresenter(
+      await this.invitationRecipeBookUseCase
+        .getInstance()
+        .execute(req.currentUser.getRecipeBookId),
     );
   }
 }

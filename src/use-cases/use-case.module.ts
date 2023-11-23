@@ -6,6 +6,9 @@ import {
   GetRecipeBookUseCase,
   CreateRecipeUseCase,
   GetRecipeDetailUseCase,
+  UpdateRecipeBookUseCase,
+  UpdateRecipeUseCase,
+  InvitationRecipeBookUseCase,
 } from './';
 import { DatabaseModule } from 'src/infrastructure/database/database.module';
 import { FirebaseModule } from 'src/infrastructure/firebase/firebase.module';
@@ -14,9 +17,8 @@ import {
   PrismaUserRepository,
   PrismaRecipeRepository,
   PrismaRecipeBookRepository,
+  PrismaRecipeBookInvitationRepository,
 } from 'src/infrastructure/database/prisma';
-import { UpdateRecipeBookUseCase } from './update-recipe-book.use-case';
-import { UpdateRecipeUseCase } from './update-recipe.use-case';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -36,6 +38,8 @@ export class UseCaseProxyModule {
   static readonly CREATE_RECIPE_USE_CASE = 'CREATE_RECIPE_USE_CASE';
   static readonly UPDATE_RECIPE_USE_CASE = 'UPDATE_RECIPE_USE_CASE';
   static readonly GET_RECIPE_DETAIL_USE_CASE = 'GET_RECIPE_DETAIL_USE_CASE';
+  static readonly INVITATION_RECIPE_BOOK_USE_CASE =
+    'INVITATION_RECIPE_BOOK_USE_CASE';
   static resister(): DynamicModule {
     return {
       module: UseCaseProxyModule,
@@ -105,6 +109,16 @@ export class UseCaseProxyModule {
           useFactory: (recipeRepository: PrismaRecipeRepository) =>
             new UseCaseProxy(new GetRecipeDetailUseCase(recipeRepository)),
         },
+        {
+          inject: [PrismaRecipeBookInvitationRepository],
+          provide: UseCaseProxyModule.INVITATION_RECIPE_BOOK_USE_CASE,
+          useFactory: (
+            recipeBookInvitationRepository: PrismaRecipeBookInvitationRepository,
+          ) =>
+            new UseCaseProxy(
+              new InvitationRecipeBookUseCase(recipeBookInvitationRepository),
+            ),
+        },
       ],
       exports: [
         UseCaseProxyModule.CHECK_USER_USE_CASE,
@@ -115,6 +129,7 @@ export class UseCaseProxyModule {
         UseCaseProxyModule.CREATE_RECIPE_USE_CASE,
         UseCaseProxyModule.UPDATE_RECIPE_USE_CASE,
         UseCaseProxyModule.GET_RECIPE_DETAIL_USE_CASE,
+        UseCaseProxyModule.INVITATION_RECIPE_BOOK_USE_CASE,
       ],
     };
   }

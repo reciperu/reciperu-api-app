@@ -261,14 +261,28 @@ paths:
                 $ref: '#/components/schemas/RecipeBookPresenter'
       tags: *ref_5
       security: *ref_6
-  /invitations/invitation:
+  /recipe-books/invitations:
     post:
       operationId: invitationSpace
       summary: ''
       parameters: []
       responses:
         '200':
-          description: スペース招待
+          description: 料理本の招待
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeBookInvitationPresenter'
+      tags: *ref_5
+      security: *ref_6
+  /invitations:
+    post:
+      operationId: invitationSpace
+      summary: ''
+      parameters: []
+      responses:
+        '200':
+          description: 料理本の招待
           content:
             application/json:
               schema:
@@ -277,7 +291,6 @@ paths:
         - invitations
       security: &ref_8
         - bearer: []
-  /invitations:
     put:
       operationId: validateInvitation
       summary: ''
@@ -563,6 +576,13 @@ components:
         - id
         - name
         - users
+    RecipeBookInvitationPresenter:
+      type: object
+      properties:
+        token:
+          type: string
+      required:
+        - token
     InvitationPresenter:
       type: object
       properties:
