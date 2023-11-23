@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty } from 'class-validator';
-import { ActiveStatus } from 'src/domain';
-export class UpdateUserDto {
+import { ActiveStatus, UpdateUserDto as DomainUpdateUserDto } from 'src/domain';
+export class UpdateUserDto implements DomainUpdateUserDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()

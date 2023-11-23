@@ -13,11 +13,11 @@ export class CheckUserUseCase {
     const decodedToken = await this.firebaseService.admin
       .auth()
       .verifyIdToken(token);
-    const userBeforePersist = new UserBeforePersist(
-      decodedToken.name,
-      decodedToken.picture,
-      decodedToken.uid,
-    );
+    const userBeforePersist = new UserBeforePersist({
+      name: decodedToken.name,
+      imageUrl: decodedToken.picture,
+      uid: decodedToken.uid,
+    });
     return await this.userRepository.create(userBeforePersist);
   }
 }

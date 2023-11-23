@@ -20,14 +20,14 @@ export class PrismaUserRepository implements IUserRepository {
     const prismaUser = await this.prismaService.$transaction(async (tx) => {
       const recipeBook = await tx.recipeBook.create({
         data: {
-          name: `${user.name}の料理本`,
+          name: `${user.getName}の料理本`,
         },
       });
       return await tx.user.create({
         data: {
-          name: user.name,
-          imageUrl: user.imageUrl,
-          uid: user.uid,
+          name: user.getName,
+          imageUrl: user.getImageUrl,
+          uid: user.getUid,
           currentRecipeBookId: recipeBook.id,
           recipeBookUsers: {
             create: {

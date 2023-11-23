@@ -9,11 +9,44 @@ export enum ActiveStatus {
   JOINED_RECIPE_BOOK = 'JOINED_RECIPE_BOOK',
   NOT_JOINED_RECIPE_BOOK = 'NOT_JOINED_RECIPE_BOOK',
 }
-export class User {
-  private id: string;
+
+export class UserBeforePersist {
   private name: string;
   private imageUrl: string;
   private uid: string;
+  constructor({
+    name,
+    imageUrl,
+    uid,
+  }: {
+    name: string;
+    imageUrl: string;
+    uid: string;
+  }) {
+    this.name = name;
+    this.imageUrl = imageUrl;
+    this.uid = uid;
+  }
+  get getName(): string {
+    return this.name;
+  }
+  get getImageUrl(): string {
+    return this.imageUrl;
+  }
+  get getUid(): string {
+    return this.uid;
+  }
+
+  set setName(name: string) {
+    this.name = name;
+  }
+  set setImageUrl(imageUrl: string) {
+    this.imageUrl = imageUrl;
+  }
+}
+
+export class User extends UserBeforePersist {
+  private id: string;
   private activeStatus: ActiveStatus;
   private recipeBookId: string;
   private recipeBookRole: RecipeBookRole;
@@ -35,10 +68,8 @@ export class User {
     recipeBookId: string;
     recipeBookRole: RecipeBookRole;
   }) {
+    super({ name, imageUrl, uid });
     this.id = id;
-    this.name = name;
-    this.imageUrl = imageUrl;
-    this.uid = uid;
     this.activeStatus = activeStatus;
     this.recipeBookId = recipeBookId;
     this.recipeBookRole = recipeBookRole;
@@ -46,15 +77,7 @@ export class User {
   get getId(): string {
     return this.id;
   }
-  get getName(): string {
-    return this.name;
-  }
-  get getImageUrl(): string {
-    return this.imageUrl;
-  }
-  get getUid(): string {
-    return this.uid;
-  }
+
   get getActiveStatus(): ActiveStatus {
     return this.activeStatus;
   }
@@ -65,12 +88,6 @@ export class User {
     return this.recipeBookRole;
   }
 
-  set setName(name: string) {
-    this.name = name;
-  }
-  set setImageUrl(imageUrl: string) {
-    this.imageUrl = imageUrl;
-  }
   set setActiveStatus(activeStatus: ActiveStatus) {
     this.activeStatus = activeStatus;
   }
@@ -96,20 +113,14 @@ export class User {
   }
 }
 
-export class UserBeforePersist {
-  constructor(
-    readonly name: string,
-    readonly imageUrl: string,
-    readonly uid: string,
-  ) {
-    this.name = name;
-    this.imageUrl = imageUrl;
-    this.uid = uid;
-  }
-}
-
 export type IUserRepository = {
   create(user: UserBeforePersist): Promise<User>;
   findUser(findOptions: { uid: string } | { id: string }): Promise<User | null>;
   update(user: User): Promise<User>;
+};
+
+export type UpdateUserDto = {
+  name: string;
+  imageUrl: string;
+  activeStatus: ActiveStatus;
 };
