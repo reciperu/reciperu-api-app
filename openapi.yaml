@@ -209,7 +209,12 @@ paths:
     put:
       operationId: updateRecipeBook
       summary: ''
-      parameters: []
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
       requestBody:
         required: true
         content:

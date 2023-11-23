@@ -1,3 +1,4 @@
+import { UpdateRecipeBookDto } from 'src/controllers/recipe-book';
 import { User } from '.';
 
 export class RecipeBook {
@@ -17,6 +18,7 @@ export class RecipeBook {
     this.name = name;
     this.users = users;
   }
+
   get getId(): string {
     return this.id;
   }
@@ -26,8 +28,17 @@ export class RecipeBook {
   get getUsers(): User[] {
     return this.users;
   }
+
+  set setName(name: string) {
+    this.name = name;
+  }
+
+  update(updateRecipeBookDto: UpdateRecipeBookDto) {
+    this.setName = updateRecipeBookDto.name;
+  }
 }
 
 export type IRecipeBookRepository = {
   findRecipeBook(id: string): Promise<RecipeBook>;
+  updateRecipeBook(recipeBook: RecipeBook): Promise<RecipeBook>;
 };

@@ -13,6 +13,7 @@ import {
   PrismaRecipeRepository,
   PrismaRecipeBookRepository,
 } from 'src/infrastructure/database/prisma';
+import { UpdateRecipeBookUseCase } from './update-recipe-book.use-case';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -28,6 +29,7 @@ export class UseCaseProxyModule {
   static readonly UPDATE_USER_USE_CASE = 'UPDATE_USER_USE_CASE';
   static readonly CREATE_RECIPES_USE_CASE = 'CREATE_RECIPES_USE_CASE';
   static readonly GET_RECIPE_BOOK_USE_CASE = 'GET_RECIPE_BOOK_USE_CASE';
+  static readonly UPDATE_RECIPE_BOOK_USE_CASE = 'UPDATE_RECIPE_BOOK_USE_CASE';
   static resister(): DynamicModule {
     return {
       module: UseCaseProxyModule,
@@ -67,12 +69,25 @@ export class UseCaseProxyModule {
             );
           },
         },
+        {
+          inject: [PrismaRecipeBookRepository, PrismaUserRepository],
+          provide: UseCaseProxyModule.UPDATE_RECIPE_BOOK_USE_CASE,
+          useFactory: (
+            recipeBookRepository: PrismaRecipeBookRepository,
+            userRepository: PrismaUserRepository,
+          ) => {
+            return new UseCaseProxy(
+              new UpdateRecipeBookUseCase(recipeBookRepository, userRepository),
+            );
+          },
+        },
       ],
       exports: [
         UseCaseProxyModule.CHECK_USER_USE_CASE,
         UseCaseProxyModule.UPDATE_USER_USE_CASE,
         UseCaseProxyModule.CREATE_RECIPES_USE_CASE,
         UseCaseProxyModule.GET_RECIPE_BOOK_USE_CASE,
+        UseCaseProxyModule.UPDATE_RECIPE_BOOK_USE_CASE,
       ],
     };
   }

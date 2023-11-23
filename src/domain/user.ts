@@ -1,3 +1,4 @@
+import { BadRequestException } from 'src/infrastructure/exceptions';
 export enum RecipeBookRole {
   OWNER = 'OWNER',
   PARTICIPANT = 'PARTICIPANT',
@@ -86,6 +87,12 @@ export class User {
     this.setName = name;
     this.setImageUrl = imageUrl;
     this.setActiveStatus = activeStatus;
+  }
+
+  canUpdateRecipeBook(): void {
+    if (this.getRecipeBookRole !== RecipeBookRole.OWNER) {
+      throw new BadRequestException('USER_NOT_OWNER');
+    }
   }
 }
 
