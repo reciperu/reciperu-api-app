@@ -1,5 +1,4 @@
-export class Recipe {
-  private id: string;
+export class RecipeBeforePersist {
   private title: string;
   private recipeBookId: string;
   private userId: string;
@@ -7,13 +6,10 @@ export class Recipe {
   private imageUrls?: string[];
   private memo?: string;
   private recipeUrl?: string;
-  private isFavorite: boolean;
   private faviconUrl?: string;
   private appName?: string;
-  private createdAt: Date;
 
   constructor({
-    id,
     title,
     recipeBookId,
     userId,
@@ -21,12 +17,9 @@ export class Recipe {
     imageUrls,
     memo,
     recipeUrl,
-    isFavorite,
     faviconUrl,
     appName,
-    createdAt,
   }: {
-    id: string;
     title: string;
     recipeBookId: string;
     userId: string;
@@ -34,12 +27,9 @@ export class Recipe {
     imageUrls?: string[];
     memo?: string;
     recipeUrl?: string;
-    isFavorite: boolean;
     faviconUrl?: string;
     appName?: string;
-    createdAt: Date;
   }) {
-    this.id = id;
     this.title = title;
     this.recipeBookId = recipeBookId;
     this.userId = userId;
@@ -47,15 +37,10 @@ export class Recipe {
     this.imageUrls = imageUrls;
     this.memo = memo;
     this.recipeUrl = recipeUrl;
-    this.isFavorite = isFavorite;
     this.faviconUrl = faviconUrl;
     this.appName = appName;
-    this.createdAt = createdAt;
   }
 
-  get getId(): string {
-    return this.id;
-  }
   get getTitle(): string {
     return this.title;
   }
@@ -84,20 +69,12 @@ export class Recipe {
     return this.recipeUrl;
   }
 
-  get getIsFavorite(): boolean {
-    return this.isFavorite;
-  }
-
   get getFaviconUrl(): string | undefined {
     return this.faviconUrl;
   }
 
   get getAppName(): string | undefined {
     return this.appName;
-  }
-
-  get getCreatedAt(): Date {
-    return this.createdAt;
   }
 
   set setTitle(title: string) {
@@ -118,9 +95,6 @@ export class Recipe {
   set setRecipeUrl(recipeUrl: string) {
     this.recipeUrl = recipeUrl;
   }
-  set setIsFavorite(isFavorite: boolean) {
-    this.isFavorite = isFavorite;
-  }
 
   set setFaviconUrl(faviconUrl: string) {
     this.faviconUrl = faviconUrl;
@@ -130,17 +104,12 @@ export class Recipe {
   }
 }
 
-export class RecipeBeforePersist {
-  readonly title: string;
-  readonly recipeBookId: string;
-  readonly userId: string;
-  readonly thumbnailUrl?: string;
-  readonly imageUrls?: string[];
-  readonly memo?: string;
-  readonly recipeUrl?: string;
-  readonly faviconUrl?: string;
-  readonly appName?: string;
+export class Recipe extends RecipeBeforePersist {
+  private id: string;
+  private isFavorite: boolean;
+  private createdAt: Date;
   constructor({
+    id,
     title,
     recipeBookId,
     userId,
@@ -148,9 +117,12 @@ export class RecipeBeforePersist {
     imageUrls,
     memo,
     recipeUrl,
+    isFavorite,
     faviconUrl,
     appName,
+    createdAt,
   }: {
+    id: string;
     title: string;
     recipeBookId: string;
     userId: string;
@@ -158,22 +130,42 @@ export class RecipeBeforePersist {
     imageUrls?: string[];
     memo?: string;
     recipeUrl?: string;
-
+    isFavorite: boolean;
     faviconUrl?: string;
     appName?: string;
+    createdAt: Date;
   }) {
-    this.title = title;
-    this.recipeBookId = recipeBookId;
-    this.thumbnailUrl = thumbnailUrl;
-    this.userId = userId;
-    this.imageUrls = imageUrls;
-    this.memo = memo;
-    this.recipeUrl = recipeUrl;
-    this.faviconUrl = faviconUrl;
-    this.appName = appName;
+    super({
+      title,
+      recipeBookId,
+      userId,
+      thumbnailUrl,
+      imageUrls,
+      memo,
+      recipeUrl,
+      faviconUrl,
+      appName,
+    });
+    this.id = id;
+    this.isFavorite = isFavorite;
+    this.createdAt = createdAt;
+  }
+  get getId(): string {
+    return this.id;
+  }
+  get getCreatedAt(): Date {
+    return this.createdAt;
+  }
+  get getIsFavorite(): boolean {
+    return this.isFavorite;
+  }
+
+  set setIsFavorite(isFavorite: boolean) {
+    this.isFavorite = isFavorite;
   }
 }
 
 export type IRecipeRepository = {
   bulkInsert(recipes: RecipeBeforePersist[]): Promise<Recipe[]>;
+  save(recipe: Recipe | RecipeBeforePersist): Promise<Recipe>;
 };

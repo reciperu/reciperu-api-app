@@ -514,11 +514,20 @@ components:
             type: string
         memo:
           type: string
+        recipeUrl:
+          type: string
+        faviconUrl:
+          type: string
+        appName:
+          type: string
       required:
         - title
         - thumbnailUrl
         - imageUrls
         - memo
+        - recipeUrl
+        - faviconUrl
+        - appName
     UpdateRecipeBookDto:
       type: object
       properties:

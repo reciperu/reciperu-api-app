@@ -21,6 +21,7 @@ import {
   UseCaseProxyModule,
   UseCaseProxy,
   CreateRecipesUseCase,
+  CreateRecipeUseCase,
 } from 'src/use-cases';
 import { Request } from 'express';
 
@@ -31,6 +32,8 @@ export class RecipeController {
   constructor(
     @Inject(UseCaseProxyModule.CREATE_RECIPES_USE_CASE)
     private readonly createRecipesUseCase: UseCaseProxy<CreateRecipesUseCase>,
+    @Inject(UseCaseProxyModule.CREATE_RECIPE_USE_CASE)
+    private readonly createRecipeUseCase: UseCaseProxy<CreateRecipeUseCase>,
   ) {}
   @Get()
   @ApiOperation({ operationId: 'getRecipe' })
@@ -98,9 +101,16 @@ export class RecipeController {
   @ApiBody({
     type: CreateRecipeDto,
   })
-  async create() {
-    try {
-    } catch (error) {}
+  async create(@Req() req: Request, @Body() createRecipeDto: CreateRecipeDto) {
+    return new RecipePresenter(
+      await this.createRecipeUseCase
+        .getInstance()
+        .execute(
+          createRecipeDto,
+          req.currentUser.getId,
+          req.currentUser.getRecipeBookId,
+        ),
+    );
   }
 
   @Patch(':id')
