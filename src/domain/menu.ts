@@ -88,10 +88,16 @@ export class Menu extends MenuBeforePersist {
   set setStatus(status: MenuStatus) {
     this.status = status;
   }
+
+  update(updateMenuDto: UpdateMenuDto) {
+    this.setStatus = updateMenuDto.status;
+    this.setScheduledAt = updateMenuDto.scheduledAt;
+  }
 }
 
 export type IMenuRepository = {
   save(menu: MenuBeforePersist | Menu): Promise<Menu>;
+  findMenu(id: string): Promise<Menu>;
 };
 
 export type CreateMenuDto = {
@@ -101,4 +107,5 @@ export type CreateMenuDto = {
 
 export type UpdateMenuDto = {
   status: MenuStatus;
+  scheduledAt?: Date;
 };

@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Inject,
+  Param,
   Post,
   Put,
   Req,
@@ -21,6 +22,7 @@ import {
   UseCaseProxyModule,
   CreateMenuUseCase,
   UseCaseProxy,
+  UpdateMenuUseCase,
 } from 'src/use-cases';
 import { Request } from 'express';
 
@@ -31,6 +33,8 @@ export class MenuController {
   constructor(
     @Inject(UseCaseProxyModule.CREATE_MENU_USE_CASE)
     private readonly createMenuUseCase: UseCaseProxy<CreateMenuUseCase>,
+    @Inject(UseCaseProxyModule.UPDATE_MENU_USE_CASE)
+    private readonly updateMenuUseCase: UseCaseProxy<UpdateMenuUseCase>,
   ) {}
   @Get()
   @ApiOperation({ operationId: 'getMenu' })
@@ -82,9 +86,10 @@ export class MenuController {
     description: '献立の更新',
     type: MenuPresenter,
   })
-  async update() {
-    try {
-    } catch (error) {}
+  async update(@Param('id') id: string, @Body() updateMenuDto: UpdateMenuDto) {
+    return new MenuPresenter(
+      await this.updateMenuUseCase.getInstance().execute(id, updateMenuDto),
+    );
   }
 
   @Delete(':id')

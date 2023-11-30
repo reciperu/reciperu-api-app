@@ -16,4 +16,7 @@ export class CreateMenuDto implements DomainCreateMenuDto {
 export class UpdateMenuDto implements DomainUpdateMenuDto {
   @ApiProperty()
   status: MenuStatus;
+
+  @ApiProperty()
+  scheduledAt?: Date;
 }

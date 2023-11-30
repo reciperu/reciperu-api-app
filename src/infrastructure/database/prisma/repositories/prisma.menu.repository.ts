@@ -44,6 +44,16 @@ export class PrismaMenuRepository implements IMenuRepository {
     return this.toMenu(prismaMenu);
   }
 
+  async findMenu(id: string): Promise<Menu> {
+    const prismaMenu = await this.prismaService.menu.findUnique({
+      where: { id },
+      include: {
+        recipe: true,
+      },
+    });
+    return this.toMenu(prismaMenu);
+  }
+
   private toMenu(prismaMenu: PrismaMenuType) {
     return new Menu({
       id: prismaMenu.id,
