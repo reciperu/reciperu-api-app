@@ -98,6 +98,7 @@ export class Menu extends MenuBeforePersist {
 export type IMenuRepository = {
   save(menu: MenuBeforePersist | Menu): Promise<Menu>;
   findMenu(id: string): Promise<Menu>;
+  delete(id: string): Promise<void>;
 };
 
 export type CreateMenuDto = {

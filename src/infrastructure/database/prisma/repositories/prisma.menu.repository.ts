@@ -54,6 +54,12 @@ export class PrismaMenuRepository implements IMenuRepository {
     return this.toMenu(prismaMenu);
   }
 
+  async delete(id: string): Promise<void> {
+    await this.prismaService.menu.delete({
+      where: { id },
+    });
+  }
+
   private toMenu(prismaMenu: PrismaMenuType) {
     return new Menu({
       id: prismaMenu.id,

@@ -29,3 +29,7 @@ export class MenuPresenter {
     this.recipe = menu.getRecipe;
   }
 }
+export class DeleteMenuPresenter {
+  @ApiProperty()
+  success: boolean;
+}

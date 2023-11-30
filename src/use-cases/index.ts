@@ -10,3 +10,4 @@ export * from './get-recipe-detail.use-case';
 export * from './invite-recipe-book.use-case';
 export * from './create-menu.use-case';
 export * from './update-menu.use-case';
+export * from './delete-menu.use-case';

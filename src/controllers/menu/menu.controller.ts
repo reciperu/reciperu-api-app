@@ -16,13 +16,14 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { MenuPresenter } from './menu.presenter';
+import { DeleteMenuPresenter, MenuPresenter } from './menu.presenter';
 import { CreateMenuDto, UpdateMenuDto } from './menu.dto';
 import {
   UseCaseProxyModule,
   CreateMenuUseCase,
   UseCaseProxy,
   UpdateMenuUseCase,
+  DeleteMenuUseCase,
 } from 'src/use-cases';
 import { Request } from 'express';
 
@@ -35,6 +36,8 @@ export class MenuController {
     private readonly createMenuUseCase: UseCaseProxy<CreateMenuUseCase>,
     @Inject(UseCaseProxyModule.UPDATE_MENU_USE_CASE)
     private readonly updateMenuUseCase: UseCaseProxy<UpdateMenuUseCase>,
+    @Inject(UseCaseProxyModule.DELETE_MENU_USE_CASE)
+    private readonly deleteMenuUseCase: UseCaseProxy<DeleteMenuUseCase>,
   ) {}
   @Get()
   @ApiOperation({ operationId: 'getMenu' })
@@ -97,9 +100,11 @@ export class MenuController {
   @ApiResponse({
     status: 200,
     description: '献立の削除',
+    type: DeleteMenuPresenter,
   })
-  async delete() {
-    try {
-    } catch (error) {}
+  async delete(@Param('id') id: string) {
+    await this.deleteMenuUseCase.getInstance().execute(id);
+
+    return { success: true };
   }
 }
