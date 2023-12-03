@@ -42,7 +42,7 @@ export class RecipeBookInvitationBeforePersist {
   private token: string;
   private expiredAt: Date;
   private recipeBookId: string;
-  constructor(recipeBookId: string) {
+  constructor({ recipeBookId }: { recipeBookId: string }) {
     this.recipeBookId = recipeBookId;
     this.token = randomUUID();
     this.expiredAt = dayjs().add(1, 'day').toDate();
@@ -60,15 +60,45 @@ export class RecipeBookInvitationBeforePersist {
   }
 }
 
+export class RecipeBookInvitation extends RecipeBookInvitationBeforePersist {
+  private id: string;
+  private usedAt: Date;
+  constructor({
+    id,
+    usedAt,
+    recipeBookId,
+  }: {
+    id: string;
+    token: string;
+    expiredAt: Date;
+    usedAt: Date;
+    recipeBookId: string;
+  }) {
+    super({
+      recipeBookId,
+    });
+    this.id = id;
+    this.usedAt = usedAt;
+  }
+
+  get getId(): string {
+    return this.id;
+  }
+
+  get getUsedAt(): Date {
+    return this.usedAt;
+  }
+}
+
 export type IRecipeBookRepository = {
   findRecipeBook(id: string): Promise<RecipeBook>;
   updateRecipeBook(recipeBook: RecipeBook): Promise<RecipeBook>;
 };
 
 export type IRecipeBookInvitationRepository = {
-  create(
+  save(
     recipeBookInvitationBeforePersist: RecipeBookInvitationBeforePersist,
-  ): Promise<{ token: string }>;
+  ): Promise<RecipeBookInvitation>;
 };
 
 export type CreateRecipeBookDto = {
@@ -77,4 +107,8 @@ export type CreateRecipeBookDto = {
 
 export type UpdateRecipeBookDto = {
   name: string;
+};
+
+export type ValidateInvitationDto = {
+  token: string;
 };

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   IRecipeBookInvitationRepository,
   RecipeBookInvitationBeforePersist,
+  RecipeBookInvitation,
   IUserRepository,
 } from 'src/domain';
 @Injectable()
@@ -16,11 +17,11 @@ export class InviteRecipeBookUseCase {
   async execute(
     recipeBookId: string,
     useId: string,
-  ): Promise<{ token: string }> {
+  ): Promise<RecipeBookInvitation> {
     const user = await this.userRepository.findUser({ id: useId });
     user.canInviteRecipeBook();
-    return await this.recipeBookInvitationRepository.create(
-      new RecipeBookInvitationBeforePersist(recipeBookId),
+    return await this.recipeBookInvitationRepository.save(
+      new RecipeBookInvitationBeforePersist({ recipeBookId }),
     );
   }
 }

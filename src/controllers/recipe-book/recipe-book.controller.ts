@@ -93,10 +93,9 @@ export class RecipeBookController {
     type: RecipeBookInvitationPresenter,
   })
   async invitation(@Req() req: Request) {
-    return new RecipeBookInvitationPresenter(
-      await this.inviteRecipeBookUseCase
-        .getInstance()
-        .execute(req.currentUser.getRecipeBookId, req.currentUser.getId),
-    );
+    const invitation = await this.inviteRecipeBookUseCase
+      .getInstance()
+      .execute(req.currentUser.getRecipeBookId, req.currentUser.getId);
+    return new RecipeBookInvitationPresenter({ token: invitation.getToken });
   }
 }

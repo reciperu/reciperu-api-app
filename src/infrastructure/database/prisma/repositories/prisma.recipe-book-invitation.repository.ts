@@ -3,7 +3,9 @@ import { PrismaService } from 'src/infrastructure/database/prisma/prisma.service
 import {
   IRecipeBookInvitationRepository,
   RecipeBookInvitationBeforePersist,
+  RecipeBookInvitation,
 } from 'src/domain';
+import { RecipeBookInvitation as PrismaInvitation } from '@prisma/client';
 
 @Injectable()
 export class PrismaRecipeBookInvitationRepository
@@ -13,18 +15,41 @@ export class PrismaRecipeBookInvitationRepository
     this.prismaService = prismaService;
   }
 
-  async create(
-    recipeBookInvitationBeforePersist: RecipeBookInvitationBeforePersist,
-  ): Promise<{ token: string }> {
-    const prismaUser = await this.prismaService.recipeBookInvitation.create({
-      data: {
-        token: recipeBookInvitationBeforePersist.getToken,
-        expiredAt: recipeBookInvitationBeforePersist.getExpiredAt,
-        recipeBookId: recipeBookInvitationBeforePersist.getRecipeBookId,
-      },
+  async save(
+    recipeBookInvitation:
+      | RecipeBookInvitationBeforePersist
+      | RecipeBookInvitation,
+  ): Promise<RecipeBookInvitation> {
+    const prismaInvitation =
+      await this.prismaService.recipeBookInvitation.upsert({
+        where: {
+          id: 'id' in recipeBookInvitation ? recipeBookInvitation.getId : '',
+        },
+        create: {
+          token: recipeBookInvitation.getToken,
+          expiredAt: recipeBookInvitation.getExpiredAt,
+          recipeBookId: recipeBookInvitation.getRecipeBookId,
+        },
+        update: {
+          token: recipeBookInvitation.getToken,
+          expiredAt: recipeBookInvitation.getExpiredAt,
+          recipeBookId: recipeBookInvitation.getRecipeBookId,
+          usedAt:
+            'id' in recipeBookInvitation
+              ? recipeBookInvitation.getUsedAt
+              : null,
+        },
+      });
+    return this.toRecipeBookInvitation(prismaInvitation);
+  }
+
+  private toRecipeBookInvitation(prismaInvitation: PrismaInvitation) {
+    return new RecipeBookInvitation({
+      id: prismaInvitation.id,
+      token: prismaInvitation.token,
+      expiredAt: prismaInvitation.expiredAt,
+      usedAt: prismaInvitation.usedAt,
+      recipeBookId: prismaInvitation.recipeBookId,
     });
-    return {
-      token: prismaUser.token,
-    };
   }
 }
