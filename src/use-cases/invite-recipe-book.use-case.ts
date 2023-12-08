@@ -20,8 +20,13 @@ export class InviteRecipeBookUseCase {
   ): Promise<RecipeBookInvitation> {
     const user = await this.userRepository.findUser({ id: useId });
     user.canInviteRecipeBook();
+    const recipeBookInvitationBeforePersist =
+      new RecipeBookInvitationBeforePersist({
+        recipeBookId,
+      });
+    recipeBookInvitationBeforePersist.generateToken();
     return await this.recipeBookInvitationRepository.save(
-      new RecipeBookInvitationBeforePersist({ recipeBookId }),
+      recipeBookInvitationBeforePersist,
     );
   }
 }
