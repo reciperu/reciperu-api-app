@@ -14,9 +14,7 @@ paths:
                 $ref: '#/components/schemas/UserPresenter'
       tags: &ref_0
         - user
-      security:
-        - &ref_1
-          bearer: []
+      security: &ref_1
         - bearer: []
   /users/{id}:
     patch:
@@ -43,8 +41,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserPresenter'
       tags: *ref_0
-      security: &ref_2
-        - *ref_1
+      security: *ref_1
     delete:
       operationId: UserController_delete
       parameters:
@@ -58,21 +55,7 @@ paths:
         '204':
           description: ユーザー削除
       tags: *ref_0
-      security: *ref_2
-  /users/check:
-    get:
-      operationId: checkUser
-      summary: ''
-      parameters: []
-      responses:
-        '200':
-          description: ユーザー情報のチェック
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserPresenter'
-      tags: *ref_0
-      security: *ref_2
+      security: *ref_1
   /recipes:
     get:
       operationId: getRecipe
@@ -87,9 +70,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RecipePresenter'
-      tags: &ref_3
+      tags: &ref_2
         - recipes
-      security: &ref_4
+      security: &ref_3
         - bearer: []
     post:
       operationId: createRecipe
@@ -108,8 +91,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecipePresenter'
-      tags: *ref_3
-      security: *ref_4
+      tags: *ref_2
+      security: *ref_3
   /recipes/favorite:
     get:
       operationId: getRecipeByFavorite
@@ -124,8 +107,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RecipePresenter'
-      tags: *ref_3
-      security: *ref_4
+      tags: *ref_2
+      security: *ref_3
   /recipes/{id}:
     get:
       operationId: getRecipe
@@ -143,8 +126,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecipePresenter'
-      tags: *ref_3
-      security: *ref_4
+      tags: *ref_2
+      security: *ref_3
     put:
       operationId: updateRecipe
       summary: ''
@@ -167,8 +150,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecipePresenter'
-      tags: *ref_3
-      security: *ref_4
+      tags: *ref_2
+      security: *ref_3
   /recipes/meta-data:
     get:
       operationId: getRecipeMetaData
@@ -189,8 +172,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecipePresenter'
-      tags: *ref_3
-      security: *ref_4
+      tags: *ref_2
+      security: *ref_3
   /recipes/bulk:
     post:
       operationId: bulkInsertRecipes
@@ -213,8 +196,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RecipePresenter'
-      tags: *ref_3
-      security: *ref_4
+      tags: *ref_2
+      security: *ref_3
   /recipe-books/{id}:
     get:
       operationId: getRecipeBook
@@ -233,9 +216,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecipeBookPresenter'
-      tags: &ref_5
+      tags: &ref_4
         - recipe-books
-      security: &ref_6
+      security: &ref_5
         - bearer: []
     put:
       operationId: updateRecipeBook
@@ -259,8 +242,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecipeBookPresenter'
-      tags: *ref_5
-      security: *ref_6
+      tags: *ref_4
+      security: *ref_5
   /recipe-books/invitations:
     post:
       operationId: invitationSpace
@@ -273,8 +256,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecipeBookInvitationPresenter'
-      tags: *ref_5
-      security: *ref_6
+      tags: *ref_4
+      security: *ref_5
   /recipe-books/joins:
     put:
       operationId: validateInvitation
@@ -293,8 +276,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecipeBookJoinPresenter'
-      tags: *ref_5
-      security: *ref_6
+      tags: *ref_4
+      security: *ref_5
   /menus:
     get:
       operationId: getMenu
@@ -309,9 +292,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/MenuPresenter'
-      tags: &ref_7
+      tags: &ref_6
         - menus
-      security: &ref_8
+      security: &ref_7
         - bearer: []
     post:
       operationId: createMenu
@@ -330,8 +313,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MenuPresenter'
-      tags: *ref_7
-      security: *ref_8
+      tags: *ref_6
+      security: *ref_7
   /menus/pending:
     get:
       operationId: getPendingMenu
@@ -346,8 +329,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/MenuPresenter'
-      tags: *ref_7
-      security: *ref_8
+      tags: *ref_6
+      security: *ref_7
   /menus/{id}:
     put:
       operationId: updateMenu
@@ -371,8 +354,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MenuPresenter'
-      tags: *ref_7
-      security: *ref_8
+      tags: *ref_6
+      security: *ref_7
     delete:
       operationId: deleteMenu
       summary: ''
@@ -389,8 +372,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeleteMenuPresenter'
-      tags: *ref_7
-      security: *ref_8
+      tags: *ref_6
+      security: *ref_7
+  /auth:
+    post:
+      operationId: login
+      summary: ''
+      parameters: []
+      responses:
+        '201':
+          description: ログイン
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPresenter'
+      tags:
+        - auth
+      security:
+        - bearer: []
 info:
   title: reciperu api app
   description: API documents

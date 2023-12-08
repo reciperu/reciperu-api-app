@@ -1,6 +1,6 @@
 import { Module, DynamicModule } from '@nestjs/common';
 import {
-  CheckUserUseCase,
+  LoginUseCase,
   UpdateUserUseCase,
   CreateRecipesUseCase,
   GetRecipeBookUseCase,
@@ -35,7 +35,7 @@ export class UseCaseProxy<T> {
   imports: [DatabaseModule, FirebaseModule],
 })
 export class UseCaseProxyModule {
-  static readonly CHECK_USER_USE_CASE = 'CHECK_USER_USE_CASE';
+  static readonly LOGIN_USE_CASE = 'LOGIN_USE_CASE';
   static readonly UPDATE_USER_USE_CASE = 'UPDATE_USER_USE_CASE';
   static readonly CREATE_RECIPES_USE_CASE = 'CREATE_RECIPES_USE_CASE';
   static readonly GET_RECIPE_BOOK_USE_CASE = 'GET_RECIPE_BOOK_USE_CASE';
@@ -55,13 +55,13 @@ export class UseCaseProxyModule {
       providers: [
         {
           inject: [PrismaUserRepository, FirebaseService],
-          provide: UseCaseProxyModule.CHECK_USER_USE_CASE,
+          provide: UseCaseProxyModule.LOGIN_USE_CASE,
           useFactory: (
             userRepository: PrismaUserRepository,
             firebaseService: FirebaseService,
           ) => {
             return new UseCaseProxy(
-              new CheckUserUseCase(userRepository, firebaseService),
+              new LoginUseCase(userRepository, firebaseService),
             );
           },
         },
@@ -166,7 +166,7 @@ export class UseCaseProxyModule {
         },
       ],
       exports: [
-        UseCaseProxyModule.CHECK_USER_USE_CASE,
+        UseCaseProxyModule.LOGIN_USE_CASE,
         UseCaseProxyModule.UPDATE_USER_USE_CASE,
         UseCaseProxyModule.CREATE_RECIPES_USE_CASE,
         UseCaseProxyModule.GET_RECIPE_BOOK_USE_CASE,

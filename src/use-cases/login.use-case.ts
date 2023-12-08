@@ -3,7 +3,7 @@ import { User, UserBeforePersist, IUserRepository } from 'src/domain';
 import { FirebaseService } from 'src/infrastructure/firebase/firebase.service';
 
 @Injectable()
-export class CheckUserUseCase {
+export class LoginUseCase {
   constructor(
     private readonly userRepository: IUserRepository,
     private readonly firebaseService: FirebaseService,

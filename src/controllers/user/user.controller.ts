@@ -22,7 +22,6 @@ import { UpdateUserDto } from './user.dto';
 import {
   UseCaseProxyModule,
   UseCaseProxy,
-  CheckUserUseCase,
   UpdateUserUseCase,
 } from 'src/use-cases';
 import { Request } from 'express';
@@ -32,14 +31,13 @@ import { Request } from 'express';
 @Controller('users')
 export class UserController {
   constructor(
-    @Inject(UseCaseProxyModule.CHECK_USER_USE_CASE)
-    private readonly checkUserUseCase: UseCaseProxy<CheckUserUseCase>,
+    // @Inject(UseCaseProxyModule.CHECK_USER_USE_CASE)
+    // private readonly checkUserUseCase: UseCaseProxy<CheckUserUseCase>,
     @Inject(UseCaseProxyModule.UPDATE_USER_USE_CASE)
     private readonly updateUserUseCase: UseCaseProxy<UpdateUserUseCase>,
   ) {}
 
   @Get('profile')
-  @ApiBearerAuth()
   @ApiOperation({ operationId: 'getProfile' })
   @ApiResponse({
     status: 200,
@@ -97,19 +95,5 @@ export class UserController {
     }
   }
 
-  @ApiOperation({ operationId: 'checkUser' })
-  @Get('check')
-  @ApiResponse({
-    status: 200,
-    description: 'ユーザー情報のチェック',
-    type: UserPresenter,
-  })
-  async check(@Req() req: Request) {
-    const user = req.currentUser;
-    const token = req.headers.authorization.split(' ')[1];
-    return new UserPresenter(
-      await this.checkUserUseCase.getInstance().execute(user, token),
-    );
-  }
   // TODO:退会処理のAPI
 }
