@@ -23,7 +23,6 @@ export class SetCurrentUserMiddleware implements NestMiddleware {
       const user = await this.prismUserRepository.findUser({
         uid: decodedToken.uid,
       });
-      console.log(user, 'middleware');
 
       req.currentUser = user
         ? new User({
