@@ -44,7 +44,6 @@ export class RecipeBookInvitationBeforePersist {
   private recipeBookId: string;
   constructor({ recipeBookId }: { recipeBookId: string }) {
     this.recipeBookId = recipeBookId;
-    this.token = randomUUID();
     this.expiredAt = dayjs().add(1, 'day').toDate();
   }
   get getRecipeBookId(): string {
@@ -58,6 +57,12 @@ export class RecipeBookInvitationBeforePersist {
   get getExpiredAt(): Date {
     return this.expiredAt;
   }
+  generateToken(): void {
+    this.token = randomUUID();
+  }
+  set setToken(token: string) {
+    this.token = token;
+  }
 }
 
 export class RecipeBookInvitation extends RecipeBookInvitationBeforePersist {
@@ -66,6 +71,7 @@ export class RecipeBookInvitation extends RecipeBookInvitationBeforePersist {
   constructor({
     id,
     usedAt,
+    token,
     recipeBookId,
   }: {
     id: string;
@@ -79,6 +85,7 @@ export class RecipeBookInvitation extends RecipeBookInvitationBeforePersist {
     });
     this.id = id;
     this.usedAt = usedAt;
+    this.setToken = token;
   }
 
   get getId(): string {
@@ -87,6 +94,16 @@ export class RecipeBookInvitation extends RecipeBookInvitationBeforePersist {
 
   get getUsedAt(): Date {
     return this.usedAt;
+  }
+
+  validate(): void {
+    if (dayjs().isAfter(this.getExpiredAt)) {
+      throw new Error('token is expired');
+    }
+  }
+
+  useToken(): void {
+    this.usedAt = dayjs().toDate();
   }
 }
 
@@ -99,6 +116,7 @@ export type IRecipeBookInvitationRepository = {
   save(
     recipeBookInvitationBeforePersist: RecipeBookInvitationBeforePersist,
   ): Promise<RecipeBookInvitation>;
+  findRecipeBookInvitation(token: string): Promise<RecipeBookInvitation | null>;
 };
 
 export type CreateRecipeBookDto = {
