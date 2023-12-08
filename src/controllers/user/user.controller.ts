@@ -31,8 +31,6 @@ import { Request } from 'express';
 @Controller('users')
 export class UserController {
   constructor(
-    // @Inject(UseCaseProxyModule.CHECK_USER_USE_CASE)
-    // private readonly checkUserUseCase: UseCaseProxy<CheckUserUseCase>,
     @Inject(UseCaseProxyModule.UPDATE_USER_USE_CASE)
     private readonly updateUserUseCase: UseCaseProxy<UpdateUserUseCase>,
   ) {}
