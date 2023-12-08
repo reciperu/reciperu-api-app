@@ -422,7 +422,9 @@ components:
             - ONBOARDING
             - JOINED_RECIPE_BOOK
             - NOT_JOINED_RECIPE_BOOK
-        recipeBookId:
+        recipeBookOwnerId:
+          type: string
+        recipeBookParticipantId:
           type: string
       required:
         - id

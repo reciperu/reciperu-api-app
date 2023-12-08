@@ -15,7 +15,10 @@ export class UserPresenter {
   readonly activeStatus: ActiveStatus;
 
   @ApiProperty({ required: false })
-  readonly recipeBookId?: string;
+  readonly recipeBookOwnerId?: string;
+
+  @ApiProperty({ required: false })
+  readonly recipeBookParticipantId?: string;
 
   constructor(user: User) {
     this.id = user.getId;
@@ -23,7 +26,10 @@ export class UserPresenter {
     this.imageUrl = user.getImageUrl;
     this.activeStatus = user.getActiveStatus;
     if (user.getRecipeBookRole === RecipeBookRole.PARTICIPANT) {
-      this.recipeBookId = user.getRecipeBookId;
+      this.recipeBookParticipantId = user.getRecipeBookId;
+    }
+    if (user.getRecipeBookRole === RecipeBookRole.OWNER) {
+      this.recipeBookOwnerId = user.getRecipeBookId;
     }
   }
 }

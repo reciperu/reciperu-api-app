@@ -77,7 +77,6 @@ export class RecipeBookController {
     const invitation = await this.inviteRecipeBookUseCase
       .getInstance()
       .execute(req.currentUser.getRecipeBookId, req.currentUser.getId);
-    console.log('invitation', invitation);
 
     return new RecipeBookInvitationPresenter({ token: invitation.getToken });
   }
