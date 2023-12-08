@@ -1,4 +1,5 @@
 import { BadRequestException } from 'src/infrastructure/exceptions';
+import { RecipeBookInvitation } from './recipe-book';
 export enum RecipeBookRole {
   OWNER = 'OWNER',
   PARTICIPANT = 'PARTICIPANT',
@@ -106,6 +107,11 @@ export class User extends UserBeforePersist {
     this.setActiveStatus = activeStatus;
   }
 
+  joinRecipeBook(recipeBookId: string): void {
+    this.recipeBookId = recipeBookId;
+    this.recipeBookRole = RecipeBookRole.PARTICIPANT;
+  }
+
   canUpdateRecipeBook(): void {
     if (this.getRecipeBookRole !== RecipeBookRole.OWNER) {
       throw new BadRequestException('USER_NOT_OWNER');
@@ -123,6 +129,10 @@ export type IUserRepository = {
   create(user: UserBeforePersist): Promise<User>;
   findUser(findOptions: { uid: string } | { id: string }): Promise<User | null>;
   update(user: User): Promise<User>;
+  updateWithRecipeBook(
+    user: User,
+    invitation: RecipeBookInvitation,
+  ): Promise<User>;
 };
 
 export type UpdateUserDto = {

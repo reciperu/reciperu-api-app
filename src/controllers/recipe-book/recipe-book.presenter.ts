@@ -26,3 +26,8 @@ export class RecipeBookInvitationPresenter {
     this.token = token;
   }
 }
+
+export class RecipeBookJoinPresenter {
+  @ApiProperty()
+  success: boolean;
+}

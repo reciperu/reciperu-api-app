@@ -6,6 +6,7 @@ import {
   UserBeforePersist,
   IUserRepository,
   RecipeBookRole,
+  RecipeBookInvitation,
 } from 'src/domain';
 import { User as PrismaUser } from '@prisma/client';
 
@@ -66,6 +67,35 @@ export class PrismaUserRepository implements IUserRepository {
       },
     });
     return this.toUser(updatedUser);
+  }
+
+  async updateWithRecipeBook(
+    user: User,
+    invitation: RecipeBookInvitation,
+  ): Promise<User> {
+    return await this.prismaService.$transaction(async (tx) => {
+      const prismaUser = await tx.user.update({
+        where: { id: user.getId },
+        data: {
+          currentRecipeBookId: user.getRecipeBookId,
+          currentRecipeBookRole: user.getRecipeBookRole as RecipeBookRole,
+        },
+      });
+      await tx.recipeBookUser.create({
+        data: {
+          userId: user.getId,
+          recipeBookId: user.getRecipeBookId,
+          recipeBookRole: user.getRecipeBookRole as RecipeBookRole,
+        },
+      });
+      await tx.recipeBookInvitation.update({
+        where: { id: invitation.getId },
+        data: {
+          usedAt: invitation.getUsedAt,
+        },
+      });
+      return this.toUser(prismaUser);
+    });
   }
 
   private toUser(user: PrismaUser) {

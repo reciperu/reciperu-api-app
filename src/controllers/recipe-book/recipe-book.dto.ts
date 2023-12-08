@@ -3,6 +3,7 @@ import { IsString, IsNotEmpty } from 'class-validator';
 import type {
   CreateRecipeBookDto as DomainCreateRecipeBookDto,
   UpdateRecipeBookDto as DomainUpdateRecipeBookDto,
+  ValidateInvitationDto as DomainValidateInvitationDto,
 } from 'src/domain';
 export class CreateRecipeBookDto implements DomainCreateRecipeBookDto {
   @ApiProperty()
@@ -16,4 +17,11 @@ export class UpdateRecipeBookDto implements DomainUpdateRecipeBookDto {
   @IsString()
   @IsNotEmpty()
   name: string;
+}
+
+export class ValidateInvitationDto implements DomainValidateInvitationDto {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  token: string;
 }

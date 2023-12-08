@@ -16,10 +16,11 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { UpdateRecipeBookDto } from './recipe-book.dto';
+import { UpdateRecipeBookDto, ValidateInvitationDto } from './recipe-book.dto';
 import {
   RecipeBookPresenter,
   RecipeBookInvitationPresenter,
+  RecipeBookJoinPresenter,
 } from './recipe-book.presenter';
 import {
   GetRecipeBookUseCase,
@@ -27,6 +28,7 @@ import {
   InviteRecipeBookUseCase,
   UseCaseProxy,
   UseCaseProxyModule,
+  ValidateRecipeBookJoinUseCase,
 } from 'src/use-cases';
 
 import { Request } from 'express';
@@ -41,30 +43,9 @@ export class RecipeBookController {
     private readonly updateRecipeBookUseCase: UseCaseProxy<UpdateRecipeBookUseCase>,
     @Inject(UseCaseProxyModule.INVITE_RECIPE_BOOK_USE_CASE)
     private readonly inviteRecipeBookUseCase: UseCaseProxy<InviteRecipeBookUseCase>,
+    @Inject(UseCaseProxyModule.VALIDATE_RECIPE_BOOK_JOIN_USE_CASE)
+    private readonly validateRecipeBookJoinUseCase: UseCaseProxy<ValidateRecipeBookJoinUseCase>,
   ) {}
-  @Put(':id')
-  @ApiOperation({ operationId: 'updateRecipeBook' })
-  @ApiBody({
-    type: UpdateRecipeBookDto,
-  })
-  @ApiResponse({
-    status: 200,
-    description: '料理本更新',
-    type: RecipeBookPresenter,
-  })
-  async update(
-    @Req() req: Request,
-    @Param('id') id: string,
-    @Body() updateRecipeBookDto: UpdateRecipeBookDto,
-  ) {
-    console.log(id, updateRecipeBookDto, 'id, updateRecipeBookDto');
-
-    return new RecipeBookPresenter(
-      await this.updateRecipeBookUseCase
-        .getInstance()
-        .execute(id, updateRecipeBookDto, req.currentUser.getId),
-    );
-  }
 
   @Get(':id')
   @ApiOperation({ operationId: 'getRecipeBook' })
@@ -96,6 +77,50 @@ export class RecipeBookController {
     const invitation = await this.inviteRecipeBookUseCase
       .getInstance()
       .execute(req.currentUser.getRecipeBookId, req.currentUser.getId);
+    console.log('invitation', invitation);
+
     return new RecipeBookInvitationPresenter({ token: invitation.getToken });
+  }
+
+  @Put('joins')
+  @ApiOperation({ operationId: 'validateInvitation' })
+  @ApiResponse({
+    status: 200,
+    description: 'スペース参加の検証',
+    type: RecipeBookJoinPresenter,
+  })
+  async validate(
+    @Req() req: Request,
+    @Body() validateInvitationDto: ValidateInvitationDto,
+  ) {
+    console.log('validateInvitationDto', validateInvitationDto);
+    await this.validateRecipeBookJoinUseCase
+      .getInstance()
+      .execute(validateInvitationDto.token, req.currentUser.getId);
+    return new RecipeBookJoinPresenter();
+  }
+
+  @Put(':id')
+  @ApiOperation({ operationId: 'updateRecipeBook' })
+  @ApiBody({
+    type: UpdateRecipeBookDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: '料理本更新',
+    type: RecipeBookPresenter,
+  })
+  async update(
+    @Req() req: Request,
+    @Param('id') id: string,
+    @Body() updateRecipeBookDto: UpdateRecipeBookDto,
+  ) {
+    console.log(id, updateRecipeBookDto, 'id, updateRecipeBookDto');
+
+    return new RecipeBookPresenter(
+      await this.updateRecipeBookUseCase
+        .getInstance()
+        .execute(id, updateRecipeBookDto, req.currentUser.getId),
+    );
   }
 }

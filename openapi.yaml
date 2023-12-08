@@ -216,6 +216,27 @@ paths:
       tags: *ref_3
       security: *ref_4
   /recipe-books/{id}:
+    get:
+      operationId: getRecipeBook
+      summary: ''
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: recipeBookId
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 料理本とユーザー一覧取得
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeBookPresenter'
+      tags: &ref_5
+        - recipe-books
+      security: &ref_6
+        - bearer: []
     put:
       operationId: updateRecipeBook
       summary: ''
@@ -238,27 +259,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecipeBookPresenter'
-      tags: &ref_5
-        - recipe-books
-      security: &ref_6
-        - bearer: []
-    get:
-      operationId: getRecipeBook
-      summary: ''
-      parameters:
-        - name: id
-          required: true
-          in: path
-          description: recipeBookId
-          schema:
-            type: string
-      responses:
-        '200':
-          description: 料理本とユーザー一覧取得
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RecipeBookPresenter'
       tags: *ref_5
       security: *ref_6
   /recipe-books/invitations:
@@ -275,22 +275,7 @@ paths:
                 $ref: '#/components/schemas/RecipeBookInvitationPresenter'
       tags: *ref_5
       security: *ref_6
-  /invitations:
-    post:
-      operationId: invitationSpace
-      summary: ''
-      parameters: []
-      responses:
-        '200':
-          description: 料理本の招待
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InvitationPresenter'
-      tags: &ref_7
-        - invitations
-      security: &ref_8
-        - bearer: []
+  /recipe-books/joins:
     put:
       operationId: validateInvitation
       summary: ''
@@ -307,9 +292,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InvitationPresenter'
-      tags: *ref_7
-      security: *ref_8
+                $ref: '#/components/schemas/RecipeBookJoinPresenter'
+      tags: *ref_5
+      security: *ref_6
   /menus:
     get:
       operationId: getMenu
@@ -324,9 +309,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/MenuPresenter'
-      tags: &ref_9
+      tags: &ref_7
         - menus
-      security: &ref_10
+      security: &ref_8
         - bearer: []
     post:
       operationId: createMenu
@@ -345,8 +330,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MenuPresenter'
-      tags: *ref_9
-      security: *ref_10
+      tags: *ref_7
+      security: *ref_8
   /menus/pending:
     get:
       operationId: getPendingMenu
@@ -361,8 +346,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/MenuPresenter'
-      tags: *ref_9
-      security: *ref_10
+      tags: *ref_7
+      security: *ref_8
   /menus/{id}:
     put:
       operationId: updateMenu
@@ -386,8 +371,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MenuPresenter'
-      tags: *ref_9
-      security: *ref_10
+      tags: *ref_7
+      security: *ref_8
     delete:
       operationId: deleteMenu
       summary: ''
@@ -404,8 +389,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeleteMenuPresenter'
-      tags: *ref_9
-      security: *ref_10
+      tags: *ref_7
+      security: *ref_8
 info:
   title: reciperu api app
   description: API documents
@@ -439,18 +424,11 @@ components:
             - NOT_JOINED_RECIPE_BOOK
         recipeBookId:
           type: string
-        recipeBookRole:
-          type: string
-          enum:
-            - OWNER
-            - PARTICIPANT
       required:
         - id
         - name
         - imageUrl
         - activeStatus
-        - recipeBookId
-        - recipeBookRole
     UpdateUserDto:
       type: object
       properties:
@@ -568,13 +546,6 @@ components:
         - recipeUrl
         - faviconUrl
         - appName
-    UpdateRecipeBookDto:
-      type: object
-      properties:
-        name:
-          type: string
-      required:
-        - name
     RecipeBookPresenter:
       type: object
       properties:
@@ -597,29 +568,27 @@ components:
           type: string
       required:
         - token
-    InvitationPresenter:
-      type: object
-      properties:
-        id:
-          type: string
-        token:
-          type: string
-        spaceId:
-          type: string
-      required:
-        - id
-        - token
-        - spaceId
     ValidateInvitationDto:
       type: object
       properties:
         token:
           type: string
-        spaceId:
-          type: string
       required:
         - token
-        - spaceId
+    RecipeBookJoinPresenter:
+      type: object
+      properties:
+        success:
+          type: boolean
+      required:
+        - success
+    UpdateRecipeBookDto:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
     Recipe:
       type: object
       properties: {}

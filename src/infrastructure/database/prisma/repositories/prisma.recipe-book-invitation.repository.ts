@@ -40,6 +40,22 @@ export class PrismaRecipeBookInvitationRepository
               : null,
         },
       });
+
+    return this.toRecipeBookInvitation(prismaInvitation);
+  }
+
+  async findRecipeBookInvitation(
+    token: string,
+  ): Promise<RecipeBookInvitation | null> {
+    const prismaInvitation =
+      await this.prismaService.recipeBookInvitation.findUnique({
+        where: {
+          token,
+        },
+      });
+    if (!prismaInvitation) {
+      return null;
+    }
     return this.toRecipeBookInvitation(prismaInvitation);
   }
 

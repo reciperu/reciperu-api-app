@@ -12,6 +12,7 @@ import {
   CreateMenuUseCase,
   UpdateMenuUseCase,
   DeleteMenuUseCase,
+  ValidateRecipeBookJoinUseCase,
 } from './';
 import { DatabaseModule } from 'src/infrastructure/database/database.module';
 import { FirebaseModule } from 'src/infrastructure/firebase/firebase.module';
@@ -46,6 +47,8 @@ export class UseCaseProxyModule {
   static readonly CREATE_MENU_USE_CASE = 'CREATE_MENU_USE_CASE';
   static readonly UPDATE_MENU_USE_CASE = 'UPDATE_MENU_USE_CASE';
   static readonly DELETE_MENU_USE_CASE = 'DELETE_MENU_USE_CASE';
+  static readonly VALIDATE_RECIPE_BOOK_JOIN_USE_CASE =
+    'VALIDATE_RECIPE_BOOK_JOIN_USE_CASE';
   static resister(): DynamicModule {
     return {
       module: UseCaseProxyModule,
@@ -147,6 +150,20 @@ export class UseCaseProxyModule {
           useFactory: (menuRepository: PrismaMenuRepository) =>
             new UseCaseProxy(new DeleteMenuUseCase(menuRepository)),
         },
+        {
+          inject: [PrismaRecipeBookInvitationRepository, PrismaUserRepository],
+          provide: UseCaseProxyModule.VALIDATE_RECIPE_BOOK_JOIN_USE_CASE,
+          useFactory: (
+            recipeBookInvitationRepository: PrismaRecipeBookInvitationRepository,
+            userRepository: PrismaUserRepository,
+          ) =>
+            new UseCaseProxy(
+              new ValidateRecipeBookJoinUseCase(
+                recipeBookInvitationRepository,
+                userRepository,
+              ),
+            ),
+        },
       ],
       exports: [
         UseCaseProxyModule.CHECK_USER_USE_CASE,
@@ -161,6 +178,7 @@ export class UseCaseProxyModule {
         UseCaseProxyModule.CREATE_MENU_USE_CASE,
         UseCaseProxyModule.UPDATE_MENU_USE_CASE,
         UseCaseProxyModule.DELETE_MENU_USE_CASE,
+        UseCaseProxyModule.VALIDATE_RECIPE_BOOK_JOIN_USE_CASE,
       ],
     };
   }
