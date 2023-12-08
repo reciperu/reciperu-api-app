@@ -14,18 +14,16 @@ export class UserPresenter {
   @ApiProperty({ enum: ActiveStatus })
   readonly activeStatus: ActiveStatus;
 
-  @ApiProperty()
-  readonly recipeBookId: string;
-
-  @ApiProperty({ enum: RecipeBookRole })
-  readonly recipeBookRole: RecipeBookRole;
+  @ApiProperty({ required: false })
+  readonly recipeBookId?: string;
 
   constructor(user: User) {
     this.id = user.getId;
     this.name = user.getName;
     this.imageUrl = user.getImageUrl;
     this.activeStatus = user.getActiveStatus;
-    this.recipeBookId = user.getRecipeBookId;
-    this.recipeBookRole = user.getRecipeBookRole;
+    if (user.getRecipeBookRole === RecipeBookRole.PARTICIPANT) {
+      this.recipeBookId = user.getRecipeBookId;
+    }
   }
 }
