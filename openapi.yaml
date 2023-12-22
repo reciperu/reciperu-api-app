@@ -161,14 +161,12 @@ paths:
       operationId: getRecipeMetaData
       summary: ''
       parameters:
-        - name: recipeIds
+        - name: recipeUrl
           required: true
           in: query
-          description: レシピID
+          description: レシピURL
           schema:
-            type: array
-            items:
-              type: string
+            type: string
       responses:
         '200':
           description: レシピメタデータ取得

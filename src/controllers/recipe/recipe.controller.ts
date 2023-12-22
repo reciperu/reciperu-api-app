@@ -103,10 +103,9 @@ export class RecipeController {
 
   @Get('meta-data')
   @ApiQuery({
-    name: 'recipeIds',
-    description: 'レシピID',
+    name: 'recipeUrl',
+    description: 'レシピURL',
     type: String,
-    isArray: true,
   })
   @ApiOperation({ operationId: 'getRecipeMetaData' })
   @ApiResponse({
