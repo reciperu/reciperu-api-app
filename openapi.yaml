@@ -60,16 +60,20 @@ paths:
     get:
       operationId: getRecipe
       summary: ''
-      parameters: []
+      parameters:
+        - name: cursor
+          required: false
+          in: query
+          description: カーソル
+          schema:
+            type: string
       responses:
         '200':
           description: レシピ一覧取得
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/RecipePresenter'
+                $ref: '#/components/schemas/PaginatedRecipePresenter'
       tags: &ref_2
         - recipes
       security: &ref_3
@@ -171,7 +175,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RecipePresenter'
+                $ref: '#/components/schemas/RecipeMetaDataPresenter'
       tags: *ref_2
       security: *ref_3
   /recipes/bulk:
@@ -490,6 +494,34 @@ components:
         - appName
         - faviconUrl
         - createdAt
+    PaginatedRecipePresenter:
+      type: object
+      properties:
+        recipes:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipePresenter'
+        nextCursor:
+          type: string
+      required:
+        - recipes
+        - nextCursor
+    RecipeMetaDataPresenter:
+      type: object
+      properties:
+        title:
+          type: string
+        thumbnailUrl:
+          type: string
+        appName:
+          type: string
+        faviconUrl:
+          type: string
+      required:
+        - title
+        - thumbnailUrl
+        - appName
+        - faviconUrl
     CreateRecipeDto:
       type: object
       properties:

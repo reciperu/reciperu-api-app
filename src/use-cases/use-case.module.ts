@@ -13,6 +13,7 @@ import {
   UpdateMenuUseCase,
   DeleteMenuUseCase,
   ValidateRecipeBookJoinUseCase,
+  GetRecipeListUseCase,
 } from './';
 import { DatabaseModule } from 'src/infrastructure/database/database.module';
 import { FirebaseModule } from 'src/infrastructure/firebase/firebase.module';
@@ -49,6 +50,7 @@ export class UseCaseProxyModule {
   static readonly DELETE_MENU_USE_CASE = 'DELETE_MENU_USE_CASE';
   static readonly VALIDATE_RECIPE_BOOK_JOIN_USE_CASE =
     'VALIDATE_RECIPE_BOOK_JOIN_USE_CASE';
+  static readonly GET_RECIPE_LIST_USE_CASE = 'GET_RECIPE_LIST_USE_CASE';
   static resister(): DynamicModule {
     return {
       module: UseCaseProxyModule,
@@ -164,6 +166,12 @@ export class UseCaseProxyModule {
               ),
             ),
         },
+        {
+          inject: [PrismaRecipeRepository],
+          provide: UseCaseProxyModule.GET_RECIPE_LIST_USE_CASE,
+          useFactory: (recipeRepository: PrismaRecipeRepository) =>
+            new UseCaseProxy(new GetRecipeListUseCase(recipeRepository)),
+        },
       ],
       exports: [
         UseCaseProxyModule.LOGIN_USE_CASE,
@@ -179,6 +187,7 @@ export class UseCaseProxyModule {
         UseCaseProxyModule.UPDATE_MENU_USE_CASE,
         UseCaseProxyModule.DELETE_MENU_USE_CASE,
         UseCaseProxyModule.VALIDATE_RECIPE_BOOK_JOIN_USE_CASE,
+        UseCaseProxyModule.GET_RECIPE_LIST_USE_CASE,
       ],
     };
   }

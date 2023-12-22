@@ -12,3 +12,4 @@ export * from './create-menu.use-case';
 export * from './update-menu.use-case';
 export * from './delete-menu.use-case';
 export * from './validate-recipe-book-join.use-case';
+export * from './get-recipe-list.use-case';

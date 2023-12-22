@@ -17,9 +17,13 @@ export class PrismaRecipeRepository implements IRecipeRepository {
     return this.toRecipe(prismaRecipe);
   }
 
-  async findRecipes() {
+  async findRecipes(recipeBookId: string, cursor?: string): Promise<Recipe[]> {
     const prismaRecipes = await this.prismaService.recipe.findMany({
-      take: 10,
+      take: 20,
+      ...(cursor && { cursor: { id: cursor }, skip: 1 }),
+      where: {
+        recipeBookId,
+      },
       orderBy: {
         createdAt: 'desc',
       },

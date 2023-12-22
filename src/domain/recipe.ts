@@ -190,6 +190,7 @@ export type IRecipeRepository = {
   findRecipe(id: string): Promise<Recipe>;
   bulkInsert(recipes: RecipeBeforePersist[]): Promise<Recipe[]>;
   save(recipe: Recipe | RecipeBeforePersist): Promise<Recipe>;
+  findRecipes(recipeBookId: string, cursor?: string): Promise<Recipe[]>;
 };
 
 export type UpdateRecipeDto = {

@@ -7,6 +7,7 @@ import {
   Put,
   Post,
   Req,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -16,7 +17,11 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { RecipePresenter } from './recipe.presenter';
+import {
+  RecipePresenter,
+  PaginatedRecipePresenter,
+  RecipeMetaDataPresenter,
+} from './recipe.presenter';
 import { CreateRecipeDto, UpdateRecipeDto } from './recipe.dto';
 import {
   UseCaseProxyModule,
@@ -25,6 +30,7 @@ import {
   CreateRecipeUseCase,
   UpdateRecipeUseCase,
   GetRecipeDetailUseCase,
+  GetRecipeListUseCase,
 } from 'src/use-cases';
 import { Request } from 'express';
 
@@ -41,18 +47,32 @@ export class RecipeController {
     private readonly updateRecipeUseCase: UseCaseProxy<UpdateRecipeUseCase>,
     @Inject(UseCaseProxyModule.GET_RECIPE_DETAIL_USE_CASE)
     private readonly getRecipeDetailUseCase: UseCaseProxy<GetRecipeDetailUseCase>,
+    @Inject(UseCaseProxyModule.GET_RECIPE_LIST_USE_CASE)
+    private readonly getRecipeListUseCase: UseCaseProxy<GetRecipeListUseCase>,
   ) {}
   @Get()
   @ApiOperation({ operationId: 'getRecipe' })
+  @ApiQuery({
+    name: 'cursor',
+    description: 'カーソル',
+    type: String,
+    required: false,
+  })
   @ApiResponse({
     status: 200,
     description: 'レシピ一覧取得',
-    type: RecipePresenter,
-    isArray: true,
+    type: PaginatedRecipePresenter,
   })
-  async index() {
-    try {
-    } catch (error) {}
+  async index(
+    @Req() req: Request,
+    @Query('cursor') cursor: string | undefined,
+  ) {
+    const recipes = await this.getRecipeListUseCase
+      .getInstance()
+      .execute(req.currentUser.getRecipeBookId, cursor);
+    return new PaginatedRecipePresenter(
+      recipes.map((x) => new RecipePresenter(x)),
+    );
   }
 
   @Get('favorite')
@@ -92,7 +112,7 @@ export class RecipeController {
   @ApiResponse({
     status: 200,
     description: 'レシピメタデータ取得',
-    type: RecipePresenter,
+    type: RecipeMetaDataPresenter,
   })
   async showMetaData() {
     try {

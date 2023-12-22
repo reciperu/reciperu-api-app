@@ -54,6 +54,23 @@ export class RecipePresenter {
   }
 }
 
+export class PaginatedRecipePresenter {
+  @ApiProperty({ type: [RecipePresenter] })
+  recipes: RecipePresenter[];
+
+  @ApiProperty()
+  nextCursor?: string;
+
+  constructor(recipes: RecipePresenter[]) {
+    this.recipes = recipes;
+    if (this.recipes.length === 0) {
+      this.nextCursor = undefined;
+      return;
+    }
+    this.nextCursor = this.recipes[this.recipes.length - 1].id;
+  }
+}
+
 export class RecipeMetaDataPresenter {
   @ApiProperty()
   title?: string;
