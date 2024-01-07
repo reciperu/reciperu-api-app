@@ -190,7 +190,11 @@ export type IRecipeRepository = {
   findRecipe(id: string): Promise<Recipe>;
   bulkInsert(recipes: RecipeBeforePersist[]): Promise<Recipe[]>;
   save(recipe: Recipe | RecipeBeforePersist): Promise<Recipe>;
-  findRecipes(recipeBookId: string, cursor?: string): Promise<Recipe[]>;
+  findRecipes(
+    recipeBookId: string,
+    cursor?: string,
+    findOptions?: FindRecipeOptions,
+  ): Promise<Recipe[]>;
 };
 
 export type UpdateRecipeDto = {
@@ -212,4 +216,8 @@ export type CreateRecipeDto = {
   recipeUrl?: string;
   faviconUrl?: string;
   appName?: string;
+};
+
+export type FindRecipeOptions = {
+  favorite?: boolean;
 };

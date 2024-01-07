@@ -61,6 +61,12 @@ paths:
       operationId: getRecipe
       summary: ''
       parameters:
+        - name: favorite
+          required: false
+          in: query
+          description: お気に入りかどうか
+          schema:
+            type: boolean
         - name: cursor
           required: false
           in: query
@@ -95,22 +101,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecipePresenter'
-      tags: *ref_2
-      security: *ref_3
-  /recipes/favorite:
-    get:
-      operationId: getRecipeByFavorite
-      summary: ''
-      parameters: []
-      responses:
-        '200':
-          description: お気に入りレシピ一覧取得
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/RecipePresenter'
       tags: *ref_2
       security: *ref_3
   /recipes/{id}:

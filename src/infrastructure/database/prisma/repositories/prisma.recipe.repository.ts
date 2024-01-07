@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { IRecipeRepository, RecipeBeforePersist, Recipe } from 'src/domain';
+import {
+  IRecipeRepository,
+  RecipeBeforePersist,
+  Recipe,
+  FindRecipeOptions,
+} from 'src/domain';
 import { Recipe as PrismaRecipe } from '@prisma/client';
 
 @Injectable()
@@ -17,12 +22,18 @@ export class PrismaRecipeRepository implements IRecipeRepository {
     return this.toRecipe(prismaRecipe);
   }
 
-  async findRecipes(recipeBookId: string, cursor?: string): Promise<Recipe[]> {
+  async findRecipes(
+    recipeBookId: string,
+    cursor?: string,
+    findOptions?: FindRecipeOptions,
+  ): Promise<Recipe[]> {
+    const { favorite } = findOptions;
     const prismaRecipes = await this.prismaService.recipe.findMany({
       take: 20,
       ...(cursor && { cursor: { id: cursor }, skip: 1 }),
       where: {
         recipeBookId,
+        isFavorite: favorite,
       },
       orderBy: {
         createdAt: 'desc',

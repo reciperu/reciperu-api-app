@@ -58,6 +58,12 @@ export class RecipeController {
     type: String,
     required: false,
   })
+  @ApiQuery({
+    name: 'favorite',
+    description: 'お気に入りかどうか',
+    type: Boolean,
+    required: false,
+  })
   @ApiResponse({
     status: 200,
     description: 'レシピ一覧取得',
@@ -65,27 +71,15 @@ export class RecipeController {
   })
   async index(
     @Req() req: Request,
+    @Query('favorite') favorite: boolean | undefined,
     @Query('cursor') cursor: string | undefined,
   ) {
     const recipes = await this.getRecipeListUseCase
       .getInstance()
-      .execute(req.currentUser.getRecipeBookId, cursor);
+      .execute(req.currentUser.getRecipeBookId, cursor, { favorite });
     return new PaginatedRecipePresenter(
       recipes.map((x) => new RecipePresenter(x)),
     );
-  }
-
-  @Get('favorite')
-  @ApiOperation({ operationId: 'getRecipeByFavorite' })
-  @ApiResponse({
-    status: 200,
-    description: 'お気に入りレシピ一覧取得',
-    type: RecipePresenter,
-    isArray: true,
-  })
-  async indexByFavorite() {
-    try {
-    } catch (error) {}
   }
 
   @Get(':id')
