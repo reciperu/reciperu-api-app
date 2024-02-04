@@ -1,7 +1,7 @@
 import { User } from '.';
 import { randomUUID } from 'crypto';
 import * as dayjs from 'dayjs';
-export class RecipeBook {
+export class Space {
   private id: string;
   private name: string;
   private users: User[];
@@ -33,21 +33,21 @@ export class RecipeBook {
     this.name = name;
   }
 
-  update(updateRecipeBookDto: UpdateRecipeBookDto) {
-    this.setName = updateRecipeBookDto.name;
+  update(updateSpaceDto: UpdateSpaceDto) {
+    this.setName = updateSpaceDto.name;
   }
 }
 
-export class RecipeBookInvitationBeforePersist {
+export class SpaceInvitationBeforePersist {
   private token: string;
   private expiredAt: Date;
-  private recipeBookId: string;
-  constructor({ recipeBookId }: { recipeBookId: string }) {
-    this.recipeBookId = recipeBookId;
+  private spaceId: string;
+  constructor({ spaceId }: { spaceId: string }) {
+    this.spaceId = spaceId;
     this.expiredAt = dayjs().add(1, 'day').toDate();
   }
-  get getRecipeBookId(): string {
-    return this.recipeBookId;
+  get getSpaceId(): string {
+    return this.spaceId;
   }
 
   get getToken(): string {
@@ -65,23 +65,23 @@ export class RecipeBookInvitationBeforePersist {
   }
 }
 
-export class RecipeBookInvitation extends RecipeBookInvitationBeforePersist {
+export class SpaceInvitation extends SpaceInvitationBeforePersist {
   private id: string;
   private usedAt: Date;
   constructor({
     id,
     usedAt,
     token,
-    recipeBookId,
+    spaceId,
   }: {
     id: string;
     token: string;
     expiredAt: Date;
     usedAt: Date;
-    recipeBookId: string;
+    spaceId: string;
   }) {
     super({
-      recipeBookId,
+      spaceId,
     });
     this.id = id;
     this.usedAt = usedAt;
@@ -107,23 +107,23 @@ export class RecipeBookInvitation extends RecipeBookInvitationBeforePersist {
   }
 }
 
-export type IRecipeBookRepository = {
-  findRecipeBook(id: string): Promise<RecipeBook>;
-  updateRecipeBook(recipeBook: RecipeBook): Promise<RecipeBook>;
+export type ISpaceRepository = {
+  findSpace(id: string): Promise<Space>;
+  updateSpace(space: Space): Promise<Space>;
 };
 
-export type IRecipeBookInvitationRepository = {
+export type ISpaceInvitationRepository = {
   save(
-    recipeBookInvitationBeforePersist: RecipeBookInvitationBeforePersist,
-  ): Promise<RecipeBookInvitation>;
-  findRecipeBookInvitation(token: string): Promise<RecipeBookInvitation | null>;
+    spaceInvitationBeforePersist: SpaceInvitationBeforePersist,
+  ): Promise<SpaceInvitation>;
+  findSpaceInvitation(token: string): Promise<SpaceInvitation | null>;
 };
 
-export type CreateRecipeBookDto = {
+export type CreateSpaceDto = {
   name: string;
 };
 
-export type UpdateRecipeBookDto = {
+export type UpdateSpaceDto = {
   name: string;
 };
 
