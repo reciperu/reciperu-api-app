@@ -1,4 +1,4 @@
-export * from './recipe-book';
+export * from './space';
 export * from './user';
 export * from './recipe';
 export * from './menu';
