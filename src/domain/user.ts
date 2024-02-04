@@ -1,14 +1,14 @@
 import { BadRequestException } from 'src/infrastructure/exceptions';
-import { RecipeBookInvitation } from './recipe-book';
-export enum RecipeBookRole {
+import { SpaceInvitation } from './space';
+export enum SpaceRole {
   OWNER = 'OWNER',
   PARTICIPANT = 'PARTICIPANT',
 }
 
 export enum ActiveStatus {
   ONBOARDING = 'ONBOARDING',
-  JOINED_RECIPE_BOOK = 'JOINED_RECIPE_BOOK',
-  NOT_JOINED_RECIPE_BOOK = 'NOT_JOINED_RECIPE_BOOK',
+  JOINED_SPACE = 'JOINED_SPACE',
+  NOT_JOINED_SPACE = 'NOT_JOINED_SPACE',
 }
 
 export class UserBeforePersist {
@@ -49,8 +49,8 @@ export class UserBeforePersist {
 export class User extends UserBeforePersist {
   private id: string;
   private activeStatus: ActiveStatus;
-  private recipeBookId: string;
-  private recipeBookRole: RecipeBookRole;
+  private spaceId: string;
+  private spaceRole: SpaceRole;
 
   constructor({
     id,
@@ -58,22 +58,22 @@ export class User extends UserBeforePersist {
     imageUrl,
     uid,
     activeStatus,
-    recipeBookId,
-    recipeBookRole,
+    spaceId,
+    spaceRole,
   }: {
     id: string;
     name: string;
     imageUrl: string;
     uid: string;
     activeStatus: ActiveStatus;
-    recipeBookId: string;
-    recipeBookRole: RecipeBookRole;
+    spaceId: string;
+    spaceRole: SpaceRole;
   }) {
     super({ name, imageUrl, uid });
     this.id = id;
     this.activeStatus = activeStatus;
-    this.recipeBookId = recipeBookId;
-    this.recipeBookRole = recipeBookRole;
+    this.spaceId = spaceId;
+    this.spaceRole = spaceRole;
   }
   get getId(): string {
     return this.id;
@@ -82,11 +82,11 @@ export class User extends UserBeforePersist {
   get getActiveStatus(): ActiveStatus {
     return this.activeStatus;
   }
-  get getRecipeBookId(): string {
-    return this.recipeBookId;
+  get getSpaceId(): string {
+    return this.spaceId;
   }
-  get getRecipeBookRole(): RecipeBookRole {
-    return this.recipeBookRole;
+  get getSpaceRole(): SpaceRole {
+    return this.spaceRole;
   }
 
   set setActiveStatus(activeStatus: ActiveStatus) {
@@ -107,19 +107,19 @@ export class User extends UserBeforePersist {
     this.setActiveStatus = activeStatus;
   }
 
-  joinRecipeBook(recipeBookId: string): void {
-    this.recipeBookId = recipeBookId;
-    this.recipeBookRole = RecipeBookRole.PARTICIPANT;
+  joinSpace(spaceId: string): void {
+    this.spaceId = spaceId;
+    this.spaceRole = SpaceRole.PARTICIPANT;
   }
 
-  canUpdateRecipeBook(): void {
-    if (this.getRecipeBookRole !== RecipeBookRole.OWNER) {
+  canUpdateSpace(): void {
+    if (this.spaceRole !== SpaceRole.OWNER) {
       throw new BadRequestException('USER_NOT_OWNER');
     }
   }
 
-  canInviteRecipeBook(): void {
-    if (this.getRecipeBookRole !== RecipeBookRole.OWNER) {
+  canInviteSpace(): void {
+    if (this.getSpaceRole !== SpaceRole.OWNER) {
       throw new BadRequestException('USER_NOT_OWNER');
     }
   }
@@ -129,10 +129,7 @@ export type IUserRepository = {
   create(user: UserBeforePersist): Promise<User>;
   findUser(findOptions: { uid: string } | { id: string }): Promise<User | null>;
   update(user: User): Promise<User>;
-  updateWithRecipeBook(
-    user: User,
-    invitation: RecipeBookInvitation,
-  ): Promise<User>;
+  updateWithSpace(user: User, invitation: SpaceInvitation): Promise<User>;
 };
 
 export type UpdateUserDto = {
