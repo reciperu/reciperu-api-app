@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^3.2.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/passport": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
@@ -34,6 +35,7 @@
     "firebase-admin": "^11.9.0",
     "fs": "0.0.1-security",
     "js-yaml": "^4.1.0",
+    "microcms-js-sdk": "^2.7.0",
     "passport-http-bearer": "^1.0.1",
     "prisma": "^5.1.1",
     "reflect-metadata": "^0.1.13",
