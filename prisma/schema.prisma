@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum RecipeBookRole {
+enum SpaceRole {
   OWNER
   PARTICIPANT
 }
@@ -23,93 +23,92 @@ enum MenuStatus {
 
 enum ActiveStatus {
   ONBOARDING
-  JOINED_RECIPE_BOOK
-  NOT_JOINED_RECIPE_BOOK
+  JOINED_SPACE
+  NOT_JOINED_SPACE
 }
 
-model RecipeBook {
-  id                    String                 @id @default(cuid())
-  name                  String?
-  recipeBookUsers       RecipeBookUser[]
-  recipeBookInvitations RecipeBookInvitation[]
-  recipes               Recipe[]
+model Space {
+  spaceId          String            @id @default(cuid()) @map("space_id")
+  name             String?
+  spaceInvitations SpaceInvitation[]
+  recipes          Recipe[]
+  users            User[]
 
-  @@index([id])
-  @@map("recipe_books")
+  @@index([spaceId])
+  @@map("spaces")
 }
 
 model User {
-  id                    String           @id @default(cuid())
-  name                  String
-  imageUrl              String           @map("image_url")
-  activeStatus          ActiveStatus     @default(ONBOARDING) @map("active_status")
-  uid                   String           @unique
-  currentRecipeBookRole RecipeBookRole   @default(OWNER) @map("current_recipe_book_role")
-  currentRecipeBookId   String           @map("current_recipe_book_id")
-  recipeBookUsers       RecipeBookUser[]
-  menus                 Menu[]
-  recipes               Recipe[]
+  userId       String       @id @default(cuid()) @map("user_id")
+  name         String
+  imageUrl     String       @map("image_url")
+  activeStatus ActiveStatus @default(ONBOARDING) @map("active_status")
+  uid          String       @unique
+  spaceRole    SpaceRole    @default(OWNER) @map("space_role")
+  menus        Menu[]
+  recipes      Recipe[]
+  spaceId      String?      @map("space_id")
+  space        Space?       @relation(fields: [spaceId], references: [spaceId], onDelete: Cascade)
 
-  @@index([id])
+  @@index([userId])
   @@map("users")
 }
 
-model RecipeBookUser {
-  id             String         @id @default(cuid())
-  userId         String         @map("user_id")
-  recipeBookId   String         @map("recipe_book_id")
-  recipeBookRole RecipeBookRole @default(OWNER) @map("recipe_book_role")
-  recipeBook     RecipeBook     @relation(fields: [recipeBookId], references: [id], onDelete: Cascade)
-  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+model SpaceInvitation {
+  token     String    @id @unique
+  expiredAt DateTime  @map("expired_at")
+  usedAt    DateTime? @map("used_at")
+  spaceId   String    @map("space_id")
+  space     Space     @relation(fields: [spaceId], references: [spaceId], onDelete: Cascade)
 
-  @@unique([userId, recipeBookId])
-  @@index([id])
-  @@map("recipe_book_users")
-}
-
-model RecipeBookInvitation {
-  id           String     @id @default(cuid())
-  token        String     @unique
-  expiredAt    DateTime   @map("expired_at")
-  usedAt       DateTime?  @map("used_at")
-  recipeBookId String     @map("recipe_book_id")
-  recipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id], onDelete: Cascade)
-
-  @@index([id])
-  @@map("recipe_book_invitations")
+  @@index([token])
+  @@map("space_invitations")
 }
 
 model Recipe {
-  id           String     @id @default(cuid())
+  recipeId     String    @id @default(cuid())
   title        String
-  thumbnailUrl String?    @map("thumbnail_url")
-  imageUrls    String?    @map("image_urls")
-  recipeUrl    String?    @map("recipe_url")
-  isFavorite   Boolean    @default(false) @map("is_favorite")
+  thumbnailUrl String?   @map("thumbnail_url")
+  imageUrls    String?   @map("image_urls")
+  recipeUrl    String?   @map("recipe_url")
   memo         String?
-  faviconUrl   String?    @map("favicon_url")
-  appName      String?    @map("app_name")
-  recipeBookId String     @map("recipe_book_id")
-  userId       String     @map("user_id")
-  createdAt    DateTime   @default(now()) @map("created_at")
-  recipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id], onDelete: Cascade)
+  faviconUrl   String?   @map("favicon_url")
+  appName      String?   @map("app_name")
+  spaceId      String    @map("space_id")
+  userId       String    @map("user_id")
+  archivedAt   DateTime? @map("archived_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime? @updatedAt @map("updated_at")
+  space        Space     @relation(fields: [spaceId], references: [spaceId], onDelete: Cascade)
   menus        Menu[]
-  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User      @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
-  @@index([id])
+  @@index([recipeId])
+  @@index([createdAt])
   @@map("recipes")
 }
 
 model Menu {
-  id          String     @id @default(cuid())
+  menuId      String     @id @default(cuid()) @map("menu_id")
   status      MenuStatus @default(PENDING)
-  scheduledAt DateTime?  @map("scheduledAt")
+  scheduledAt DateTime   @map("scheduledAt") @db.Date
   recipeId    String     @map("recipe_id")
   userId      String     @map("user_id")
   createdAt   DateTime   @default(now()) @map("created_at")
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  recipe      Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  user        User       @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  recipe      Recipe     @relation(fields: [recipeId], references: [recipeId], onDelete: Cascade)
 
-  @@index([id])
+  @@index([menuId])
   @@map("menus")
+}
+
+model RequestedRecipe {
+  userId    String   @map("user_id")
+  recipeId  String   @map("recipe_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, recipeId])
+  @@index([userId, recipeId])
+  @@index([createdAt])
+  @@map("requested_recipes")
 }
