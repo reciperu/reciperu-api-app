@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Req,
-  Inject,
-  Get,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Req, Inject, Get } from '@nestjs/common';
 import {
   ApiOperation,
   ApiResponse,
@@ -39,17 +32,10 @@ export class RoadmapController {
     type: RoadmapPresenter,
   })
   async getRoadmap(@Req() req: Request) {
-    try {
-      const result = await client.get({
-        endpoint: 'roadmap',
-        queries: { limit: 20 },
-      });
-      return result.contents;
-    } catch (error) {
-      throw new HttpException(
-        error instanceof Error ? error.message : 'Internal Server Error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    const result = await client.get({
+      endpoint: 'roadmap',
+      queries: { limit: 20 },
+    });
+    return result.contents;
   }
 }
