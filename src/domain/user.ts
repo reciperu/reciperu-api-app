@@ -127,7 +127,9 @@ export class User extends UserBeforePersist {
 
 export type IUserRepository = {
   create(user: UserBeforePersist): Promise<User>;
-  findUser(findOptions: { uid: string } | { id: string }): Promise<User | null>;
+  findUser(
+    findOptions: { uid: string } | { userId: string },
+  ): Promise<User | null>;
   update(user: User): Promise<User>;
   updateWithSpace(user: User, invitation: SpaceInvitation): Promise<User>;
 };

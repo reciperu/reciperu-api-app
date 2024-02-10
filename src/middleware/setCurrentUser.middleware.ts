@@ -31,8 +31,8 @@ export class SetCurrentUserMiddleware implements NestMiddleware {
             imageUrl: user.getImageUrl,
             uid: user.getUid,
             activeStatus: user.getActiveStatus,
-            recipeBookId: user.getRecipeBookId,
-            recipeBookRole: user.getRecipeBookRole,
+            spaceId: user.getSpaceId,
+            spaceRole: user.getSpaceRole,
           })
         : null;
 

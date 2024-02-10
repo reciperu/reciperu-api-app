@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User, ActiveStatus, RecipeBookRole } from 'src/domain';
+import { User, ActiveStatus, SpaceRole } from 'src/domain';
 
 export class UserPresenter {
   @ApiProperty()
@@ -15,21 +15,21 @@ export class UserPresenter {
   readonly activeStatus: ActiveStatus;
 
   @ApiProperty({ required: false })
-  readonly recipeBookOwnerId?: string;
+  readonly spaceOwnerId?: string;
 
   @ApiProperty({ required: false })
-  readonly recipeBookParticipantId?: string;
+  readonly spaceParticipantId?: string;
 
   constructor(user: User) {
     this.id = user.getId;
     this.name = user.getName;
     this.imageUrl = user.getImageUrl;
     this.activeStatus = user.getActiveStatus;
-    if (user.getRecipeBookRole === RecipeBookRole.PARTICIPANT) {
-      this.recipeBookParticipantId = user.getRecipeBookId;
+    if (user.getSpaceRole === SpaceRole.PARTICIPANT) {
+      this.spaceParticipantId = user.getSpaceId;
     }
-    if (user.getRecipeBookRole === RecipeBookRole.OWNER) {
-      this.recipeBookOwnerId = user.getRecipeBookId;
+    if (user.getSpaceRole === SpaceRole.OWNER) {
+      this.spaceOwnerId = user.getSpaceId;
     }
   }
 }

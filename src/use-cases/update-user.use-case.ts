@@ -5,8 +5,8 @@ import { User, IUserRepository } from 'src/domain';
 @Injectable()
 export class UpdateUserUseCase {
   constructor(private readonly userRepository: IUserRepository) {}
-  async execute(updateUserDto: UpdateUserDto, id: string): Promise<User> {
-    const user = await this.userRepository.findUser({ id });
+  async execute(updateUserDto: UpdateUserDto, userId: string): Promise<User> {
+    const user = await this.userRepository.findUser({ userId });
     if (!user) throw new HttpException('User not found', 404);
     user.update({
       name: updateUserDto.name,

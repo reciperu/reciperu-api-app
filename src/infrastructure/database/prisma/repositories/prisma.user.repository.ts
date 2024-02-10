@@ -5,12 +5,12 @@ import {
   User,
   UserBeforePersist,
   IUserRepository,
-  RecipeBookRole,
-  RecipeBookInvitation,
+  SpaceRole,
+  SpaceInvitation,
 } from 'src/domain';
 import { User as PrismaUser } from '@prisma/client';
 
-export type FindOptions = { uid: string } | { id: string };
+export type FindOptions = { uid: string } | { userId: string };
 @Injectable()
 export class PrismaUserRepository implements IUserRepository {
   constructor(private readonly prismaService: PrismaService) {
@@ -19,9 +19,9 @@ export class PrismaUserRepository implements IUserRepository {
 
   async create(user: UserBeforePersist): Promise<User> {
     const prismaUser = await this.prismaService.$transaction(async (tx) => {
-      const recipeBook = await tx.recipeBook.create({
+      await tx.space.create({
         data: {
-          name: `${user.getName}の料理本`,
+          name: `${user.getName}のスペース`,
         },
       });
       return await tx.user.create({
@@ -29,15 +29,6 @@ export class PrismaUserRepository implements IUserRepository {
           name: user.getName,
           imageUrl: user.getImageUrl,
           uid: user.getUid,
-          currentRecipeBookId: recipeBook.id,
-          recipeBookUsers: {
-            create: {
-              recipeBookId: recipeBook.id,
-            },
-          },
-        },
-        include: {
-          recipeBookUsers: true,
         },
       });
     });
@@ -48,7 +39,9 @@ export class PrismaUserRepository implements IUserRepository {
   async findUser(findOptions: FindOptions): Promise<null | User> {
     const user = await this.prismaService.user.findUnique({
       where:
-        'id' in findOptions ? { id: findOptions.id } : { uid: findOptions.uid },
+        'userId' in findOptions
+          ? { userId: findOptions.userId }
+          : { uid: findOptions.uid },
     });
     if (!user) {
       return null;
@@ -58,38 +51,36 @@ export class PrismaUserRepository implements IUserRepository {
 
   async update(user: User): Promise<User> {
     const updatedUser = await this.prismaService.user.update({
-      where: { id: user.getId },
+      where: { userId: user.getId },
       data: {
         name: user.getName,
         imageUrl: user.getImageUrl,
         activeStatus: user.getActiveStatus as ActiveStatus,
-        currentRecipeBookRole: user.getRecipeBookRole as RecipeBookRole,
       },
     });
     return this.toUser(updatedUser);
   }
 
-  async updateWithRecipeBook(
+  async updateWithSpace(
     user: User,
-    invitation: RecipeBookInvitation,
+    invitation: SpaceInvitation,
   ): Promise<User> {
     return await this.prismaService.$transaction(async (tx) => {
       const prismaUser = await tx.user.update({
-        where: { id: user.getId },
+        where: { userId: user.getId },
         data: {
-          currentRecipeBookId: user.getRecipeBookId,
-          currentRecipeBookRole: user.getRecipeBookRole as RecipeBookRole,
+          spaceRole: user.getSpaceRole as SpaceRole,
+          spaceId: user.getSpaceId,
         },
       });
-      await tx.recipeBookUser.create({
+      await tx.space.create({
         data: {
-          userId: user.getId,
-          recipeBookId: user.getRecipeBookId,
-          recipeBookRole: user.getRecipeBookRole as RecipeBookRole,
+          spaceId: user.getSpaceId,
+          name: `${user.getName}のスペース`,
         },
       });
-      await tx.recipeBookInvitation.update({
-        where: { id: invitation.getId },
+      await tx.spaceInvitation.update({
+        where: { token: invitation.getToken },
         data: {
           usedAt: invitation.getUsedAt,
         },
@@ -100,13 +91,13 @@ export class PrismaUserRepository implements IUserRepository {
 
   private toUser(user: PrismaUser) {
     return new User({
-      id: user.id,
+      id: user.userId,
       name: user.name,
       imageUrl: user.imageUrl,
       uid: user.uid,
       activeStatus: user.activeStatus as ActiveStatus,
-      recipeBookId: user.currentRecipeBookId,
-      recipeBookRole: user.currentRecipeBookRole as RecipeBookRole,
+      spaceId: user.spaceId,
+      spaceRole: user.spaceRole as SpaceRole,
     });
   }
 }
