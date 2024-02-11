@@ -1,11 +1,10 @@
-import { Controller, Req, Get } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import {
   ApiOperation,
   ApiResponse,
   ApiTags,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { Request } from 'express';
 import { createClient } from 'microcms-js-sdk';
 import { RoadmapPresenter } from './roadmap.presenter';
 
@@ -22,10 +21,10 @@ export class RoadmapController {
   @ApiOperation({ operationId: 'roadmap' })
   @ApiResponse({
     status: 200,
-    description: 'ロードマップ',
+    description: 'ロードマップを取得する',
     type: RoadmapPresenter,
   })
-  async getRoadmap(@Req() req: Request) {
+  async getRoadmap() {
     const result = await client.get({
       endpoint: 'roadmap',
       queries: { limit: 20 },

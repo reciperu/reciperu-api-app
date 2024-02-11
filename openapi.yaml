@@ -389,7 +389,7 @@ paths:
       parameters: []
       responses:
         '200':
-          description: ロードマップ
+          description: ロードマップを取得する
           content:
             application/json:
               schema:
