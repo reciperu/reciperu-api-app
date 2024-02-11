@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { RecipeBook, User } from 'src/domain';
+import { Space, User } from 'src/domain';
 
-export class RecipeBookPresenter {
+export class SpacePresenter {
   @ApiProperty()
   readonly id: string;
 
@@ -11,14 +11,14 @@ export class RecipeBookPresenter {
   @ApiProperty()
   readonly users: User[];
 
-  constructor(recipeBook: RecipeBook) {
-    this.id = recipeBook.getId;
-    this.name = recipeBook.getName;
-    this.users = recipeBook.getUsers;
+  constructor(space: Space) {
+    this.id = space.getId;
+    this.name = space.getName;
+    this.users = space.getUsers;
   }
 }
 
-export class RecipeBookInvitationPresenter {
+export class SpaceInvitationPresenter {
   @ApiProperty()
   readonly token: string;
 
@@ -27,7 +27,7 @@ export class RecipeBookInvitationPresenter {
   }
 }
 
-export class RecipeBookJoinPresenter {
+export class SpaceJoinPresenter {
   @ApiProperty()
   success: boolean;
 }

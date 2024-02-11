@@ -5,16 +5,7 @@ export class Space {
   private id: string;
   private name: string;
   private users: User[];
-  constructor({
-    id,
-    name,
-    users,
-  }: {
-    id: string;
-    name: string;
-    users: User[];
-  }) {
-    this.id = id;
+  constructor({ name, users }: { id: string; name: string; users: User[] }) {
     this.name = name;
     this.users = users;
   }
@@ -66,15 +57,12 @@ export class SpaceInvitationBeforePersist {
 }
 
 export class SpaceInvitation extends SpaceInvitationBeforePersist {
-  private id: string;
   private usedAt: Date;
   constructor({
-    id,
     usedAt,
     token,
     spaceId,
   }: {
-    id: string;
     token: string;
     expiredAt: Date;
     usedAt: Date;
@@ -83,13 +71,8 @@ export class SpaceInvitation extends SpaceInvitationBeforePersist {
     super({
       spaceId,
     });
-    this.id = id;
     this.usedAt = usedAt;
     this.setToken = token;
-  }
-
-  get getId(): string {
-    return this.id;
   }
 
   get getUsedAt(): Date {

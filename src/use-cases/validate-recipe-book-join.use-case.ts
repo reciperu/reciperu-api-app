@@ -1,22 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { IRecipeBookInvitationRepository, IUserRepository } from 'src/domain';
+import { ISpaceInvitationRepository, IUserRepository } from 'src/domain';
 
 @Injectable()
-export class ValidateRecipeBookJoinUseCase {
+export class ValidateSpaceJoinUseCase {
   constructor(
-    private readonly recipeBookInvitationRepository: IRecipeBookInvitationRepository,
+    private readonly spaceInvitationRepository: ISpaceInvitationRepository,
     private readonly userRepository: IUserRepository,
   ) {}
 
   async execute(token: string, userId: string): Promise<void> {
-    const invitation =
-      await this.recipeBookInvitationRepository.findRecipeBookInvitation(token);
+    const invitation = await this.spaceInvitationRepository.findSpaceInvitation(
+      token,
+    );
 
     invitation.validate();
     invitation.useToken();
 
-    const user = await this.userRepository.findUser({ id: userId });
-    user.joinRecipeBook(invitation.getRecipeBookId);
-    await this.userRepository.updateWithRecipeBook(user, invitation);
+    const user = await this.userRepository.findUser({ userId });
+    user.joinSpace(invitation.getSpaceId);
+    await this.userRepository.updateWithSpace(user, invitation);
   }
 }
