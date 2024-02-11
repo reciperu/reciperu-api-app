@@ -1,5 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Roadmap, RoadmapStatus } from 'src/domain';
+
+export enum RoadmapStatus {
+  IN_PROGRESS = '対応中',
+  BACKLOG = '未対応',
+  COMPLETED = '対応済',
+}
 
 export class RoadmapPresenter {
   @ApiProperty()
@@ -25,15 +30,4 @@ export class RoadmapPresenter {
 
   @ApiProperty({ enum: RoadmapStatus })
   readonly status: RoadmapStatus[];
-
-  constructor(roadmap: Roadmap) {
-    this.id = roadmap.getId;
-    this.createdAt = roadmap.getCreatedAt;
-    this.updatedAt = roadmap.getUpdatedAt;
-    this.publishedAt = roadmap.getPublishedAt;
-    this.revisedAt = roadmap.getRevisedAt;
-    this.title = roadmap.getTitle;
-    this.description = roadmap.getDescription;
-    this.status = roadmap.getStatus;
-  }
 }

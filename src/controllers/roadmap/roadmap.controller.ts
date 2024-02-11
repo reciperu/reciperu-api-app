@@ -1,11 +1,10 @@
-import { Controller, Req, Inject, Get } from '@nestjs/common';
+import { Controller, Req, Get } from '@nestjs/common';
 import {
   ApiOperation,
   ApiResponse,
   ApiTags,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { UseCaseProxyModule, UseCaseProxy, LoginUseCase } from 'src/use-cases';
 import { Request } from 'express';
 import { createClient } from 'microcms-js-sdk';
 import { RoadmapPresenter } from './roadmap.presenter';
@@ -19,11 +18,6 @@ const client = createClient({
 @ApiBearerAuth()
 @Controller('roadmap')
 export class RoadmapController {
-  constructor(
-    @Inject(UseCaseProxyModule.LOGIN_USE_CASE)
-    private readonly loginUseCase: UseCaseProxy<LoginUseCase>,
-  ) {}
-
   @Get()
   @ApiOperation({ operationId: 'roadmap' })
   @ApiResponse({
