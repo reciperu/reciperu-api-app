@@ -7,6 +7,7 @@ import {
 import { FirebaseModule } from './infrastructure/firebase/firebase.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ClassSerializerInterceptor } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { ControllersModule } from './controllers';
 import { DatabaseModule } from './infrastructure/database/database.module';
 import { UseCaseProxyModule } from './use-cases/use-case.module';
@@ -22,6 +23,7 @@ import { PrismaService } from './infrastructure/database/prisma/prisma.service';
     DatabaseModule,
     UseCaseProxyModule,
     AuthModule,
+    ConfigModule.forRoot(),
   ],
   providers: [
     {
