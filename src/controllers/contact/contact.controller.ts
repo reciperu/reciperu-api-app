@@ -12,11 +12,13 @@ import {
   ApiTags,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { ContactPresenter, ContactRequestBody } from './contact.presenter';
+import { ContactPresenter } from './contact.presenter';
 import { Request } from 'express';
+import { CreateContactDto } from './contact.dto';
 
 // Slack の Incoming Webhook URL
-const webhookUrl = process.env.SLACK_WEBHOOK_URL;
+const webhookUrl =
+  'https://hooks.slack.com/services/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';
 
 @ApiTags('contact')
 @ApiBearerAuth()
@@ -31,9 +33,9 @@ export class ContactController {
   })
   async postContact(
     @Req() req: Request,
-    @Body() requestBody: ContactRequestBody,
+    @Body() createContactDto: CreateContactDto,
   ) {
-    if (!requestBody.content.length) {
+    if (!createContactDto.content.length) {
       // 400エラーを返す
       throw new HttpException('No message provided', HttpStatus.BAD_REQUEST);
     }
@@ -44,11 +46,11 @@ export class ContactController {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        text: `# ユーザー情報\n- ユーザー名：${JSON.stringify(
-          req.currentUser.getName,
-        )}\n- ユーザーID：${req.currentUser.getUid}\n- メールアドレス: ${
-          requestBody.email || 'unknown'
-        }\n\n# 問い合わせ内容\n${requestBody.content}`,
+        text: `# ユーザー情報\n- ユーザー名：${
+          req.currentUser.getName
+        }\n- ユーザーID：${req.currentUser.getId}\n- メールアドレス: ${
+          createContactDto.email || 'unknown'
+        }\n\n# 問い合わせ内容\n${createContactDto.content}`,
       }),
     });
 
