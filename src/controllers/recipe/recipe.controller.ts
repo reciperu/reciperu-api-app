@@ -65,12 +65,11 @@ export class RecipeController {
   })
   async index(
     @Req() req: Request,
-    @Query('favorite') favorite: boolean | undefined,
     @Query('cursor') cursor: string | undefined,
   ) {
     const recipes = await this.getRecipeListUseCase
       .getInstance()
-      .execute(req.currentUser.getSpaceId, cursor, { favorite });
+      .execute(req.currentUser.getSpaceId, cursor);
     return new PaginatedRecipePresenter(
       recipes.map((x) => new RecipePresenter(x)),
     );

@@ -61,11 +61,6 @@ paths:
       operationId: getRecipe
       summary: ''
       parameters:
-        - name: favorite
-          required: true
-          in: query
-          schema:
-            type: boolean
         - name: cursor
           required: false
           in: query
