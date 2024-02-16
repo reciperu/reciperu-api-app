@@ -13,6 +13,9 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.use(bodyParser.json({ limit: '50mb' })); // jsonをパースする際のlimitを設定
   app.use(bodyParser.urlencoded({ limit: '50mb', extended: true })); // urlencodeされたボディをパースする際のlimitを設定
+  const globalPrefix = 'api';
+  app.setGlobalPrefix(globalPrefix);
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   const config = new DocumentBuilder()
     .setTitle('reciperu api app')
     .setDescription('API documents')
@@ -24,9 +27,6 @@ async function bootstrap() {
   fs.writeFileSync('./openapi.yaml', dump(document, {}));
   SwaggerModule.setup('api', app, document);
 
-  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   await app.listen(3333);
 }
 bootstrap();
