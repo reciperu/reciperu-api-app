@@ -3,16 +3,16 @@ import {
   LoginUseCase,
   UpdateUserUseCase,
   CreateRecipesUseCase,
-  GetRecipeBookUseCase,
+  GetSpaceUseCase,
   CreateRecipeUseCase,
   GetRecipeDetailUseCase,
-  UpdateRecipeBookUseCase,
+  UpdateSpaceUseCase,
   UpdateRecipeUseCase,
-  InviteRecipeBookUseCase,
+  InviteSpaceUseCase,
   CreateMenuUseCase,
   UpdateMenuUseCase,
   DeleteMenuUseCase,
-  ValidateRecipeBookJoinUseCase,
+  ValidateSpaceJoinUseCase,
   GetRecipeListUseCase,
 } from './';
 import { DatabaseModule } from 'src/infrastructure/database/database.module';
@@ -21,9 +21,9 @@ import { FirebaseService } from 'src/infrastructure/firebase/firebase.service';
 import {
   PrismaUserRepository,
   PrismaRecipeRepository,
-  PrismaRecipeBookRepository,
-  PrismaRecipeBookInvitationRepository,
+  PrismaSpaceInvitationRepository,
   PrismaMenuRepository,
+  PrismaSpaceRepository,
 } from 'src/infrastructure/database/prisma';
 
 export class UseCaseProxy<T> {
@@ -39,17 +39,16 @@ export class UseCaseProxyModule {
   static readonly LOGIN_USE_CASE = 'LOGIN_USE_CASE';
   static readonly UPDATE_USER_USE_CASE = 'UPDATE_USER_USE_CASE';
   static readonly CREATE_RECIPES_USE_CASE = 'CREATE_RECIPES_USE_CASE';
-  static readonly GET_RECIPE_BOOK_USE_CASE = 'GET_RECIPE_BOOK_USE_CASE';
-  static readonly UPDATE_RECIPE_BOOK_USE_CASE = 'UPDATE_RECIPE_BOOK_USE_CASE';
+  static readonly GET_SPACE_USE_CASE = 'GET_SPACE_USE_CASE';
+  static readonly UPDATE_SPACE_USE_CASE = 'UPDATE_SPACE_USE_CASE';
   static readonly CREATE_RECIPE_USE_CASE = 'CREATE_RECIPE_USE_CASE';
   static readonly UPDATE_RECIPE_USE_CASE = 'UPDATE_RECIPE_USE_CASE';
   static readonly GET_RECIPE_DETAIL_USE_CASE = 'GET_RECIPE_DETAIL_USE_CASE';
-  static readonly INVITE_RECIPE_BOOK_USE_CASE = 'INVITE_RECIPE_BOOK_USE_CASE';
+  static readonly INVITE_SPACE_USE_CASE = 'INVITE_SPACE_USE_CASE';
   static readonly CREATE_MENU_USE_CASE = 'CREATE_MENU_USE_CASE';
   static readonly UPDATE_MENU_USE_CASE = 'UPDATE_MENU_USE_CASE';
   static readonly DELETE_MENU_USE_CASE = 'DELETE_MENU_USE_CASE';
-  static readonly VALIDATE_RECIPE_BOOK_JOIN_USE_CASE =
-    'VALIDATE_RECIPE_BOOK_JOIN_USE_CASE';
+  static readonly VALIDATE_SPACE_JOIN_USE_CASE = 'VALIDATE_SPACE_JOIN_USE_CASE';
   static readonly GET_RECIPE_LIST_USE_CASE = 'GET_RECIPE_LIST_USE_CASE';
   static resister(): DynamicModule {
     return {
@@ -82,23 +81,21 @@ export class UseCaseProxyModule {
           },
         },
         {
-          inject: [PrismaRecipeBookRepository],
-          provide: UseCaseProxyModule.GET_RECIPE_BOOK_USE_CASE,
-          useFactory: (recipeBookRepository: PrismaRecipeBookRepository) => {
-            return new UseCaseProxy(
-              new GetRecipeBookUseCase(recipeBookRepository),
-            );
+          inject: [PrismaSpaceRepository],
+          provide: UseCaseProxyModule.GET_SPACE_USE_CASE,
+          useFactory: (spaceRepository: PrismaSpaceRepository) => {
+            return new UseCaseProxy(new GetSpaceUseCase(spaceRepository));
           },
         },
         {
-          inject: [PrismaRecipeBookRepository, PrismaUserRepository],
-          provide: UseCaseProxyModule.UPDATE_RECIPE_BOOK_USE_CASE,
+          inject: [PrismaSpaceRepository, PrismaUserRepository],
+          provide: UseCaseProxyModule.UPDATE_SPACE_USE_CASE,
           useFactory: (
-            recipeBookRepository: PrismaRecipeBookRepository,
+            spaceRepository: PrismaSpaceRepository,
             userRepository: PrismaUserRepository,
           ) => {
             return new UseCaseProxy(
-              new UpdateRecipeBookUseCase(recipeBookRepository, userRepository),
+              new UpdateSpaceUseCase(spaceRepository, userRepository),
             );
           },
         },
@@ -121,17 +118,14 @@ export class UseCaseProxyModule {
             new UseCaseProxy(new GetRecipeDetailUseCase(recipeRepository)),
         },
         {
-          inject: [PrismaRecipeBookInvitationRepository, PrismaUserRepository],
-          provide: UseCaseProxyModule.INVITE_RECIPE_BOOK_USE_CASE,
+          inject: [PrismaSpaceInvitationRepository, PrismaUserRepository],
+          provide: UseCaseProxyModule.INVITE_SPACE_USE_CASE,
           useFactory: (
-            recipeBookInvitationRepository: PrismaRecipeBookInvitationRepository,
+            spaceInvitationRepository: PrismaSpaceInvitationRepository,
             userRepository: PrismaUserRepository,
           ) =>
             new UseCaseProxy(
-              new InviteRecipeBookUseCase(
-                recipeBookInvitationRepository,
-                userRepository,
-              ),
+              new InviteSpaceUseCase(spaceInvitationRepository, userRepository),
             ),
         },
         {
@@ -153,15 +147,15 @@ export class UseCaseProxyModule {
             new UseCaseProxy(new DeleteMenuUseCase(menuRepository)),
         },
         {
-          inject: [PrismaRecipeBookInvitationRepository, PrismaUserRepository],
-          provide: UseCaseProxyModule.VALIDATE_RECIPE_BOOK_JOIN_USE_CASE,
+          inject: [PrismaSpaceInvitationRepository, PrismaUserRepository],
+          provide: UseCaseProxyModule.VALIDATE_SPACE_JOIN_USE_CASE,
           useFactory: (
-            recipeBookInvitationRepository: PrismaRecipeBookInvitationRepository,
+            spaceInvitationRepository: PrismaSpaceInvitationRepository,
             userRepository: PrismaUserRepository,
           ) =>
             new UseCaseProxy(
-              new ValidateRecipeBookJoinUseCase(
-                recipeBookInvitationRepository,
+              new ValidateSpaceJoinUseCase(
+                spaceInvitationRepository,
                 userRepository,
               ),
             ),
@@ -177,16 +171,16 @@ export class UseCaseProxyModule {
         UseCaseProxyModule.LOGIN_USE_CASE,
         UseCaseProxyModule.UPDATE_USER_USE_CASE,
         UseCaseProxyModule.CREATE_RECIPES_USE_CASE,
-        UseCaseProxyModule.GET_RECIPE_BOOK_USE_CASE,
-        UseCaseProxyModule.UPDATE_RECIPE_BOOK_USE_CASE,
+        UseCaseProxyModule.GET_SPACE_USE_CASE,
+        UseCaseProxyModule.UPDATE_SPACE_USE_CASE,
         UseCaseProxyModule.CREATE_RECIPE_USE_CASE,
         UseCaseProxyModule.UPDATE_RECIPE_USE_CASE,
         UseCaseProxyModule.GET_RECIPE_DETAIL_USE_CASE,
-        UseCaseProxyModule.INVITE_RECIPE_BOOK_USE_CASE,
+        UseCaseProxyModule.INVITE_SPACE_USE_CASE,
         UseCaseProxyModule.CREATE_MENU_USE_CASE,
         UseCaseProxyModule.UPDATE_MENU_USE_CASE,
         UseCaseProxyModule.DELETE_MENU_USE_CASE,
-        UseCaseProxyModule.VALIDATE_RECIPE_BOOK_JOIN_USE_CASE,
+        UseCaseProxyModule.VALIDATE_SPACE_JOIN_USE_CASE,
         UseCaseProxyModule.GET_RECIPE_LIST_USE_CASE,
       ],
     };

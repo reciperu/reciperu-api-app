@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { PrismaService } from './prisma/prisma.service';
 import {
-  PrismaRecipeBookRepository,
+  PrismaSpaceRepository,
   PrismaRecipeRepository,
   PrismaUserRepository,
-  PrismaRecipeBookInvitationRepository,
+  PrismaSpaceInvitationRepository,
 } from './prisma';
 import { PrismaMenuRepository } from './prisma/repositories/prisma.menu.repository';
 
@@ -13,15 +13,15 @@ import { PrismaMenuRepository } from './prisma/repositories/prisma.menu.reposito
     PrismaService,
     PrismaUserRepository,
     PrismaRecipeRepository,
-    PrismaRecipeBookRepository,
-    PrismaRecipeBookInvitationRepository,
+    PrismaSpaceRepository,
+    PrismaSpaceInvitationRepository,
     PrismaMenuRepository,
   ],
   exports: [
     PrismaUserRepository,
     PrismaRecipeRepository,
-    PrismaRecipeBookRepository,
-    PrismaRecipeBookInvitationRepository,
+    PrismaSpaceRepository,
+    PrismaSpaceInvitationRepository,
     PrismaMenuRepository,
   ],
 })

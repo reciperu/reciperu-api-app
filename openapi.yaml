@@ -190,30 +190,30 @@ paths:
                   $ref: '#/components/schemas/RecipePresenter'
       tags: *ref_2
       security: *ref_3
-  /recipe-books/{id}:
+  /spaces/{id}:
     get:
-      operationId: getRecipeBook
+      operationId: getSpace
       summary: ''
       parameters:
         - name: id
           required: true
           in: path
-          description: recipeBookId
+          description: spaceId
           schema:
             type: string
       responses:
         '200':
-          description: 料理本とユーザー一覧取得
+          description: スペースとユーザー一覧取得
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RecipeBookPresenter'
+                $ref: '#/components/schemas/SpacePresenter'
       tags: &ref_4
-        - recipe-books
+        - spaces
       security: &ref_5
         - bearer: []
     put:
-      operationId: updateRecipeBook
+      operationId: updateSpace
       summary: ''
       parameters:
         - name: id
@@ -226,31 +226,31 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateRecipeBookDto'
+              $ref: '#/components/schemas/UpdateSpaceDto'
       responses:
         '200':
-          description: 料理本更新
+          description: スペースの更新
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RecipeBookPresenter'
+                $ref: '#/components/schemas/SpacePresenter'
       tags: *ref_4
       security: *ref_5
-  /recipe-books/invitations:
+  /spaces/invitations:
     post:
       operationId: invitationSpace
       summary: ''
       parameters: []
       responses:
         '200':
-          description: 料理本の招待
+          description: スペースの招待
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RecipeBookInvitationPresenter'
+                $ref: '#/components/schemas/SpaceInvitationPresenter'
       tags: *ref_4
       security: *ref_5
-  /recipe-books/joins:
+  /spaces/joins:
     put:
       operationId: validateInvitation
       summary: ''
@@ -267,7 +267,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RecipeBookJoinPresenter'
+                $ref: '#/components/schemas/SpaceJoinPresenter'
       tags: *ref_4
       security: *ref_5
   /menus:
@@ -427,11 +427,11 @@ components:
           type: string
           enum:
             - ONBOARDING
-            - JOINED_RECIPE_BOOK
-            - NOT_JOINED_RECIPE_BOOK
-        recipeBookOwnerId:
+            - JOINED_SPACE
+            - NOT_JOINED_SPACE
+        spaceOwnerId:
           type: string
-        recipeBookParticipantId:
+        spaceParticipantId:
           type: string
       required:
         - id
@@ -449,8 +449,8 @@ components:
           type: string
           enum:
             - ONBOARDING
-            - JOINED_RECIPE_BOOK
-            - NOT_JOINED_RECIPE_BOOK
+            - JOINED_SPACE
+            - NOT_JOINED_SPACE
       required:
         - name
         - imageUrl
@@ -583,7 +583,7 @@ components:
         - recipeUrl
         - faviconUrl
         - appName
-    RecipeBookPresenter:
+    SpacePresenter:
       type: object
       properties:
         id:
@@ -598,7 +598,7 @@ components:
         - id
         - name
         - users
-    RecipeBookInvitationPresenter:
+    SpaceInvitationPresenter:
       type: object
       properties:
         token:
@@ -612,14 +612,14 @@ components:
           type: string
       required:
         - token
-    RecipeBookJoinPresenter:
+    SpaceJoinPresenter:
       type: object
       properties:
         success:
           type: boolean
       required:
         - success
-    UpdateRecipeBookDto:
+    UpdateSpaceDto:
       type: object
       properties:
         name:
