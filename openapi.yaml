@@ -1,6 +1,6 @@
 openapi: 3.0.0
 paths:
-  /users/profile:
+  /api/users/profile:
     get:
       operationId: getProfile
       summary: ''
@@ -16,7 +16,7 @@ paths:
         - user
       security: &ref_1
         - bearer: []
-  /users/{id}:
+  /api/users/{id}:
     patch:
       operationId: updateUser
       summary: ''
@@ -56,15 +56,14 @@ paths:
           description: ユーザー削除
       tags: *ref_0
       security: *ref_1
-  /recipes:
+  /api/recipes:
     get:
       operationId: getRecipe
       summary: ''
       parameters:
         - name: favorite
-          required: false
+          required: true
           in: query
-          description: お気に入りかどうか
           schema:
             type: boolean
         - name: cursor
@@ -103,7 +102,7 @@ paths:
                 $ref: '#/components/schemas/RecipePresenter'
       tags: *ref_2
       security: *ref_3
-  /recipes/{id}:
+  /api/recipes/{id}:
     get:
       operationId: getRecipe
       summary: ''
@@ -146,7 +145,7 @@ paths:
                 $ref: '#/components/schemas/RecipePresenter'
       tags: *ref_2
       security: *ref_3
-  /recipes/meta-data:
+  /api/recipes/meta-data:
     get:
       operationId: getRecipeMetaData
       summary: ''
@@ -166,7 +165,7 @@ paths:
                 $ref: '#/components/schemas/RecipeMetaDataPresenter'
       tags: *ref_2
       security: *ref_3
-  /recipes/bulk:
+  /api/recipes/bulk:
     post:
       operationId: bulkInsertRecipes
       summary: ''
@@ -190,7 +189,7 @@ paths:
                   $ref: '#/components/schemas/RecipePresenter'
       tags: *ref_2
       security: *ref_3
-  /spaces/{id}:
+  /api/spaces/{id}:
     get:
       operationId: getSpace
       summary: ''
@@ -236,7 +235,7 @@ paths:
                 $ref: '#/components/schemas/SpacePresenter'
       tags: *ref_4
       security: *ref_5
-  /spaces/invitations:
+  /api/spaces/invitations:
     post:
       operationId: invitationSpace
       summary: ''
@@ -250,7 +249,7 @@ paths:
                 $ref: '#/components/schemas/SpaceInvitationPresenter'
       tags: *ref_4
       security: *ref_5
-  /spaces/joins:
+  /api/spaces/joins:
     put:
       operationId: validateInvitation
       summary: ''
@@ -270,7 +269,7 @@ paths:
                 $ref: '#/components/schemas/SpaceJoinPresenter'
       tags: *ref_4
       security: *ref_5
-  /menus:
+  /api/menus:
     get:
       operationId: getMenu
       summary: ''
@@ -307,7 +306,7 @@ paths:
                 $ref: '#/components/schemas/MenuPresenter'
       tags: *ref_6
       security: *ref_7
-  /menus/pending:
+  /api/menus/pending:
     get:
       operationId: getPendingMenu
       summary: ''
@@ -323,7 +322,7 @@ paths:
                   $ref: '#/components/schemas/MenuPresenter'
       tags: *ref_6
       security: *ref_7
-  /menus/{id}:
+  /api/menus/{id}:
     put:
       operationId: updateMenu
       summary: ''
@@ -366,7 +365,7 @@ paths:
                 $ref: '#/components/schemas/DeleteMenuPresenter'
       tags: *ref_6
       security: *ref_7
-  /auth:
+  /api/auth:
     post:
       operationId: login
       summary: ''
@@ -382,7 +381,7 @@ paths:
         - auth
       security:
         - bearer: []
-  /roadmap:
+  /api/roadmap:
     get:
       operationId: roadmap
       summary: ''

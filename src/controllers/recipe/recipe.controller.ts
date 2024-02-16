@@ -58,12 +58,6 @@ export class RecipeController {
     type: String,
     required: false,
   })
-  @ApiQuery({
-    name: 'favorite',
-    description: 'お気に入りかどうか',
-    type: Boolean,
-    required: false,
-  })
   @ApiResponse({
     status: 200,
     description: 'レシピ一覧取得',
