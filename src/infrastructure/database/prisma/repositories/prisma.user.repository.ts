@@ -19,7 +19,7 @@ export class PrismaUserRepository implements IUserRepository {
 
   async create(user: UserBeforePersist): Promise<User> {
     const prismaUser = await this.prismaService.$transaction(async (tx) => {
-      await tx.space.create({
+      const space = await tx.space.create({
         data: {
           name: `${user.getName}のスペース`,
         },
@@ -29,6 +29,7 @@ export class PrismaUserRepository implements IUserRepository {
           name: user.getName,
           imageUrl: user.getImageUrl,
           uid: user.getUid,
+          spaceId: space.spaceId,
         },
       });
     });
