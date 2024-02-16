@@ -74,12 +74,6 @@ export class PrismaUserRepository implements IUserRepository {
           spaceId: user.getSpaceId,
         },
       });
-      await tx.space.create({
-        data: {
-          spaceId: user.getSpaceId,
-          name: `${user.getName}のスペース`,
-        },
-      });
       await tx.spaceInvitation.update({
         where: { token: invitation.getToken },
         data: {
