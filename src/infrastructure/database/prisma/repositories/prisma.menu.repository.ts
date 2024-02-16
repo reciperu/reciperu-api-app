@@ -9,9 +9,9 @@ import {
 import { PrismaService } from '../prisma.service';
 import { PrismaClient } from '@prisma/client';
 
-const prismaMenuType = async (prisma: PrismaClient, id: string) =>
+const prismaMenuType = async (prisma: PrismaClient, menuId: string) =>
   await prisma.menu.findUnique({
-    where: { id },
+    where: { menuId },
     include: {
       recipe: true,
     },
@@ -25,7 +25,7 @@ export class PrismaMenuRepository implements IMenuRepository {
 
   async save(menu: MenuBeforePersist | Menu) {
     const prismaMenu = await this.prismaService.menu.upsert({
-      where: { id: 'id' in menu ? menu.getId : '' },
+      where: { menuId: 'id' in menu ? menu.getId : '' },
       create: {
         userId: menu.getUserId,
         scheduledAt: menu.getScheduledAt,
@@ -44,9 +44,9 @@ export class PrismaMenuRepository implements IMenuRepository {
     return this.toMenu(prismaMenu);
   }
 
-  async findMenu(id: string): Promise<Menu> {
+  async findMenu(menuId: string): Promise<Menu> {
     const prismaMenu = await this.prismaService.menu.findUnique({
-      where: { id },
+      where: { menuId },
       include: {
         recipe: true,
       },
@@ -54,31 +54,30 @@ export class PrismaMenuRepository implements IMenuRepository {
     return this.toMenu(prismaMenu);
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(menuId: string): Promise<void> {
     await this.prismaService.menu.delete({
-      where: { id },
+      where: { menuId },
     });
   }
 
   private toMenu(prismaMenu: PrismaMenuType) {
     return new Menu({
-      id: prismaMenu.id,
+      id: prismaMenu.menuId,
       userId: prismaMenu.userId,
       scheduledAt: prismaMenu.scheduledAt,
       recipeId: prismaMenu.recipeId,
       status: prismaMenu.status as MenuStatus,
       createdAt: prismaMenu.createdAt,
       recipe: new Recipe({
-        id: prismaMenu.recipe.id,
+        id: prismaMenu.recipe.recipeId,
         title: prismaMenu.recipe.title,
-        recipeBookId: prismaMenu.recipe.recipeBookId,
+        spaceId: prismaMenu.recipe.spaceId,
         userId: prismaMenu.recipe.userId,
         thumbnailUrl: prismaMenu.recipe.thumbnailUrl,
         imageUrls: prismaMenu.recipe.imageUrls
           ? prismaMenu.recipe.imageUrls.split(',')
           : null,
         memo: prismaMenu.recipe.memo,
-        isFavorite: prismaMenu.recipe.isFavorite,
         recipeUrl: prismaMenu.recipe.recipeUrl,
         faviconUrl: prismaMenu.recipe.faviconUrl,
         appName: prismaMenu.recipe.appName,
