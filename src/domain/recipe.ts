@@ -1,6 +1,6 @@
 export class RecipeBeforePersist {
   private title: string;
-  private recipeBookId: string;
+  private spaceId: string;
   private userId: string;
   private thumbnailUrl?: string;
   private imageUrls?: string[];
@@ -8,10 +8,11 @@ export class RecipeBeforePersist {
   private recipeUrl?: string;
   private faviconUrl?: string;
   private appName?: string;
+  private requested?: boolean;
 
   constructor({
     title,
-    recipeBookId,
+    spaceId,
     userId,
     thumbnailUrl,
     imageUrls,
@@ -21,7 +22,7 @@ export class RecipeBeforePersist {
     appName,
   }: {
     title: string;
-    recipeBookId: string;
+    spaceId: string;
     userId: string;
     thumbnailUrl?: string;
     imageUrls?: string[];
@@ -31,7 +32,7 @@ export class RecipeBeforePersist {
     appName?: string;
   }) {
     this.title = title;
-    this.recipeBookId = recipeBookId;
+    this.spaceId = spaceId;
     this.userId = userId;
     this.thumbnailUrl = thumbnailUrl;
     this.imageUrls = imageUrls;
@@ -45,8 +46,8 @@ export class RecipeBeforePersist {
     return this.title;
   }
 
-  get getRecipeBookId(): string {
-    return this.recipeBookId;
+  get getSpaceId(): string {
+    return this.spaceId;
   }
 
   get getUserId(): string {
@@ -106,38 +107,35 @@ export class RecipeBeforePersist {
 
 export class Recipe extends RecipeBeforePersist {
   private id: string;
-  private isFavorite: boolean;
   private createdAt: Date;
   constructor({
     id,
     title,
-    recipeBookId,
+    spaceId,
     userId,
     thumbnailUrl,
     imageUrls,
     memo,
     recipeUrl,
-    isFavorite,
     faviconUrl,
     appName,
     createdAt,
   }: {
     id: string;
     title: string;
-    recipeBookId: string;
+    spaceId: string;
     userId: string;
     thumbnailUrl?: string;
     imageUrls?: string[];
     memo?: string;
     recipeUrl?: string;
-    isFavorite: boolean;
     faviconUrl?: string;
     appName?: string;
     createdAt: Date;
   }) {
     super({
       title,
-      recipeBookId,
+      spaceId,
       userId,
       thumbnailUrl,
       imageUrls,
@@ -147,7 +145,7 @@ export class Recipe extends RecipeBeforePersist {
       appName,
     });
     this.id = id;
-    this.isFavorite = isFavorite;
+
     this.createdAt = createdAt;
   }
   get getId(): string {
@@ -155,13 +153,6 @@ export class Recipe extends RecipeBeforePersist {
   }
   get getCreatedAt(): Date {
     return this.createdAt;
-  }
-  get getIsFavorite(): boolean {
-    return this.isFavorite;
-  }
-
-  set setIsFavorite(isFavorite: boolean) {
-    this.isFavorite = isFavorite;
   }
 
   update(updateRecipeDto: UpdateRecipeDto) {
@@ -173,7 +164,6 @@ export class Recipe extends RecipeBeforePersist {
       recipeUrl,
       faviconUrl,
       appName,
-      isFavorite,
     } = updateRecipeDto;
     this.setTitle = title;
     this.setThumbnailUrl = thumbnailUrl;
@@ -182,16 +172,15 @@ export class Recipe extends RecipeBeforePersist {
     this.setRecipeUrl = recipeUrl;
     this.setFaviconUrl = faviconUrl;
     this.setAppName = appName;
-    this.setIsFavorite = isFavorite;
   }
 }
 
 export type IRecipeRepository = {
-  findRecipe(id: string): Promise<Recipe>;
+  findRecipe(recipeId: string): Promise<Recipe>;
   bulkInsert(recipes: RecipeBeforePersist[]): Promise<Recipe[]>;
   save(recipe: Recipe | RecipeBeforePersist): Promise<Recipe>;
   findRecipes(
-    recipeBookId: string,
+    spaceId: string,
     cursor?: string,
     findOptions?: FindRecipeOptions,
   ): Promise<Recipe[]>;
@@ -199,7 +188,6 @@ export type IRecipeRepository = {
 
 export type UpdateRecipeDto = {
   title: string;
-  isFavorite: boolean;
   thumbnailUrl?: string;
   imageUrls?: string[];
   memo?: string;

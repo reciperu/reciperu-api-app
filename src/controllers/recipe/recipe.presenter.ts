@@ -41,9 +41,8 @@ export class RecipePresenter {
   constructor(recipe: Recipe) {
     this.id = recipe.getId;
     this.title = recipe.getTitle;
-    this.recipeBookId = recipe.getRecipeBookId;
+    this.recipeBookId = recipe.getSpaceId;
     this.userId = recipe.getUserId;
-    this.isFavorite = recipe.getIsFavorite;
     this.thumbnailUrl = recipe.getThumbnailUrl;
     this.imageUrls = recipe.getImageUrls;
     this.memo = recipe.getMemo;

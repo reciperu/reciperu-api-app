@@ -1,20 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import {
-  IRecipeRepository,
-  RecipeBeforePersist,
-  Recipe,
-  FindRecipeOptions,
-} from 'src/domain';
+import { IRecipeRepository, RecipeBeforePersist, Recipe } from 'src/domain';
 import { Recipe as PrismaRecipe } from '@prisma/client';
 
 @Injectable()
 export class PrismaRecipeRepository implements IRecipeRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async findRecipe(id: string): Promise<Recipe> {
+  async findRecipe(recipeId: string): Promise<Recipe> {
     const prismaRecipe = await this.prismaService.recipe.findUnique({
-      where: { id },
+      where: { recipeId },
     });
     if (!prismaRecipe) {
       return null;
@@ -22,18 +17,12 @@ export class PrismaRecipeRepository implements IRecipeRepository {
     return this.toRecipe(prismaRecipe);
   }
 
-  async findRecipes(
-    recipeBookId: string,
-    cursor?: string,
-    findOptions?: FindRecipeOptions,
-  ): Promise<Recipe[]> {
-    const { favorite } = findOptions;
+  async findRecipes(spaceId: string, cursor?: string): Promise<Recipe[]> {
     const prismaRecipes = await this.prismaService.recipe.findMany({
       take: 20,
-      ...(cursor && { cursor: { id: cursor }, skip: 1 }),
+      ...(cursor && { cursor: { recipeId: cursor }, skip: 1 }),
       where: {
-        recipeBookId,
-        isFavorite: favorite,
+        spaceId,
       },
       orderBy: {
         createdAt: 'desc',
@@ -48,7 +37,7 @@ export class PrismaRecipeRepository implements IRecipeRepository {
         this.prismaService.recipe.create({
           data: {
             title: recipe.getTitle,
-            recipeBookId: recipe.getRecipeBookId,
+            spaceId: recipe.getSpaceId,
             userId: recipe.getUserId,
             thumbnailUrl: recipe.getThumbnailUrl,
             imageUrls: recipe.getImageUrls.join(','),
@@ -65,22 +54,21 @@ export class PrismaRecipeRepository implements IRecipeRepository {
 
   async save(recipe: Recipe | RecipeBeforePersist) {
     const prismaRecipe = await this.prismaService.recipe.upsert({
-      where: { id: 'id' in recipe ? recipe.getId : '' },
+      where: { recipeId: 'id' in recipe ? recipe.getId : '' },
       update: {
         title: recipe.getTitle,
-        recipeBookId: recipe.getRecipeBookId,
+        spaceId: recipe.getSpaceId,
         userId: recipe.getUserId,
         thumbnailUrl: recipe.getThumbnailUrl,
         imageUrls: recipe.getImageUrls ? recipe.getImageUrls.join(',') : null,
         memo: recipe.getMemo,
         recipeUrl: recipe.getRecipeUrl,
-        isFavorite: 'id' in recipe ? recipe.getIsFavorite : false,
         faviconUrl: recipe.getFaviconUrl,
         appName: recipe.getAppName,
       },
       create: {
         title: recipe.getTitle,
-        recipeBookId: recipe.getRecipeBookId,
+        spaceId: recipe.getSpaceId,
         userId: recipe.getUserId,
         thumbnailUrl: recipe.getThumbnailUrl,
         imageUrls: recipe.getImageUrls ? recipe.getImageUrls.join(',') : null,
@@ -95,12 +83,11 @@ export class PrismaRecipeRepository implements IRecipeRepository {
 
   toRecipe(recipe: PrismaRecipe) {
     return new Recipe({
-      id: recipe.id,
+      id: recipe.recipeId,
       title: recipe.title,
-      recipeBookId: recipe.recipeBookId,
+      spaceId: recipe.spaceId,
       userId: recipe.userId,
       thumbnailUrl: recipe.thumbnailUrl,
-      isFavorite: recipe.isFavorite,
       imageUrls: recipe.imageUrls ? recipe.imageUrls.split(',') : null,
       memo: recipe.memo,
       recipeUrl: recipe.recipeUrl,

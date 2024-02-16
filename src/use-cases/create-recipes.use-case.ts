@@ -10,13 +10,13 @@ export class CreateRecipesUseCase {
   async execute(
     createRecipesDto: CreateRecipeDto[],
     userId: string,
-    recipeBookId: string,
+    spaceId: string,
   ) {
     const recipesBeforePersist = createRecipesDto.map(
       (x) =>
         new RecipeBeforePersist({
           title: x.title,
-          recipeBookId: recipeBookId,
+          spaceId: spaceId,
           userId: userId,
           thumbnailUrl: x.thumbnailUrl,
           imageUrls: x.imageUrls,

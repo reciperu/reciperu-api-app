@@ -10,12 +10,12 @@ export class CreateRecipeUseCase {
   async execute(
     createRecipesDto: CreateRecipeDto,
     userId: string,
-    recipeBookId: string,
+    spaceId: string,
   ) {
     return await this.recipeRepository.save(
       new RecipeBeforePersist({
         title: createRecipesDto.title,
-        recipeBookId: recipeBookId,
+        spaceId,
         userId: userId,
         thumbnailUrl: createRecipesDto.thumbnailUrl,
         imageUrls: createRecipesDto.imageUrls,

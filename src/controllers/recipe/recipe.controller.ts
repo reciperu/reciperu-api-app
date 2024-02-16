@@ -76,7 +76,7 @@ export class RecipeController {
   ) {
     const recipes = await this.getRecipeListUseCase
       .getInstance()
-      .execute(req.currentUser.getRecipeBookId, cursor, { favorite });
+      .execute(req.currentUser.getSpaceId, cursor, { favorite });
     return new PaginatedRecipePresenter(
       recipes.map((x) => new RecipePresenter(x)),
     );
@@ -129,7 +129,7 @@ export class RecipeController {
         .execute(
           createRecipeDto,
           req.currentUser.getId,
-          req.currentUser.getRecipeBookId,
+          req.currentUser.getSpaceId,
         ),
     );
   }
@@ -174,7 +174,7 @@ export class RecipeController {
       .execute(
         createRecipesDto,
         req.currentUser.getId,
-        req.currentUser.getRecipeBookId,
+        req.currentUser.getSpaceId,
       );
     return createRecipes.map((x) => new RecipePresenter(x));
   }
