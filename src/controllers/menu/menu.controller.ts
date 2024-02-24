@@ -77,7 +77,11 @@ export class MenuController {
     return new MenuPresenter(
       await this.createMenuUseCase
         .getInstance()
-        .execute(createMenuDto, req.currentUser.getId),
+        .execute(
+          createMenuDto,
+          req.currentUser.getId,
+          req.currentUser.getSpaceId,
+        ),
     );
   }
 

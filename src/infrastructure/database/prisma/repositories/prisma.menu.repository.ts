@@ -23,6 +23,23 @@ type PrismaMenuType = NonNullable<Awaited<ReturnType<typeof prismaMenuType>>>;
 export class PrismaMenuRepository implements IMenuRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
+  async findMenus(
+    spaceId: string,
+    cursor: string | undefined,
+  ): Promise<Menu[]> {
+    const prismaMenus = await this.prismaService.menu.findMany({
+      include: {
+        recipe: true,
+      },
+      take: 20,
+      ...(cursor && { cursor: { menuId: cursor }, skip: 1 }),
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    return prismaMenus.map((prismaMenu) => this.toMenu(prismaMenu));
+  }
+
   async save(menu: MenuBeforePersist | Menu) {
     const prismaMenu = await this.prismaService.menu.upsert({
       where: { menuId: 'id' in menu ? menu.getId : '' },
@@ -30,6 +47,7 @@ export class PrismaMenuRepository implements IMenuRepository {
         userId: menu.getUserId,
         scheduledAt: menu.getScheduledAt,
         recipeId: menu.getRecipeId,
+        spaceId: menu.getSpaceId,
       },
       update: {
         userId: menu.getUserId,
@@ -68,6 +86,7 @@ export class PrismaMenuRepository implements IMenuRepository {
       recipeId: prismaMenu.recipeId,
       status: prismaMenu.status as MenuStatus,
       createdAt: prismaMenu.createdAt,
+      spaceId: prismaMenu.spaceId,
       recipe: new Recipe({
         id: prismaMenu.recipe.recipeId,
         title: prismaMenu.recipe.title,

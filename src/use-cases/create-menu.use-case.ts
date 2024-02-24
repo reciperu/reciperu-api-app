@@ -10,10 +10,15 @@ import {
 export class CreateMenuUseCase {
   constructor(private readonly menuRepository: IMenuRepository) {}
 
-  async execute(createMenuDto: CreateMenuDto, userId: string): Promise<Menu> {
+  async execute(
+    createMenuDto: CreateMenuDto,
+    userId: string,
+    spaceId: string,
+  ): Promise<Menu> {
     return await this.menuRepository.save(
       new MenuBeforePersist({
         userId,
+        spaceId,
         recipeId: createMenuDto.recipeId,
         scheduledAt: createMenuDto.scheduledAt,
       }),
