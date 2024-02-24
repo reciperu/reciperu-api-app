@@ -44,9 +44,9 @@ export class ContactController {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        text: `# ユーザー情報\n- ユーザー名：${JSON.stringify(
-          req.currentUser.getName,
-        )}\n- ユーザーID：${req.currentUser.getUid}\n- メールアドレス: ${
+        text: `# ユーザー情報\n- ユーザー名：${
+          req.currentUser.getName
+        }\n- ユーザーID：${req.currentUser.getId}\n- メールアドレス: ${
           requestBody.email || 'unknown'
         }\n\n# 問い合わせ内容\n${requestBody.content}`,
       }),
