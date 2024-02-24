@@ -49,6 +49,7 @@ export class ContactController {
     await this.sendContactToSlackUseCase
       .getInstance()
       .execute(req.currentUser, sendContactDto);
+
     return new ContactPresenter();
   }
 }
