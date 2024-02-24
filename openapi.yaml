@@ -268,16 +268,20 @@ paths:
     get:
       operationId: getMenu
       summary: ''
-      parameters: []
+      parameters:
+        - name: cursor
+          required: false
+          in: query
+          description: カーソル
+          schema:
+            type: string
       responses:
         '200':
           description: 献立ー一覧取得
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/MenuPresenter'
+                $ref: '#/components/schemas/PaginatedMenuPresenter'
       tags: &ref_6
         - menus
       security: &ref_7
@@ -646,6 +650,18 @@ components:
         - userId
         - recipeId
         - recipe
+    PaginatedMenuPresenter:
+      type: object
+      properties:
+        menus:
+          type: array
+          items:
+            $ref: '#/components/schemas/MenuPresenter'
+        nextCursor:
+          type: string
+      required:
+        - menus
+        - nextCursor
     CreateMenuDto:
       type: object
       properties:

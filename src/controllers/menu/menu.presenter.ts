@@ -29,6 +29,24 @@ export class MenuPresenter {
     this.recipe = menu.getRecipe;
   }
 }
+
+export class PaginatedMenuPresenter {
+  @ApiProperty({ type: [MenuPresenter] })
+  menus: MenuPresenter[];
+
+  @ApiProperty()
+  nextCursor?: string;
+
+  constructor(menus: MenuPresenter[]) {
+    this.menus = menus;
+    if (this.menus.length === 0) {
+      this.nextCursor = undefined;
+      return;
+    }
+    this.nextCursor = this.menus[this.menus.length - 1].id;
+  }
+}
+
 export class DeleteMenuPresenter {
   @ApiProperty()
   success: boolean;

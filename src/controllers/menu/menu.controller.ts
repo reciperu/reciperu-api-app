@@ -8,15 +8,21 @@ import {
   Post,
   Put,
   Req,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
   ApiOperation,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { DeleteMenuPresenter, MenuPresenter } from './menu.presenter';
+import {
+  DeleteMenuPresenter,
+  MenuPresenter,
+  PaginatedMenuPresenter,
+} from './menu.presenter';
 import { CreateMenuDto, UpdateMenuDto } from './menu.dto';
 import {
   UseCaseProxyModule,
@@ -24,6 +30,7 @@ import {
   UseCaseProxy,
   UpdateMenuUseCase,
   DeleteMenuUseCase,
+  GetMenuListUseCase,
 } from 'src/use-cases';
 import { Request } from 'express';
 
@@ -38,18 +45,32 @@ export class MenuController {
     private readonly updateMenuUseCase: UseCaseProxy<UpdateMenuUseCase>,
     @Inject(UseCaseProxyModule.DELETE_MENU_USE_CASE)
     private readonly deleteMenuUseCase: UseCaseProxy<DeleteMenuUseCase>,
+    @Inject(UseCaseProxyModule.GET_MENU_LIST_USE_CASE)
+    private readonly getMenuListUseCase: UseCaseProxy<GetMenuListUseCase>,
   ) {}
   @Get()
   @ApiOperation({ operationId: 'getMenu' })
+  @ApiQuery({
+    name: 'cursor',
+    description: 'カーソル',
+    type: String,
+    required: false,
+  })
   @ApiResponse({
     status: 200,
     description: '献立ー一覧取得',
-    type: MenuPresenter,
-    isArray: true,
+    type: PaginatedMenuPresenter,
   })
-  async index() {
-    try {
-    } catch (error) {}
+  async index(
+    @Req() req: Request,
+    @Query('cursor') cursor: string | undefined,
+  ) {
+    const menus = await this.getMenuListUseCase
+      .getInstance()
+      .execute(req.currentUser.getSpaceId, cursor);
+    return new PaginatedMenuPresenter(
+      menus.map((menu) => new MenuPresenter(menu)),
+    );
   }
 
   @Get('pending')

@@ -28,6 +28,9 @@ export class PrismaMenuRepository implements IMenuRepository {
     cursor: string | undefined,
   ): Promise<Menu[]> {
     const prismaMenus = await this.prismaService.menu.findMany({
+      where: {
+        spaceId,
+      },
       include: {
         recipe: true,
       },
