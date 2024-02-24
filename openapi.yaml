@@ -402,7 +402,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ContactRequestBody'
+              $ref: '#/components/schemas/CreateContactDto'
       responses:
         '200':
           description: 問い合わせ内容を送信する
@@ -729,7 +729,7 @@ components:
         - title
         - description
         - status
-    ContactRequestBody:
+    CreateContactDto:
       type: object
       properties:
         email:
