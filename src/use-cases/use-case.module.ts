@@ -14,6 +14,7 @@ import {
   DeleteMenuUseCase,
   ValidateSpaceJoinUseCase,
   GetRecipeListUseCase,
+  SendContactToSlackUseCase,
 } from './';
 import { DatabaseModule } from 'src/infrastructure/database/database.module';
 import { FirebaseModule } from 'src/infrastructure/firebase/firebase.module';
@@ -50,6 +51,8 @@ export class UseCaseProxyModule {
   static readonly DELETE_MENU_USE_CASE = 'DELETE_MENU_USE_CASE';
   static readonly VALIDATE_SPACE_JOIN_USE_CASE = 'VALIDATE_SPACE_JOIN_USE_CASE';
   static readonly GET_RECIPE_LIST_USE_CASE = 'GET_RECIPE_LIST_USE_CASE';
+  static readonly SEND_CONTACT_TO_SLACK_USE_CASE =
+    'SEND_CONTACT_TO_SLACK_USE_CASE';
   static resister(): DynamicModule {
     return {
       module: UseCaseProxyModule,
@@ -166,6 +169,11 @@ export class UseCaseProxyModule {
           useFactory: (recipeRepository: PrismaRecipeRepository) =>
             new UseCaseProxy(new GetRecipeListUseCase(recipeRepository)),
         },
+        {
+          inject: [],
+          provide: UseCaseProxyModule.SEND_CONTACT_TO_SLACK_USE_CASE,
+          useFactory: () => new UseCaseProxy(new SendContactToSlackUseCase()),
+        },
       ],
       exports: [
         UseCaseProxyModule.LOGIN_USE_CASE,
@@ -182,6 +190,7 @@ export class UseCaseProxyModule {
         UseCaseProxyModule.DELETE_MENU_USE_CASE,
         UseCaseProxyModule.VALIDATE_SPACE_JOIN_USE_CASE,
         UseCaseProxyModule.GET_RECIPE_LIST_USE_CASE,
+        UseCaseProxyModule.SEND_CONTACT_TO_SLACK_USE_CASE,
       ],
     };
   }

@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { SendContactDto as DomainSendContactDto } from 'src/domain';
 
-export class CreateContactDto {
+export class SendContactDto implements DomainSendContactDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
