@@ -398,7 +398,7 @@ paths:
         - bearer: []
   /api/contact:
     post:
-      operationId: contact
+      operationId: send-contact
       summary: ''
       parameters: []
       requestBody:
@@ -406,7 +406,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateContactDto'
+              $ref: '#/components/schemas/SendContactDto'
       responses:
         '200':
           description: 問い合わせ内容を送信する
@@ -745,7 +745,7 @@ components:
         - title
         - description
         - status
-    CreateContactDto:
+    SendContactDto:
       type: object
       properties:
         email:
