@@ -33,6 +33,7 @@ model Space {
   spaceInvitations SpaceInvitation[]
   recipes          Recipe[]
   users            User[]
+  menus            Menu[]
 
   @@index([spaceId])
   @@map("spaces")
@@ -94,11 +95,13 @@ model Menu {
   menuId      String     @id @default(cuid()) @map("menu_id")
   status      MenuStatus @default(PENDING)
   scheduledAt DateTime   @map("scheduledAt") @db.Date
-  recipeId    String     @map("recipe_id")
+  spaceId     String     @map("space_id")
   userId      String     @map("user_id")
+  recipeId    String     @map("recipe_id")
   createdAt   DateTime   @default(now()) @map("created_at")
   user        User       @relation(fields: [userId], references: [userId], onDelete: Cascade)
   recipe      Recipe     @relation(fields: [recipeId], references: [recipeId], onDelete: Cascade)
+  space       Space      @relation(fields: [spaceId], references: [spaceId], onDelete: Cascade)
 
   @@index([menuId])
   @@map("menus")
