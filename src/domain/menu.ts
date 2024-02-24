@@ -9,19 +9,23 @@ export class MenuBeforePersist {
   private recipeId: string;
   private scheduledAt?: Date;
   private userId: string;
+  private spaceId: string;
 
   constructor({
     recipeId,
-    userId,
     scheduledAt,
+    userId,
+    spaceId,
   }: {
     recipeId: string;
-    userId: string;
     scheduledAt?: Date;
+    userId: string;
+    spaceId: string;
   }) {
     this.recipeId = recipeId;
     this.userId = userId;
     this.scheduledAt = scheduledAt;
+    this.spaceId = spaceId;
   }
   get getRecipeId(): string {
     return this.recipeId;
@@ -32,6 +36,10 @@ export class MenuBeforePersist {
   }
   get getScheduledAt(): Date | undefined {
     return this.scheduledAt;
+  }
+
+  get getSpaceId(): string {
+    return this.spaceId;
   }
 
   set setScheduledAt(scheduledAt: Date | undefined) {
@@ -52,19 +60,22 @@ export class Menu extends MenuBeforePersist {
     status,
     createdAt,
     recipe,
+    spaceId,
   }: {
     id: string;
     recipeId: string;
-    userId: string;
     scheduledAt?: Date;
     status: MenuStatus;
     createdAt: Date;
     recipe: Recipe;
+    userId: string;
+    spaceId: string;
   }) {
     super({
       recipeId,
       scheduledAt,
       userId,
+      spaceId,
     });
     this.id = id;
     this.status = status;
