@@ -41,10 +41,6 @@ export class ContactController {
     @Req() req: Request,
     @Body() sendContactDto: SendContactDto,
   ) {
-    if (!sendContactDto.content.length) {
-      // 400エラーを返す
-      throw new HttpException('No message provided', HttpStatus.BAD_REQUEST);
-    }
     // Slack にメッセージを送信
     await this.sendContactToSlackUseCase
       .getInstance()

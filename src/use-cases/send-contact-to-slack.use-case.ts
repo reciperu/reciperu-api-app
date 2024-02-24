@@ -4,6 +4,10 @@ import { SendContactDto, User } from 'src/domain';
 @Injectable()
 export class SendContactToSlackUseCase {
   async execute(user: User, sendContactDto: SendContactDto) {
+    if (!sendContactDto.content.length) {
+      // 400エラーを返す
+      throw new HttpException('No message provided', HttpStatus.BAD_REQUEST);
+    }
     const response = await fetch(process.env.SLACK_WEBHOOK_URL, {
       method: 'POST',
       headers: {
