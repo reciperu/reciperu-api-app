@@ -396,6 +396,28 @@ paths:
         - roadmap
       security:
         - bearer: []
+  /api/contact:
+    post:
+      operationId: contact
+      summary: ''
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactRequestBody'
+      responses:
+        '200':
+          description: 問い合わせ内容を送信する
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactPresenter'
+      tags:
+        - contact
+      security:
+        - bearer: []
 info:
   title: reciperu api app
   description: API documents
@@ -723,3 +745,20 @@ components:
         - title
         - description
         - status
+    ContactRequestBody:
+      type: object
+      properties:
+        email:
+          type: string
+        content:
+          type: string
+      required:
+        - email
+        - content
+    ContactPresenter:
+      type: object
+      properties:
+        success:
+          type: boolean
+      required:
+        - success
