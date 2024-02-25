@@ -5,6 +5,7 @@ import {
   Menu,
   Recipe,
   MenuStatus,
+  MenuStatusKey,
 } from 'src/domain';
 import { PrismaService } from '../prisma.service';
 import { PrismaClient } from '@prisma/client';
@@ -23,13 +24,19 @@ type PrismaMenuType = NonNullable<Awaited<ReturnType<typeof prismaMenuType>>>;
 export class PrismaMenuRepository implements IMenuRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async findMenus(
-    spaceId: string,
-    cursor: string | undefined,
-  ): Promise<Menu[]> {
+  async findMenus({
+    spaceId,
+    cursor,
+    statuses,
+  }: {
+    spaceId: string;
+    cursor?: string;
+    statuses?: MenuStatusKey[];
+  }): Promise<Menu[]> {
     const prismaMenus = await this.prismaService.menu.findMany({
       where: {
         spaceId,
+        status: { in: statuses },
       },
       include: {
         recipe: true,

@@ -5,6 +5,8 @@ export enum MenuStatus {
   CANCELED = 'CANCELED',
   CONFIRMED = 'CONFIRMED',
 }
+
+export type MenuStatusKey = keyof typeof MenuStatus;
 export class MenuBeforePersist {
   private recipeId: string;
   private scheduledAt?: Date;
@@ -107,7 +109,15 @@ export class Menu extends MenuBeforePersist {
 }
 
 export type IMenuRepository = {
-  findMenus(spaceId: string, cursor?: string): Promise<Menu[]>;
+  findMenus({
+    spaceId,
+    cursor,
+    statuses,
+  }: {
+    spaceId: string;
+    cursor?: string;
+    statuses?: MenuStatusKey[];
+  }): Promise<Menu[]>;
   findMenu(id: string): Promise<Menu>;
   save(menu: MenuBeforePersist | Menu): Promise<Menu>;
   delete(id: string): Promise<void>;

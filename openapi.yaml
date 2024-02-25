@@ -275,6 +275,14 @@ paths:
           description: カーソル
           schema:
             type: string
+        - name: statuses
+          required: false
+          in: query
+          description: ステータス
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         '200':
           description: 献立ー一覧取得

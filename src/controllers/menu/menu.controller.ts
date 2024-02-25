@@ -33,6 +33,7 @@ import {
   GetMenuListUseCase,
 } from 'src/use-cases';
 import { Request } from 'express';
+import { MenuStatusKey } from 'src/domain';
 
 @ApiTags('menus')
 @ApiBearerAuth()
@@ -56,6 +57,13 @@ export class MenuController {
     type: String,
     required: false,
   })
+  @ApiQuery({
+    name: 'statuses',
+    description: 'ステータス',
+    isArray: true,
+    type: String,
+    required: false,
+  })
   @ApiResponse({
     status: 200,
     description: '献立ー一覧取得',
@@ -64,10 +72,13 @@ export class MenuController {
   async index(
     @Req() req: Request,
     @Query('cursor') cursor: string | undefined,
+    @Query('statuses') statuses: MenuStatusKey[] | undefined,
   ) {
-    const menus = await this.getMenuListUseCase
-      .getInstance()
-      .execute(req.currentUser.getSpaceId, cursor);
+    const menus = await this.getMenuListUseCase.getInstance().execute({
+      spaceId: req.currentUser.getSpaceId,
+      cursor,
+      statuses: Array.isArray(statuses) ? statuses : [statuses],
+    });
     return new PaginatedMenuPresenter(
       menus.map((menu) => new MenuPresenter(menu)),
     );
