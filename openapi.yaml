@@ -97,6 +97,26 @@ paths:
                 $ref: '#/components/schemas/RecipePresenter'
       tags: *ref_2
       security: *ref_3
+  /api/recipes/meta-data:
+    get:
+      operationId: getRecipeMetaData
+      summary: ''
+      parameters:
+        - name: recipeUrl
+          required: true
+          in: query
+          description: レシピURL
+          schema:
+            type: string
+      responses:
+        '200':
+          description: レシピメタデータ取得
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeMetaDataPresenter'
+      tags: *ref_2
+      security: *ref_3
   /api/recipes/{id}:
     get:
       operationId: getRecipe
@@ -138,26 +158,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecipePresenter'
-      tags: *ref_2
-      security: *ref_3
-  /api/recipes/meta-data:
-    get:
-      operationId: getRecipeMetaData
-      summary: ''
-      parameters:
-        - name: recipeUrl
-          required: true
-          in: query
-          description: レシピURL
-          schema:
-            type: string
-      responses:
-        '200':
-          description: レシピメタデータ取得
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RecipeMetaDataPresenter'
       tags: *ref_2
       security: *ref_3
   /api/recipes/bulk:

@@ -82,4 +82,21 @@ export class RecipeMetaDataPresenter {
 
   @ApiProperty()
   faviconUrl?: string;
+
+  constructor({
+    title,
+    thumbnailUrl,
+    appName,
+    faviconUrl,
+  }: {
+    title: string;
+    thumbnailUrl: string;
+    appName: string;
+    faviconUrl: string;
+  }) {
+    this.title = title;
+    this.thumbnailUrl = thumbnailUrl;
+    this.appName = appName;
+    this.faviconUrl = faviconUrl;
+  }
 }

@@ -31,6 +31,7 @@ import {
   UpdateRecipeUseCase,
   GetRecipeDetailUseCase,
   GetRecipeListUseCase,
+  GetRecipeMetaDateUseCase,
 } from 'src/use-cases';
 import { Request } from 'express';
 
@@ -49,6 +50,8 @@ export class RecipeController {
     private readonly getRecipeDetailUseCase: UseCaseProxy<GetRecipeDetailUseCase>,
     @Inject(UseCaseProxyModule.GET_RECIPE_LIST_USE_CASE)
     private readonly getRecipeListUseCase: UseCaseProxy<GetRecipeListUseCase>,
+    @Inject(UseCaseProxyModule.GET_RECIPE_META_DATE_USE_CASE)
+    private readonly getRecipeMetaDataUseCase: UseCaseProxy<GetRecipeMetaDateUseCase>,
   ) {}
   @Get()
   @ApiOperation({ operationId: 'getRecipe' })
@@ -75,19 +78,6 @@ export class RecipeController {
     );
   }
 
-  @Get(':id')
-  @ApiOperation({ operationId: 'getRecipe' })
-  @ApiResponse({
-    status: 200,
-    description: 'レシピ詳細取得',
-    type: RecipePresenter,
-  })
-  async show(@Param('id') id: string) {
-    return new RecipePresenter(
-      await this.getRecipeDetailUseCase.getInstance().execute(id),
-    );
-  }
-
   @Get('meta-data')
   @ApiQuery({
     name: 'recipeUrl',
@@ -100,9 +90,23 @@ export class RecipeController {
     description: 'レシピメタデータ取得',
     type: RecipeMetaDataPresenter,
   })
-  async showMetaData() {
-    try {
-    } catch (error) {}
+  async showMetaData(@Query('recipeUrl') recipeUrl: string) {
+    return new RecipeMetaDataPresenter(
+      await this.getRecipeMetaDataUseCase.getInstance().execute(recipeUrl),
+    );
+  }
+
+  @Get(':id')
+  @ApiOperation({ operationId: 'getRecipe' })
+  @ApiResponse({
+    status: 200,
+    description: 'レシピ詳細取得',
+    type: RecipePresenter,
+  })
+  async show(@Param('id') id: string) {
+    return new RecipePresenter(
+      await this.getRecipeDetailUseCase.getInstance().execute(id),
+    );
   }
 
   @Post()

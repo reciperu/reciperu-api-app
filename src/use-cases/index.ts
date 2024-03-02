@@ -15,3 +15,4 @@ export * from './validate-recipe-book-join.use-case';
 export * from './get-recipe-list.use-case';
 export * from './get-menu-list.use-case';
 export * from './send-contact-to-slack.use-case';
+export * from './get-recipe-meta-data.use-case';
