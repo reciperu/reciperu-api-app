@@ -5,7 +5,16 @@ export class Space {
   private id: string;
   private name: string;
   private users: User[];
-  constructor({ name, users }: { id: string; name: string; users: User[] }) {
+  constructor({
+    id,
+    name,
+    users,
+  }: {
+    id: string;
+    name: string;
+    users: User[];
+  }) {
+    this.id = id;
     this.name = name;
     this.users = users;
   }
