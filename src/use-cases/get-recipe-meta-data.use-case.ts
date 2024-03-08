@@ -7,7 +7,7 @@ export class GetRecipeMetaDateUseCase {
     const dom = await this.parseUrlToDom(recipeUrl);
     const ogImage = this.getOgpData(dom, 'og:image');
     const ogTitle = this.getOgpData(dom, 'og:title');
-    const siteName = this.getOgpData(dom, 'og:site_name');
+    const siteName = this.getSiteName(dom, recipeUrl);
     const faviconUrl = FAVICON_URL + recipeUrl;
     return {
       title: ogTitle,
@@ -21,6 +21,20 @@ export class GetRecipeMetaDateUseCase {
     return dom.window.document
       .querySelector(`meta[property='${property}']`)
       ?.getAttribute('content');
+  }
+
+  getSiteName(dom: JSDOM, recipeUrl: string) {
+    const siteName = this.getOgpData(dom, 'og:site_name');
+    if (siteName) {
+      return siteName;
+    }
+    // サイト名がなければドメインから判断してサイト名を取得する
+    // cookpadの場合
+    if (recipeUrl.includes('cookpad.com')) {
+      return 'クックパッド';
+    }
+    // note: 今後他のサイトも追加していく
+    return '';
   }
 
   async parseUrlToDom(recipeUrl: string) {
