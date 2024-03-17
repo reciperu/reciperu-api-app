@@ -8,7 +8,6 @@ export class RecipeBeforePersist {
   private recipeUrl?: string;
   private faviconUrl?: string;
   private appName?: string;
-  private requested?: boolean;
 
   constructor({
     title,
@@ -105,9 +104,19 @@ export class RecipeBeforePersist {
   }
 }
 
+export class RecipeRequester {
+  private userId: string;
+  constructor({ userId }: { userId: string }) {
+    this.userId = userId;
+  }
+  get getUserId(): string {
+    return this.userId;
+  }
+}
 export class Recipe extends RecipeBeforePersist {
   private id: string;
   private createdAt: Date;
+  private requesters: RecipeRequester[];
   constructor({
     id,
     title,
@@ -120,6 +129,7 @@ export class Recipe extends RecipeBeforePersist {
     faviconUrl,
     appName,
     createdAt,
+    requesters,
   }: {
     id: string;
     title: string;
@@ -132,6 +142,7 @@ export class Recipe extends RecipeBeforePersist {
     faviconUrl?: string;
     appName?: string;
     createdAt: Date;
+    requesters?: RecipeRequester[];
   }) {
     super({
       title,
@@ -145,14 +156,18 @@ export class Recipe extends RecipeBeforePersist {
       appName,
     });
     this.id = id;
-
     this.createdAt = createdAt;
+    this.requesters = requesters;
   }
   get getId(): string {
     return this.id;
   }
   get getCreatedAt(): Date {
     return this.createdAt;
+  }
+
+  get getRequesters(): RecipeRequester[] {
+    return this.requesters;
   }
 
   update(updateRecipeDto: UpdateRecipeDto) {

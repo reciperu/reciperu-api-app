@@ -457,15 +457,20 @@ components:
             - ONBOARDING
             - JOINED_SPACE
             - NOT_JOINED_SPACE
-        spaceOwnerId:
+        spaceId:
           type: string
-        spaceParticipantId:
+        spaceRole:
           type: string
+          enum:
+            - OWNER
+            - PARTICIPANT
       required:
         - id
         - name
         - imageUrl
         - activeStatus
+        - spaceId
+        - spaceRole
     UpdateUserDto:
       type: object
       properties:
@@ -513,6 +518,10 @@ components:
         createdAt:
           format: date-time
           type: string
+        requesters:
+          type: array
+          items:
+            type: string
       required:
         - id
         - title
@@ -526,6 +535,7 @@ components:
         - appName
         - faviconUrl
         - createdAt
+        - requesters
     PaginatedRecipePresenter:
       type: object
       properties:

@@ -1,8 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { IRecipeRepository, RecipeBeforePersist, Recipe } from 'src/domain';
-import { Recipe as PrismaRecipe } from '@prisma/client';
+import {
+  IRecipeRepository,
+  RecipeBeforePersist,
+  Recipe,
+  RecipeRequester,
+} from 'src/domain';
+import { Recipe as PrismaRecipe, PrismaClient } from '@prisma/client';
 
+const prismaRecipeType = async (prisma: PrismaClient, recipeId: string) =>
+  await prisma.recipe.findUnique({
+    where: { recipeId },
+    include: {
+      requestedRecipes: true,
+    },
+  });
+
+type PrismaRecipeType = NonNullable<
+  Awaited<ReturnType<typeof prismaRecipeType>>
+>;
 @Injectable()
 export class PrismaRecipeRepository implements IRecipeRepository {
   constructor(private readonly prismaService: PrismaService) {}
@@ -26,6 +42,9 @@ export class PrismaRecipeRepository implements IRecipeRepository {
       },
       orderBy: {
         createdAt: 'desc',
+      },
+      include: {
+        requestedRecipes: true,
       },
     });
     return prismaRecipes.map((prismaRecipe) => this.toRecipe(prismaRecipe));
@@ -81,19 +100,37 @@ export class PrismaRecipeRepository implements IRecipeRepository {
     return this.toRecipe(prismaRecipe);
   }
 
-  toRecipe(recipe: PrismaRecipe) {
-    return new Recipe({
-      id: recipe.recipeId,
-      title: recipe.title,
-      spaceId: recipe.spaceId,
-      userId: recipe.userId,
-      thumbnailUrl: recipe.thumbnailUrl,
-      imageUrls: recipe.imageUrls ? recipe.imageUrls.split(',') : null,
-      memo: recipe.memo,
-      recipeUrl: recipe.recipeUrl,
-      faviconUrl: recipe.faviconUrl,
-      appName: recipe.appName,
-      createdAt: recipe.createdAt,
-    });
+  toRecipe(recipe: PrismaRecipe | PrismaRecipeType): Recipe {
+    return 'requestedRecipes' in recipe
+      ? new Recipe({
+          id: recipe.recipeId,
+          title: recipe.title,
+          spaceId: recipe.spaceId,
+          userId: recipe.userId,
+          thumbnailUrl: recipe.thumbnailUrl,
+          imageUrls: recipe.imageUrls ? recipe.imageUrls.split(',') : null,
+          memo: recipe.memo,
+          recipeUrl: recipe.recipeUrl,
+          faviconUrl: recipe.faviconUrl,
+          appName: recipe.appName,
+          createdAt: recipe.createdAt,
+          requesters: recipe.requestedRecipes.map(
+            (requestedRecipe) =>
+              new RecipeRequester({ userId: requestedRecipe.userId }),
+          ),
+        })
+      : new Recipe({
+          id: recipe.recipeId,
+          title: recipe.title,
+          spaceId: recipe.spaceId,
+          userId: recipe.userId,
+          thumbnailUrl: recipe.thumbnailUrl,
+          imageUrls: recipe.imageUrls ? recipe.imageUrls.split(',') : null,
+          memo: recipe.memo,
+          recipeUrl: recipe.recipeUrl,
+          faviconUrl: recipe.faviconUrl,
+          appName: recipe.appName,
+          createdAt: recipe.createdAt,
+        });
   }
 }
