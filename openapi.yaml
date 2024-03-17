@@ -186,7 +186,7 @@ paths:
       security: *ref_3
   /api/recipes/requests:
     post:
-      operationId: createRequestRecipe
+      operationId: createRequestedRecipe
       summary: ''
       parameters: []
       requestBody:
@@ -194,14 +194,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateRecipeDto'
+              $ref: '#/components/schemas/CreateRequestedRecipeDto'
       responses:
         '201':
           description: リクエストレシピ登録
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RecipePresenter'
+                $ref: '#/components/schemas/CreateRequestedRecipePresenter'
       tags: *ref_2
       security: *ref_3
   /api/spaces/{id}:
@@ -641,6 +641,20 @@ components:
         - recipeUrl
         - faviconUrl
         - appName
+    CreateRequestedRecipeDto:
+      type: object
+      properties:
+        recipeId:
+          type: string
+      required:
+        - recipeId
+    CreateRequestedRecipePresenter:
+      type: object
+      properties:
+        success:
+          type: boolean
+      required:
+        - success
     SpacePresenter:
       type: object
       properties:

@@ -104,3 +104,8 @@ export class RecipeMetaDataPresenter {
     this.faviconUrl = faviconUrl;
   }
 }
+
+export class CreateRequestedRecipePresenter {
+  @ApiProperty()
+  success: boolean;
+}

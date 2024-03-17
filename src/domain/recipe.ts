@@ -201,6 +201,10 @@ export type IRecipeRepository = {
   ): Promise<Recipe[]>;
 };
 
+export type IRequestedRecipeRepository = {
+  create(userId: string, recipeId: string): Promise<void>;
+};
+
 export type UpdateRecipeDto = {
   title: string;
   thumbnailUrl?: string;
@@ -223,4 +227,8 @@ export type CreateRecipeDto = {
 
 export type FindRecipeOptions = {
   favorite?: boolean;
+};
+
+export type CreateRequestedRecipeDto = {
+  recipeId: string;
 };

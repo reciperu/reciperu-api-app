@@ -5,8 +5,9 @@ import {
   PrismaRecipeRepository,
   PrismaUserRepository,
   PrismaSpaceInvitationRepository,
+  PrismaMenuRepository,
+  PrismaRequestedRecipeRepository,
 } from './prisma';
-import { PrismaMenuRepository } from './prisma/repositories/prisma.menu.repository';
 
 @Module({
   providers: [
@@ -16,6 +17,7 @@ import { PrismaMenuRepository } from './prisma/repositories/prisma.menu.reposito
     PrismaSpaceRepository,
     PrismaSpaceInvitationRepository,
     PrismaMenuRepository,
+    PrismaRequestedRecipeRepository,
   ],
   exports: [
     PrismaUserRepository,
@@ -23,6 +25,7 @@ import { PrismaMenuRepository } from './prisma/repositories/prisma.menu.reposito
     PrismaSpaceRepository,
     PrismaSpaceInvitationRepository,
     PrismaMenuRepository,
+    PrismaRequestedRecipeRepository,
   ],
 })
 export class DatabaseModule {}

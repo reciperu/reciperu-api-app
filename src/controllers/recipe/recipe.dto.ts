@@ -9,6 +9,7 @@ import {
 import type {
   UpdateRecipeDto as DomainUpdateRecipeDto,
   CreateRecipeDto as DomainCreateRecipeDto,
+  CreateRequestedRecipeDto as DomainCreateRequestedRecipeDto,
 } from 'src/domain';
 export class CreateRecipeDto implements DomainCreateRecipeDto {
   @ApiProperty()
@@ -86,4 +87,13 @@ export class UpdateRecipeDto implements DomainUpdateRecipeDto {
   @IsString()
   @IsOptional()
   appName?: string;
+}
+
+export class CreateRequestedRecipeDto
+  implements DomainCreateRequestedRecipeDto
+{
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  recipeId: string;
 }
