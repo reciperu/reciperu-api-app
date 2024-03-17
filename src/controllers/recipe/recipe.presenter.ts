@@ -9,7 +9,7 @@ export class RecipePresenter {
   title: string;
 
   @ApiProperty()
-  recipeBookId: string;
+  spaceId: string;
 
   @ApiProperty()
   userId: string;
@@ -44,7 +44,7 @@ export class RecipePresenter {
   constructor(recipe: Recipe) {
     this.id = recipe.getId;
     this.title = recipe.getTitle;
-    this.recipeBookId = recipe.getSpaceId;
+    this.spaceId = recipe.getSpaceId;
     this.userId = recipe.getUserId;
     this.thumbnailUrl = recipe.getThumbnailUrl;
     this.imageUrls = recipe.getImageUrls;

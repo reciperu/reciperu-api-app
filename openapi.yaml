@@ -184,6 +184,26 @@ paths:
                   $ref: '#/components/schemas/RecipePresenter'
       tags: *ref_2
       security: *ref_3
+  /api/recipes/requests:
+    post:
+      operationId: createRequestRecipe
+      summary: ''
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRecipeDto'
+      responses:
+        '201':
+          description: リクエストレシピ登録
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipePresenter'
+      tags: *ref_2
+      security: *ref_3
   /api/spaces/{id}:
     get:
       operationId: getSpace
@@ -495,7 +515,7 @@ components:
           type: string
         title:
           type: string
-        recipeBookId:
+        spaceId:
           type: string
         userId:
           type: string
@@ -525,7 +545,7 @@ components:
       required:
         - id
         - title
-        - recipeBookId
+        - spaceId
         - userId
         - isFavorite
         - thumbnailUrl
