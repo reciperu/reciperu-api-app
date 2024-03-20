@@ -204,6 +204,25 @@ paths:
                 $ref: '#/components/schemas/CreateRequestedRecipePresenter'
       tags: *ref_2
       security: *ref_3
+  /api/recipes/{id}/requests:
+    delete:
+      operationId: deleteRequestedRecipe
+      summary: ''
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '201':
+          description: リクエストレシピ削除
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteRequestedRecipePresenter'
+      tags: *ref_2
+      security: *ref_3
   /api/spaces/{id}:
     get:
       operationId: getSpace
@@ -653,6 +672,15 @@ components:
       properties:
         success:
           type: boolean
+          default: true
+      required:
+        - success
+    DeleteRequestedRecipePresenter:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
       required:
         - success
     SpacePresenter:

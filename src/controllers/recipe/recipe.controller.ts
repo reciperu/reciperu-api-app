@@ -8,6 +8,7 @@ import {
   Post,
   Req,
   Query,
+  Delete,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -22,6 +23,7 @@ import {
   PaginatedRecipePresenter,
   RecipeMetaDataPresenter,
   CreateRequestedRecipePresenter,
+  DeleteRequestedRecipePresenter,
 } from './recipe.presenter';
 import {
   CreateRecipeDto,
@@ -38,6 +40,7 @@ import {
   GetRecipeListUseCase,
   GetRecipeMetaDateUseCase,
   CreateRequestedRecipeUseCase,
+  DeleteRequestedRecipeUseCase,
 } from 'src/use-cases';
 import { Request } from 'express';
 
@@ -60,6 +63,8 @@ export class RecipeController {
     private readonly getRecipeMetaDataUseCase: UseCaseProxy<GetRecipeMetaDateUseCase>,
     @Inject(UseCaseProxyModule.CREATE_REQUESTED_RECIPE_USE_CASE)
     private readonly createRequestedRecipeUseCase: UseCaseProxy<CreateRequestedRecipeUseCase>,
+    @Inject(UseCaseProxyModule.DELETE_REQUESTED_RECIPE_USE_CASE)
+    private readonly deleteRequestedRecipeUseCase: UseCaseProxy<DeleteRequestedRecipeUseCase>,
   ) {}
   @Get()
   @ApiOperation({ operationId: 'getRecipe' })
@@ -194,7 +199,7 @@ export class RecipeController {
   @ApiBody({
     type: CreateRequestedRecipeDto,
   })
-  async createRequestRecipe(
+  async createRequestedRecipe(
     @Req() req: Request,
     @Body() createRequestedRecipeDto: CreateRequestedRecipeDto,
   ) {
@@ -202,5 +207,19 @@ export class RecipeController {
       .getInstance()
       .execute(createRequestedRecipeDto, req.currentUser.getId);
     return new CreateRequestedRecipePresenter();
+  }
+
+  @Delete(':id/requests')
+  @ApiOperation({ operationId: 'deleteRequestedRecipe' })
+  @ApiResponse({
+    status: 201,
+    description: 'リクエストレシピ削除',
+    type: DeleteRequestedRecipePresenter,
+  })
+  async deleteRequestedRecipe(@Req() req: Request, @Param('id') id: string) {
+    await this.deleteRequestedRecipeUseCase
+      .getInstance()
+      .execute(id, req.currentUser.getId);
+    return new DeleteRequestedRecipePresenter();
   }
 }

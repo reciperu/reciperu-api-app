@@ -106,6 +106,15 @@ export class RecipeMetaDataPresenter {
 }
 
 export class CreateRequestedRecipePresenter {
-  @ApiProperty()
+  @ApiProperty({
+    default: true,
+  })
+  success: boolean;
+}
+
+export class DeleteRequestedRecipePresenter {
+  @ApiProperty({
+    default: true,
+  })
   success: boolean;
 }

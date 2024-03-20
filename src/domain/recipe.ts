@@ -203,6 +203,7 @@ export type IRecipeRepository = {
 
 export type IRequestedRecipeRepository = {
   create(userId: string, recipeId: string): Promise<void>;
+  delete(userId: string, recipeId: string): Promise<void>;
 };
 
 export type UpdateRecipeDto = {

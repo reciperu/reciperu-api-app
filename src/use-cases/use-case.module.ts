@@ -18,6 +18,7 @@ import {
   SendContactToSlackUseCase,
   GetRecipeMetaDateUseCase,
   CreateRequestedRecipeUseCase,
+  DeleteRequestedRecipeUseCase,
 } from './';
 import { DatabaseModule } from 'src/infrastructure/database/database.module';
 import { FirebaseModule } from 'src/infrastructure/firebase/firebase.module';
@@ -62,6 +63,8 @@ export class UseCaseProxyModule {
     'GET_RECIPE_META_DATE_USE_CASE';
   static readonly CREATE_REQUESTED_RECIPE_USE_CASE =
     'CREATE_REQUESTED_RECIPE_USE_CASE';
+  static readonly DELETE_REQUESTED_RECIPE_USE_CASE =
+    'DELETE_REQUESTED_RECIPE_USE_CASE';
   static resister(): DynamicModule {
     return {
       module: UseCaseProxyModule,
@@ -204,6 +207,16 @@ export class UseCaseProxyModule {
               new CreateRequestedRecipeUseCase(prismaRequestedRecipeRepository),
             ),
         },
+        {
+          inject: [PrismaRequestedRecipeRepository],
+          provide: UseCaseProxyModule.DELETE_REQUESTED_RECIPE_USE_CASE,
+          useFactory: (
+            prismaRequestedRecipeRepository: PrismaRequestedRecipeRepository,
+          ) =>
+            new UseCaseProxy(
+              new DeleteRequestedRecipeUseCase(prismaRequestedRecipeRepository),
+            ),
+        },
       ],
       exports: [
         UseCaseProxyModule.LOGIN_USE_CASE,
@@ -224,6 +237,7 @@ export class UseCaseProxyModule {
         UseCaseProxyModule.SEND_CONTACT_TO_SLACK_USE_CASE,
         UseCaseProxyModule.GET_RECIPE_META_DATE_USE_CASE,
         UseCaseProxyModule.CREATE_REQUESTED_RECIPE_USE_CASE,
+        UseCaseProxyModule.DELETE_REQUESTED_RECIPE_USE_CASE,
       ],
     };
   }
