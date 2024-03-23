@@ -66,7 +66,7 @@ export class PaginatedRecipePresenter {
 
   constructor(recipes: RecipePresenter[]) {
     this.recipes = recipes;
-    if (this.recipes.length === 0) {
+    if (this.recipes.length < 20) {
       this.nextCursor = undefined;
       return;
     }
