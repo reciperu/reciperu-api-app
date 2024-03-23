@@ -35,7 +35,7 @@ export class PrismaRecipeRepository implements IRecipeRepository {
 
   async findRecipes(spaceId: string, cursor?: string): Promise<Recipe[]> {
     const prismaRecipes = await this.prismaService.recipe.findMany({
-      take: 20,
+      take: 5,
       ...(cursor && { cursor: { recipeId: cursor }, skip: 1 }),
       where: {
         spaceId,
