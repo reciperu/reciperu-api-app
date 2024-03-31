@@ -67,6 +67,12 @@ paths:
           description: カーソル
           schema:
             type: string
+        - name: isRequested
+          required: false
+          in: query
+          description: 食べたい料理かどうか
+          schema:
+            type: boolean
       responses:
         '200':
           description: レシピ一覧取得

@@ -5,6 +5,7 @@ import {
   RecipeBeforePersist,
   Recipe,
   RecipeRequester,
+  FilterRecipeOptions,
 } from 'src/domain';
 import { Recipe as PrismaRecipe, PrismaClient } from '@prisma/client';
 
@@ -33,12 +34,24 @@ export class PrismaRecipeRepository implements IRecipeRepository {
     return this.toRecipe(prismaRecipe);
   }
 
-  async findRecipes(spaceId: string, cursor?: string): Promise<Recipe[]> {
+  async findRecipes(
+    spaceId: string,
+    cursor?: string,
+    filterOptions?: FilterRecipeOptions,
+  ): Promise<Recipe[]> {
+    const { requestUserId } = filterOptions;
     const prismaRecipes = await this.prismaService.recipe.findMany({
       take: 5,
       ...(cursor && { cursor: { recipeId: cursor }, skip: 1 }),
       where: {
         spaceId,
+        ...(requestUserId && {
+          requestedRecipes: {
+            some: {
+              userId: requestUserId,
+            },
+          },
+        }),
       },
       orderBy: {
         createdAt: 'desc',

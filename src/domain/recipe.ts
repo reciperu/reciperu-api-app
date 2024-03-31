@@ -197,7 +197,7 @@ export type IRecipeRepository = {
   findRecipes(
     spaceId: string,
     cursor?: string,
-    findOptions?: FindRecipeOptions,
+    filterOptions?: FilterRecipeOptions,
   ): Promise<Recipe[]>;
 };
 
@@ -226,8 +226,8 @@ export type CreateRecipeDto = {
   appName?: string;
 };
 
-export type FindRecipeOptions = {
-  favorite?: boolean;
+export type FilterRecipeOptions = {
+  requestUserId?: string;
 };
 
 export type CreateRequestedRecipeDto = {
