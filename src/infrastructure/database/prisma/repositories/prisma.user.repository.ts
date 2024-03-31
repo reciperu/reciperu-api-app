@@ -84,7 +84,7 @@ export class PrismaUserRepository implements IUserRepository {
     });
   }
 
-  private toUser(user: PrismaUser) {
+  toUser(user: PrismaUser) {
     return new User({
       id: user.userId,
       name: user.name,

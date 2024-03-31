@@ -1,13 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import {
-  User,
-  Space,
-  ActiveStatus,
-  SpaceRole,
-  ISpaceRepository,
-} from 'src/domain';
+import { Space, ISpaceRepository } from 'src/domain';
 import { PrismaService } from '../prisma.service';
 import { PrismaClient, Space as PrismaSpace } from '@prisma/client';
+import { PrismaUserRepository } from './prisma.user.repository';
 const prismaSpaceType = async (prisma: PrismaClient, spaceId: string) =>
   await prisma.space.findUnique({
     where: { spaceId },
@@ -19,7 +14,10 @@ const prismaSpaceType = async (prisma: PrismaClient, spaceId: string) =>
 type PrismaSpaceType = NonNullable<Awaited<ReturnType<typeof prismaSpaceType>>>;
 @Injectable()
 export class PrismaSpaceRepository implements ISpaceRepository {
-  constructor(private readonly prismaService: PrismaService) {
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly prismaUserRepository: PrismaUserRepository,
+  ) {
     this.prismaService = prismaService;
   }
   async findSpace(spaceId: string): Promise<Space> {
@@ -53,17 +51,8 @@ export class PrismaSpaceRepository implements ISpaceRepository {
       ? new Space({
           id: prismaSpace.spaceId,
           name: prismaSpace.name,
-          users: prismaSpace.users.map(
-            (user) =>
-              new User({
-                id: user.userId,
-                name: user.name,
-                imageUrl: user.imageUrl,
-                uid: user.uid,
-                activeStatus: user.activeStatus as ActiveStatus,
-                spaceId: user.spaceId,
-                spaceRole: user.spaceRole as SpaceRole,
-              }),
+          users: prismaSpace.users.map((user) =>
+            this.prismaUserRepository.toUser(user),
           ),
         })
       : new Space({

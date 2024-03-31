@@ -3,12 +3,12 @@ import {
   MenuBeforePersist,
   IMenuRepository,
   Menu,
-  Recipe,
   MenuStatus,
   MenuStatusKey,
 } from 'src/domain';
 import { PrismaService } from '../prisma.service';
 import { PrismaClient } from '@prisma/client';
+import { PrismaRecipeRepository } from './prisma.recipe.repository';
 
 const prismaMenuType = async (prisma: PrismaClient, menuId: string) =>
   await prisma.menu.findUnique({
@@ -22,7 +22,10 @@ type PrismaMenuType = NonNullable<Awaited<ReturnType<typeof prismaMenuType>>>;
 
 @Injectable()
 export class PrismaMenuRepository implements IMenuRepository {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly prismaRecipeRepository: PrismaRecipeRepository,
+  ) {}
 
   async findMenus({
     spaceId,
@@ -88,7 +91,7 @@ export class PrismaMenuRepository implements IMenuRepository {
     });
   }
 
-  private toMenu(prismaMenu: PrismaMenuType) {
+  toMenu(prismaMenu: PrismaMenuType) {
     return new Menu({
       id: prismaMenu.menuId,
       userId: prismaMenu.userId,
@@ -97,21 +100,7 @@ export class PrismaMenuRepository implements IMenuRepository {
       status: prismaMenu.status as MenuStatus,
       createdAt: prismaMenu.createdAt,
       spaceId: prismaMenu.spaceId,
-      recipe: new Recipe({
-        id: prismaMenu.recipe.recipeId,
-        title: prismaMenu.recipe.title,
-        spaceId: prismaMenu.recipe.spaceId,
-        userId: prismaMenu.recipe.userId,
-        thumbnailUrl: prismaMenu.recipe.thumbnailUrl,
-        imageUrls: prismaMenu.recipe.imageUrls
-          ? prismaMenu.recipe.imageUrls.split(',')
-          : null,
-        memo: prismaMenu.recipe.memo,
-        recipeUrl: prismaMenu.recipe.recipeUrl,
-        faviconUrl: prismaMenu.recipe.faviconUrl,
-        appName: prismaMenu.recipe.appName,
-        createdAt: prismaMenu.recipe.createdAt,
-      }),
+      recipe: this.prismaRecipeRepository.toRecipe(prismaMenu.recipe),
     });
   }
 }
