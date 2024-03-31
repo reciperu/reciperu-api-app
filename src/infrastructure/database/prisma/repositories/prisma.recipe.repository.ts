@@ -45,6 +45,7 @@ export class PrismaRecipeRepository implements IRecipeRepository {
       ...(cursor && { cursor: { recipeId: cursor }, skip: 1 }),
       where: {
         spaceId,
+        title: { contains: filterOptions.title },
         ...(requestUserId && {
           requestedRecipes: {
             some: {

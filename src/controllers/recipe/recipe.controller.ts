@@ -80,6 +80,12 @@ export class RecipeController {
     type: Boolean,
     required: false,
   })
+  @ApiQuery({
+    name: 'title',
+    description: 'レシピ名（部分一致）',
+    type: String,
+    required: false,
+  })
   @ApiResponse({
     status: 200,
     description: 'レシピ一覧取得',
@@ -89,11 +95,13 @@ export class RecipeController {
     @Req() req: Request,
     @Query('cursor') cursor: string | undefined,
     @Query('isRequested') isRequested: boolean | undefined,
+    @Query('title') title: string | undefined,
   ) {
     const recipes = await this.getRecipeListUseCase
       .getInstance()
       .execute(req.currentUser.getSpaceId, cursor, {
         requestUserId: isRequested ? req.currentUser.getId : undefined,
+        title,
       });
     return new PaginatedRecipePresenter(
       recipes.map((x) => new RecipePresenter(x)),

@@ -73,6 +73,12 @@ paths:
           description: 食べたい料理かどうか
           schema:
             type: boolean
+        - name: title
+          required: false
+          in: query
+          description: レシピ名（部分一致）
+          schema:
+            type: string
       responses:
         '200':
           description: レシピ一覧取得

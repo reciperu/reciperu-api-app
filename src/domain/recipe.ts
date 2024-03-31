@@ -228,6 +228,7 @@ export type CreateRecipeDto = {
 
 export type FilterRecipeOptions = {
   requestUserId?: string;
+  title?: string;
 };
 
 export type CreateRequestedRecipeDto = {
