@@ -1,3 +1,5 @@
+import { User } from './user';
+
 export class RecipeBeforePersist {
   private title: string;
   private spaceId: string;
@@ -117,6 +119,7 @@ export class Recipe extends RecipeBeforePersist {
   private id: string;
   private createdAt: Date;
   private requesters: RecipeRequester[];
+  private user: User;
   constructor({
     id,
     title,
@@ -130,6 +133,7 @@ export class Recipe extends RecipeBeforePersist {
     appName,
     createdAt,
     requesters,
+    user,
   }: {
     id: string;
     title: string;
@@ -143,6 +147,7 @@ export class Recipe extends RecipeBeforePersist {
     appName?: string;
     createdAt: Date;
     requesters?: RecipeRequester[];
+    user?: User;
   }) {
     super({
       title,
@@ -158,6 +163,7 @@ export class Recipe extends RecipeBeforePersist {
     this.id = id;
     this.createdAt = createdAt;
     this.requesters = requesters;
+    this.user = user;
   }
   get getId(): string {
     return this.id;
@@ -168,6 +174,10 @@ export class Recipe extends RecipeBeforePersist {
 
   get getRequesters(): RecipeRequester[] {
     return this.requesters;
+  }
+
+  get getUser(): User {
+    return this.user;
   }
 
   update(updateRecipeDto: UpdateRecipeDto) {

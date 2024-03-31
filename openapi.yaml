@@ -573,6 +573,8 @@ components:
           type: array
           items:
             type: string
+        user:
+          $ref: '#/components/schemas/UserPresenter'
       required:
         - id
         - title
@@ -587,6 +589,7 @@ components:
         - faviconUrl
         - createdAt
         - requesters
+        - user
     PaginatedRecipePresenter:
       type: object
       properties:

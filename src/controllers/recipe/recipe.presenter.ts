@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Recipe, RecipeRequester } from 'src/domain';
+import { UserPresenter } from '../user';
 
 export class RecipePresenter {
   @ApiProperty()
@@ -41,6 +42,9 @@ export class RecipePresenter {
   @ApiProperty()
   requesters?: RecipeRequester[];
 
+  @ApiProperty()
+  user?: UserPresenter;
+
   constructor(recipe: Recipe) {
     this.id = recipe.getId;
     this.title = recipe.getTitle;
@@ -54,6 +58,7 @@ export class RecipePresenter {
     this.faviconUrl = recipe.getFaviconUrl;
     this.createdAt = recipe.getCreatedAt;
     this.requesters = recipe.getRequesters;
+    this.user = recipe.getUser ? new UserPresenter(recipe.getUser) : undefined;
   }
 }
 

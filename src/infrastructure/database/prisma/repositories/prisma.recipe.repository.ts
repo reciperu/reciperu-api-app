@@ -8,12 +8,14 @@ import {
   FilterRecipeOptions,
 } from 'src/domain';
 import { Recipe as PrismaRecipe, PrismaClient } from '@prisma/client';
+import { PrismaUserRepository } from './prisma.user.repository';
 
 const prismaRecipeType = async (prisma: PrismaClient, recipeId: string) =>
   await prisma.recipe.findUnique({
     where: { recipeId },
     include: {
       requestedRecipes: true,
+      user: true,
     },
   });
 
@@ -22,7 +24,10 @@ type PrismaRecipeType = NonNullable<
 >;
 @Injectable()
 export class PrismaRecipeRepository implements IRecipeRepository {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly prismaUserRepository: PrismaUserRepository,
+  ) {}
 
   async findRecipe(recipeId: string): Promise<Recipe> {
     const prismaRecipe = await this.prismaService.recipe.findUnique({
@@ -59,6 +64,7 @@ export class PrismaRecipeRepository implements IRecipeRepository {
       },
       include: {
         requestedRecipes: true,
+        user: true,
       },
     });
     return prismaRecipes.map((prismaRecipe) => this.toRecipe(prismaRecipe));
@@ -115,7 +121,7 @@ export class PrismaRecipeRepository implements IRecipeRepository {
   }
 
   toRecipe(recipe: PrismaRecipe | PrismaRecipeType): Recipe {
-    return 'requestedRecipes' in recipe
+    return 'requestedRecipes' in recipe && 'user' in recipe
       ? new Recipe({
           id: recipe.recipeId,
           title: recipe.title,
@@ -132,6 +138,7 @@ export class PrismaRecipeRepository implements IRecipeRepository {
             (requestedRecipe) =>
               new RecipeRequester({ userId: requestedRecipe.userId }),
           ),
+          user: this.prismaUserRepository.toUser(recipe.user),
         })
       : new Recipe({
           id: recipe.recipeId,
