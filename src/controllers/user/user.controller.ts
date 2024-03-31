@@ -8,6 +8,7 @@ import {
   Delete,
   Inject,
   BadRequestException,
+  UploadedFile,
 } from '@nestjs/common';
 import {
   ApiOperation,
@@ -24,6 +25,10 @@ import {
   UseCaseProxy,
   UpdateUserUseCase,
 } from 'src/use-cases';
+import {
+  FileInterceptor,
+  FileFieldsInterceptor,
+} from '@nestjs/platform-express';
 import { Request } from 'express';
 
 @ApiTags('user')
@@ -64,7 +69,12 @@ export class UserController {
     description: 'ユーザーの情報更新',
     type: UserPresenter,
   })
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    console.log(file);
     const updatedUser = await this.updateUserUseCase
       .getInstance()
       .execute(updateUserDto, id);
