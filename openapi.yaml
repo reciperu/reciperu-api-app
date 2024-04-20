@@ -550,8 +550,6 @@ components:
           type: string
         userId:
           type: string
-        isFavorite:
-          type: boolean
         thumbnailUrl:
           type: string
         imageUrls:
@@ -580,7 +578,6 @@ components:
         - title
         - spaceId
         - userId
-        - isFavorite
         - thumbnailUrl
         - imageUrls
         - memo
@@ -650,8 +647,6 @@ components:
       properties:
         title:
           type: string
-        isFavorite:
-          type: boolean
         thumbnailUrl:
           type: string
         imageUrls:
@@ -668,7 +663,6 @@ components:
           type: string
       required:
         - title
-        - isFavorite
         - thumbnailUrl
         - imageUrls
         - memo

@@ -16,9 +16,6 @@ export class RecipePresenter {
   userId: string;
 
   @ApiProperty()
-  isFavorite: boolean;
-
-  @ApiProperty()
   thumbnailUrl?: string;
 
   @ApiProperty()

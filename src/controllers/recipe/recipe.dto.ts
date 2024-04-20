@@ -55,10 +55,6 @@ export class UpdateRecipeDto implements DomainUpdateRecipeDto {
   title: string;
 
   @ApiProperty()
-  @IsBoolean()
-  isFavorite: boolean;
-
-  @ApiProperty()
   @IsString()
   @IsOptional()
   thumbnailUrl?: string;
