@@ -37,7 +37,7 @@ export class RecipePresenter {
   createdAt: Date;
 
   @ApiProperty()
-  requesters?: RecipeRequester[];
+  requesters?: string[];
 
   @ApiProperty()
   user?: UserPresenter;
@@ -54,7 +54,9 @@ export class RecipePresenter {
     this.appName = recipe.getAppName;
     this.faviconUrl = recipe.getFaviconUrl;
     this.createdAt = recipe.getCreatedAt;
-    this.requesters = recipe.getRequesters;
+    this.requesters = recipe.getRequesters.map(
+      (requester) => requester.getUserId,
+    );
     this.user = recipe.getUser ? new UserPresenter(recipe.getUser) : undefined;
   }
 }
