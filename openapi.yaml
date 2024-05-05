@@ -213,7 +213,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateRequestedRecipePresenter'
+                $ref: '#/components/schemas/SuccessPresenter'
       tags: *ref_2
       security: *ref_3
   /api/recipes/{id}/requests:
@@ -232,7 +232,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeleteRequestedRecipePresenter'
+                $ref: '#/components/schemas/SuccessPresenter'
       tags: *ref_2
       security: *ref_3
   /api/spaces/{id}:
@@ -312,7 +312,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SpaceJoinPresenter'
+                $ref: '#/components/schemas/SuccessPresenter'
       tags: *ref_4
       security: *ref_5
   /api/menus:
@@ -420,7 +420,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeleteMenuPresenter'
+                $ref: '#/components/schemas/SuccessPresenter'
       tags: *ref_6
       security: *ref_7
   /api/auth:
@@ -676,15 +676,7 @@ components:
           type: string
       required:
         - recipeId
-    CreateRequestedRecipePresenter:
-      type: object
-      properties:
-        success:
-          type: boolean
-          default: true
-      required:
-        - success
-    DeleteRequestedRecipePresenter:
+    SuccessPresenter:
       type: object
       properties:
         success:
@@ -721,13 +713,6 @@ components:
           type: string
       required:
         - token
-    SpaceJoinPresenter:
-      type: object
-      properties:
-        success:
-          type: boolean
-      required:
-        - success
     UpdateSpaceDto:
       type: object
       properties:
@@ -795,13 +780,6 @@ components:
       required:
         - status
         - scheduledAt
-    DeleteMenuPresenter:
-      type: object
-      properties:
-        success:
-          type: boolean
-      required:
-        - success
     RoadmapPresenter:
       type: object
       properties:

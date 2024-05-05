@@ -46,8 +46,3 @@ export class PaginatedMenuPresenter {
     this.nextCursor = this.menus[this.menus.length - 1].id;
   }
 }
-
-export class DeleteMenuPresenter {
-  @ApiProperty()
-  success: boolean;
-}

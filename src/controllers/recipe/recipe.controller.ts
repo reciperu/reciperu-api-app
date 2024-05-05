@@ -22,8 +22,6 @@ import {
   RecipePresenter,
   PaginatedRecipePresenter,
   RecipeMetaDataPresenter,
-  CreateRequestedRecipePresenter,
-  DeleteRequestedRecipePresenter,
 } from './recipe.presenter';
 import {
   CreateRecipeDto,
@@ -43,6 +41,7 @@ import {
   DeleteRequestedRecipeUseCase,
 } from 'src/use-cases';
 import { Request } from 'express';
+import { SuccessPresenter } from '../common/success.presenter';
 
 @ApiTags('recipes')
 @ApiBearerAuth()
@@ -211,7 +210,7 @@ export class RecipeController {
   @ApiResponse({
     status: 201,
     description: 'リクエストレシピ登録',
-    type: CreateRequestedRecipePresenter,
+    type: SuccessPresenter,
   })
   @ApiBody({
     type: CreateRequestedRecipeDto,
@@ -223,7 +222,7 @@ export class RecipeController {
     await this.createRequestedRecipeUseCase
       .getInstance()
       .execute(createRequestedRecipeDto, req.currentUser.getId);
-    return new CreateRequestedRecipePresenter();
+    return new SuccessPresenter();
   }
 
   @Delete(':id/requests')
@@ -231,12 +230,12 @@ export class RecipeController {
   @ApiResponse({
     status: 201,
     description: 'リクエストレシピ削除',
-    type: DeleteRequestedRecipePresenter,
+    type: SuccessPresenter,
   })
   async deleteRequestedRecipe(@Req() req: Request, @Param('id') id: string) {
     await this.deleteRequestedRecipeUseCase
       .getInstance()
       .execute(id, req.currentUser.getId);
-    return new DeleteRequestedRecipePresenter();
+    return new SuccessPresenter();
   }
 }

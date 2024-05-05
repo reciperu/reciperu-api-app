@@ -18,11 +18,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import {
-  DeleteMenuPresenter,
-  MenuPresenter,
-  PaginatedMenuPresenter,
-} from './menu.presenter';
+import { MenuPresenter, PaginatedMenuPresenter } from './menu.presenter';
 import { CreateMenuDto, UpdateMenuDto } from './menu.dto';
 import {
   UseCaseProxyModule,
@@ -34,6 +30,7 @@ import {
 } from 'src/use-cases';
 import { Request } from 'express';
 import { MenuStatusKey } from 'src/domain';
+import { SuccessPresenter } from '../common/success.presenter';
 
 @ApiTags('menus')
 @ApiBearerAuth()
@@ -136,11 +133,10 @@ export class MenuController {
   @ApiResponse({
     status: 200,
     description: '献立の削除',
-    type: DeleteMenuPresenter,
+    type: SuccessPresenter,
   })
   async delete(@Param('id') id: string) {
     await this.deleteMenuUseCase.getInstance().execute(id);
-
-    return { success: true };
+    return new SuccessPresenter();
   }
 }

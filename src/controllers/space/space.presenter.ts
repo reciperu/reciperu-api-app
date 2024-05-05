@@ -26,8 +26,3 @@ export class SpaceInvitationPresenter {
     this.token = token;
   }
 }
-
-export class SpaceJoinPresenter {
-  @ApiProperty()
-  success: boolean;
-}

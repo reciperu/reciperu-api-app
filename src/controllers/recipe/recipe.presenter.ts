@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Recipe, RecipeRequester } from 'src/domain';
+import { Recipe } from 'src/domain';
 import { UserPresenter } from '../user';
 
 export class RecipePresenter {
@@ -103,18 +103,4 @@ export class RecipeMetaDataPresenter {
     this.appName = appName;
     this.faviconUrl = faviconUrl;
   }
-}
-
-export class CreateRequestedRecipePresenter {
-  @ApiProperty({
-    default: true,
-  })
-  success: boolean;
-}
-
-export class DeleteRequestedRecipePresenter {
-  @ApiProperty({
-    default: true,
-  })
-  success: boolean;
 }

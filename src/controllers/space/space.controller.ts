@@ -17,11 +17,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { UpdateSpaceDto, ValidateInvitationDto } from './space.dto';
-import {
-  SpacePresenter,
-  SpaceInvitationPresenter,
-  SpaceJoinPresenter,
-} from './space.presenter';
+import { SpacePresenter, SpaceInvitationPresenter } from './space.presenter';
 import {
   GetSpaceUseCase,
   UpdateSpaceUseCase,
@@ -30,8 +26,9 @@ import {
   UseCaseProxyModule,
   ValidateSpaceJoinUseCase,
 } from 'src/use-cases';
-
 import { Request } from 'express';
+import { SuccessPresenter } from '../common/success.presenter';
+
 @ApiTags('spaces')
 @ApiBearerAuth()
 @Controller('spaces')
@@ -86,7 +83,7 @@ export class SpaceController {
   @ApiResponse({
     status: 200,
     description: 'スペース参加の検証',
-    type: SpaceJoinPresenter,
+    type: SuccessPresenter,
   })
   async validate(
     @Req() req: Request,
@@ -95,7 +92,7 @@ export class SpaceController {
     await this.validateSpaceJoinUseCase
       .getInstance()
       .execute(validateInvitationDto.token, req.currentUser.getId);
-    return new SpaceJoinPresenter();
+    return new SuccessPresenter();
   }
 
   @Put(':id')
