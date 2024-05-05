@@ -54,9 +54,9 @@ export class RecipePresenter {
     this.appName = recipe.getAppName;
     this.faviconUrl = recipe.getFaviconUrl;
     this.createdAt = recipe.getCreatedAt;
-    this.requesters = recipe.getRequesters.map(
-      (requester) => requester.getUserId,
-    );
+    this.requesters = recipe.getRequesters
+      ? recipe.getRequesters.map((requester) => requester.getUserId)
+      : undefined;
     this.user = recipe.getUser ? new UserPresenter(recipe.getUser) : undefined;
   }
 }
