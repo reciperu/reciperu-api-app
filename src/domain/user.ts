@@ -51,6 +51,7 @@ export class User extends UserBeforePersist {
   private activeStatus: ActiveStatus;
   private spaceId: string;
   private spaceRole: SpaceRole;
+  private mySpaceId: string;
 
   constructor({
     id,
@@ -60,6 +61,7 @@ export class User extends UserBeforePersist {
     activeStatus,
     spaceId,
     spaceRole,
+    mySpaceId,
   }: {
     id: string;
     name: string;
@@ -68,12 +70,14 @@ export class User extends UserBeforePersist {
     activeStatus: ActiveStatus;
     spaceId: string;
     spaceRole: SpaceRole;
+    mySpaceId: string;
   }) {
     super({ name, imageUrl, uid });
     this.id = id;
     this.activeStatus = activeStatus;
     this.spaceId = spaceId;
     this.spaceRole = spaceRole;
+    this.mySpaceId = mySpaceId;
   }
   get getId(): string {
     return this.id;
@@ -87,6 +91,10 @@ export class User extends UserBeforePersist {
   }
   get getSpaceRole(): SpaceRole {
     return this.spaceRole;
+  }
+
+  get getMySpaceId(): string {
+    return this.mySpaceId;
   }
 
   set setActiveStatus(activeStatus: ActiveStatus) {

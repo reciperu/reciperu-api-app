@@ -30,6 +30,7 @@ export class PrismaUserRepository implements IUserRepository {
           imageUrl: user.getImageUrl,
           uid: user.getUid,
           spaceId: space.spaceId,
+          mySpaceId: space.spaceId,
         },
       });
     });
@@ -93,6 +94,7 @@ export class PrismaUserRepository implements IUserRepository {
       activeStatus: user.activeStatus as ActiveStatus,
       spaceId: user.spaceId,
       spaceRole: user.spaceRole as SpaceRole,
+      mySpaceId: user.mySpaceId,
     });
   }
 }
