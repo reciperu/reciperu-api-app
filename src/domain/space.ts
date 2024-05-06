@@ -89,9 +89,13 @@ export class SpaceInvitation extends SpaceInvitationBeforePersist {
   }
 
   validate(): void {
-    if (dayjs().isAfter(this.getExpiredAt)) {
+    if (!this.isValid()) {
       throw new Error('token is expired');
     }
+  }
+
+  isValid(): boolean {
+    return dayjs().isBefore(this.getExpiredAt);
   }
 
   useToken(): void {
@@ -100,7 +104,7 @@ export class SpaceInvitation extends SpaceInvitationBeforePersist {
 }
 
 export type ISpaceRepository = {
-  findSpace(id: string): Promise<Space>;
+  findSpace(id: string): Promise<Space | null>;
   updateSpace(space: Space): Promise<Space>;
 };
 

@@ -20,7 +20,7 @@ export class PrismaSpaceRepository implements ISpaceRepository {
   ) {
     this.prismaService = prismaService;
   }
-  async findSpace(spaceId: string): Promise<Space> {
+  async findSpace(spaceId: string): Promise<Space | null> {
     const prismaSpace = await this.prismaService.space.findUnique({
       where: { spaceId },
       include: {

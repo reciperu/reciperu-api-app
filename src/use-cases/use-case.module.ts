@@ -167,11 +167,13 @@ export class UseCaseProxyModule {
           useFactory: (
             spaceInvitationRepository: PrismaSpaceInvitationRepository,
             userRepository: PrismaUserRepository,
+            spaceRepository: PrismaSpaceRepository,
           ) =>
             new UseCaseProxy(
               new ValidateSpaceJoinUseCase(
                 spaceInvitationRepository,
                 userRepository,
+                spaceRepository,
               ),
             ),
         },
