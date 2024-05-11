@@ -206,8 +206,7 @@ export type IRecipeRepository = {
   save(recipe: Recipe | RecipeBeforePersist): Promise<Recipe>;
   findRecipes(
     spaceId: string,
-    cursor?: string,
-    filterOptions?: FilterRecipeOptions,
+    findRecipeOptions?: FindRecipeOptions,
   ): Promise<Recipe[]>;
 };
 
@@ -236,7 +235,8 @@ export type CreateRecipeDto = {
   appName?: string;
 };
 
-export type FilterRecipeOptions = {
+export type FindRecipeOptions = {
+  cursor?: string;
   requestUserId?: string;
   title?: string;
 };
