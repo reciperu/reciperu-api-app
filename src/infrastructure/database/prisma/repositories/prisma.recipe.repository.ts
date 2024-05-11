@@ -52,7 +52,12 @@ export class PrismaRecipeRepository implements IRecipeRepository {
       }),
       where: {
         spaceId,
-        title: { contains: findRecipeOptions.title },
+        ...(findRecipeOptions.userId && {
+          userId: findRecipeOptions.userId,
+        }),
+        ...(findRecipeOptions.title && {
+          title: { contains: findRecipeOptions.title },
+        }),
         ...(requestUserId && {
           requestedRecipes: {
             some: {
