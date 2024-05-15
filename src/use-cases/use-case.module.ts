@@ -65,6 +65,7 @@ export class UseCaseProxyModule {
     'CREATE_REQUESTED_RECIPE_USE_CASE';
   static readonly DELETE_REQUESTED_RECIPE_USE_CASE =
     'DELETE_REQUESTED_RECIPE_USE_CASE';
+  static readonly UPLOAD_FILES_USE_CASE = 'UPLOAD_FILES_USE_CASE';
   static resister(): DynamicModule {
     return {
       module: UseCaseProxyModule,
@@ -84,8 +85,13 @@ export class UseCaseProxyModule {
         {
           inject: [PrismaUserRepository],
           provide: UseCaseProxyModule.UPDATE_USER_USE_CASE,
-          useFactory: (userRepository: PrismaUserRepository) => {
-            return new UseCaseProxy(new UpdateUserUseCase(userRepository));
+          useFactory: (
+            userRepository: PrismaUserRepository,
+            firebaseService: FirebaseService,
+          ) => {
+            return new UseCaseProxy(
+              new UpdateUserUseCase(userRepository, firebaseService),
+            );
           },
         },
         {

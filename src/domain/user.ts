@@ -136,6 +136,5 @@ export type IUserRepository = {
 
 export type UpdateUserDto = {
   name: string;
-  imageUrl: string;
   activeStatus: ActiveStatus;
 };
