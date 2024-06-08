@@ -8,10 +8,12 @@ import {
   PrismaMenuRepository,
   PrismaRequestedRecipeRepository,
 } from './prisma';
+import { PrismaTransactionManager } from './prisma/prisma.transaction-manager';
 
 @Module({
   providers: [
     PrismaService,
+    PrismaTransactionManager,
     PrismaUserRepository,
     PrismaRecipeRepository,
     PrismaSpaceRepository,
@@ -26,6 +28,7 @@ import {
     PrismaSpaceInvitationRepository,
     PrismaMenuRepository,
     PrismaRequestedRecipeRepository,
+    PrismaTransactionManager,
   ],
 })
 export class DatabaseModule {}
