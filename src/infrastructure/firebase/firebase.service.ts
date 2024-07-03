@@ -9,6 +9,7 @@ export class FirebaseService implements OnModuleInit {
     if (admin.apps.length === 0) {
       admin.initializeApp({
         credential: admin.credential.cert(adminConfig),
+        storageBucket: process.env.STORAGE_BUCKET_NAME,
       });
     }
   }

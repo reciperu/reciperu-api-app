@@ -82,10 +82,15 @@ export class UseCaseProxyModule {
           },
         },
         {
-          inject: [PrismaUserRepository],
+          inject: [PrismaUserRepository, FirebaseService],
           provide: UseCaseProxyModule.UPDATE_USER_USE_CASE,
-          useFactory: (userRepository: PrismaUserRepository) => {
-            return new UseCaseProxy(new UpdateUserUseCase(userRepository));
+          useFactory: (
+            userRepository: PrismaUserRepository,
+            firebaseService: FirebaseService,
+          ) => {
+            return new UseCaseProxy(
+              new UpdateUserUseCase(userRepository, firebaseService),
+            );
           },
         },
         {
