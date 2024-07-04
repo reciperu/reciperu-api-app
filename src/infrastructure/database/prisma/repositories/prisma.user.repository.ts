@@ -28,6 +28,7 @@ export class PrismaUserRepository implements IUserRepository {
         data: {
           name: user.getName,
           imageUrl: user.getImageUrl,
+          filename: user.getFilename,
           uid: user.getUid,
           spaceId: space.spaceId,
         },
@@ -89,6 +90,7 @@ export class PrismaUserRepository implements IUserRepository {
       id: user.userId,
       name: user.name,
       imageUrl: user.imageUrl,
+      filename: user.filename,
       uid: user.uid,
       activeStatus: user.activeStatus as ActiveStatus,
       spaceId: user.spaceId,

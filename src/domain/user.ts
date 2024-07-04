@@ -14,18 +14,22 @@ export enum ActiveStatus {
 export class UserBeforePersist {
   private name: string;
   private imageUrl: string;
+  private filename: string;
   private uid: string;
   constructor({
     name,
     imageUrl,
+    filename,
     uid,
   }: {
     name: string;
     imageUrl: string;
+    filename: string;
     uid: string;
   }) {
     this.name = name;
     this.imageUrl = imageUrl;
+    this.filename = filename;
     this.uid = uid;
   }
   get getName(): string {
@@ -33,6 +37,9 @@ export class UserBeforePersist {
   }
   get getImageUrl(): string {
     return this.imageUrl;
+  }
+  get getFilename(): string {
+    return this.filename;
   }
   get getUid(): string {
     return this.uid;
@@ -43,6 +50,9 @@ export class UserBeforePersist {
   }
   set setImageUrl(imageUrl: string) {
     this.imageUrl = imageUrl;
+  }
+  set setFilename(filename: string) {
+    this.filename = filename;
   }
 }
 
@@ -56,6 +66,7 @@ export class User extends UserBeforePersist {
     id,
     name,
     imageUrl,
+    filename,
     uid,
     activeStatus,
     spaceId,
@@ -64,12 +75,13 @@ export class User extends UserBeforePersist {
     id: string;
     name: string;
     imageUrl: string;
+    filename: string;
     uid: string;
     activeStatus: ActiveStatus;
     spaceId: string;
     spaceRole: SpaceRole;
   }) {
-    super({ name, imageUrl, uid });
+    super({ name, imageUrl, uid, filename });
     this.id = id;
     this.activeStatus = activeStatus;
     this.spaceId = spaceId;
@@ -96,14 +108,17 @@ export class User extends UserBeforePersist {
   update({
     name,
     imageUrl,
+    filename,
     activeStatus,
   }: {
     name: string;
     imageUrl: string;
+    filename: string;
     activeStatus: ActiveStatus;
   }): void {
     this.setName = name;
     this.setImageUrl = imageUrl;
+    this.setFilename = filename;
     this.setActiveStatus = activeStatus;
   }
 

@@ -29,6 +29,7 @@ export class SetCurrentUserMiddleware implements NestMiddleware {
             id: user.getId,
             name: user.getName,
             imageUrl: user.getImageUrl,
+            filename: user.getFilename,
             uid: user.getUid,
             activeStatus: user.getActiveStatus,
             spaceId: user.getSpaceId,

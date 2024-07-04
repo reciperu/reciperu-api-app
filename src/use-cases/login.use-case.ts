@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { User, UserBeforePersist, IUserRepository } from 'src/domain';
 import { FirebaseService } from 'src/infrastructure/firebase/firebase.service';
+import { uploadImageToStorage } from 'src/functions/image';
 
 @Injectable()
 export class LoginUseCase {
@@ -13,11 +14,32 @@ export class LoginUseCase {
     const decodedToken = await this.firebaseService.admin
       .auth()
       .verifyIdToken(token);
-    const userBeforePersist = new UserBeforePersist({
+
+    // TODO: uidが同じものが存在する場合はエラーを返す？
+    const userObject = {
       name: decodedToken.name,
-      imageUrl: decodedToken.picture,
+      imageUrl: '',
+      filename: '',
       uid: decodedToken.uid,
-    });
+    };
+    const picture = decodedToken.picture;
+
+    if (picture?.length) {
+      // storageに登録
+      const storage = this.firebaseService.admin.storage();
+      const { imageUrl, filename } = await uploadImageToStorage(
+        storage,
+        picture,
+        '',
+      );
+      if (imageUrl) {
+        userObject.imageUrl = imageUrl;
+      }
+      if (filename) {
+        userObject.filename = filename;
+      }
+    }
+    const userBeforePersist = new UserBeforePersist(userObject);
     return await this.userRepository.create(userBeforePersist);
   }
 }
