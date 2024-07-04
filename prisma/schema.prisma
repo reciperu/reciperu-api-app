@@ -69,23 +69,25 @@ model SpaceInvitation {
 }
 
 model Recipe {
-  recipeId         String            @id @default(cuid())
-  title            String
-  thumbnailUrl     String?           @map("thumbnail_url")
-  imageUrls        String?           @map("image_urls")
-  recipeUrl        String?           @map("recipe_url")
-  memo             String?
-  faviconUrl       String?           @map("favicon_url")
-  appName          String?           @map("app_name")
-  spaceId          String            @map("space_id")
-  userId           String            @map("user_id")
-  archivedAt       DateTime?         @map("archived_at")
-  createdAt        DateTime          @default(now()) @map("created_at")
-  updatedAt        DateTime?         @updatedAt @map("updated_at")
-  space            Space             @relation(fields: [spaceId], references: [spaceId], onDelete: Cascade)
-  menus            Menu[]
-  requestedRecipes RequestedRecipe[]
-  user             User              @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  recipeId          String            @id @default(cuid())
+  title             String
+  thumbnailUrl      String?           @map("thumbnail_url")
+  thumbnailFilename String?           @map("thumbnail_filename")
+  imageUrls         String[]          @map("image_urls")
+  imageFilenames    String[]          @map("image_filenames")
+  recipeUrl         String?           @map("recipe_url")
+  memo              String?
+  faviconUrl        String?           @map("favicon_url")
+  appName           String?           @map("app_name")
+  spaceId           String            @map("space_id")
+  userId            String            @map("user_id")
+  archivedAt        DateTime?         @map("archived_at")
+  createdAt         DateTime          @default(now()) @map("created_at")
+  updatedAt         DateTime?         @updatedAt @map("updated_at")
+  space             Space             @relation(fields: [spaceId], references: [spaceId], onDelete: Cascade)
+  menus             Menu[]
+  requestedRecipes  RequestedRecipe[]
+  user              User              @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
   @@index([recipeId])
   @@index([createdAt])

@@ -5,7 +5,9 @@ export class RecipeBeforePersist {
   private spaceId: string;
   private userId: string;
   private thumbnailUrl?: string;
+  private thumbnailFilename?: string;
   private imageUrls?: string[];
+  private imageFilenames?: string[];
   private memo?: string;
   private recipeUrl?: string;
   private faviconUrl?: string;
@@ -16,7 +18,9 @@ export class RecipeBeforePersist {
     spaceId,
     userId,
     thumbnailUrl,
+    thumbnailFilename,
     imageUrls,
+    imageFilenames,
     memo,
     recipeUrl,
     faviconUrl,
@@ -26,7 +30,9 @@ export class RecipeBeforePersist {
     spaceId: string;
     userId: string;
     thumbnailUrl?: string;
+    thumbnailFilename?: string;
     imageUrls?: string[];
+    imageFilenames?: string[];
     memo?: string;
     recipeUrl?: string;
     faviconUrl?: string;
@@ -36,7 +42,9 @@ export class RecipeBeforePersist {
     this.spaceId = spaceId;
     this.userId = userId;
     this.thumbnailUrl = thumbnailUrl;
+    this.thumbnailFilename = thumbnailFilename;
     this.imageUrls = imageUrls;
+    this.imageFilenames = imageFilenames;
     this.memo = memo;
     this.recipeUrl = recipeUrl;
     this.faviconUrl = faviconUrl;
@@ -59,8 +67,16 @@ export class RecipeBeforePersist {
     return this.thumbnailUrl;
   }
 
+  get getThumbnailFilename(): string | undefined {
+    return this.thumbnailFilename;
+  }
+
   get getImageUrls(): string[] | undefined {
     return this.imageUrls;
+  }
+
+  get getImageFilenames(): string[] | undefined {
+    return this.imageFilenames;
   }
 
   get getMemo(): string | undefined {
@@ -86,8 +102,16 @@ export class RecipeBeforePersist {
     this.thumbnailUrl = thumbnailUrl;
   }
 
+  set setThumbnailFilename(thumbnailFilename: string) {
+    this.thumbnailFilename = thumbnailFilename;
+  }
+
   set setImageUrls(imageUrls: string[]) {
     this.imageUrls = imageUrls;
+  }
+
+  set setImageFilenames(imageFilenames: string[]) {
+    this.imageFilenames = imageFilenames;
   }
 
   set setMemo(memo: string) {
@@ -126,7 +150,9 @@ export class Recipe extends RecipeBeforePersist {
     spaceId,
     userId,
     thumbnailUrl,
+    thumbnailFilename,
     imageUrls,
+    imageFilenames,
     memo,
     recipeUrl,
     faviconUrl,
@@ -140,7 +166,9 @@ export class Recipe extends RecipeBeforePersist {
     spaceId: string;
     userId: string;
     thumbnailUrl?: string;
+    thumbnailFilename?: string;
     imageUrls?: string[];
+    imageFilenames?: string[];
     memo?: string;
     recipeUrl?: string;
     faviconUrl?: string;
@@ -154,7 +182,9 @@ export class Recipe extends RecipeBeforePersist {
       spaceId,
       userId,
       thumbnailUrl,
+      thumbnailFilename,
       imageUrls,
+      imageFilenames,
       memo,
       recipeUrl,
       faviconUrl,
@@ -180,19 +210,32 @@ export class Recipe extends RecipeBeforePersist {
     return this.user;
   }
 
-  update(updateRecipeDto: UpdateRecipeDto) {
-    const {
-      title,
-      thumbnailUrl,
-      imageUrls,
-      memo,
-      recipeUrl,
-      faviconUrl,
-      appName,
-    } = updateRecipeDto;
+  update({
+    title,
+    thumbnailUrl,
+    thumbnailFilename,
+    imageUrls,
+    imageFilenames,
+    memo,
+    recipeUrl,
+    faviconUrl,
+    appName,
+  }: {
+    title: string;
+    thumbnailUrl: string;
+    thumbnailFilename: string;
+    imageUrls: string[];
+    imageFilenames: string[];
+    memo: string;
+    recipeUrl: string;
+    faviconUrl: string;
+    appName: string;
+  }) {
     this.setTitle = title;
     this.setThumbnailUrl = thumbnailUrl;
+    this.setThumbnailFilename = thumbnailFilename;
     this.setImageUrls = imageUrls;
+    this.setImageFilenames = imageFilenames;
     this.setMemo = memo;
     this.setRecipeUrl = recipeUrl;
     this.setFaviconUrl = faviconUrl;

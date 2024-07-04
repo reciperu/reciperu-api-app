@@ -94,10 +94,15 @@ export class UseCaseProxyModule {
           },
         },
         {
-          inject: [PrismaRecipeRepository],
+          inject: [PrismaRecipeRepository, FirebaseService],
           provide: UseCaseProxyModule.CREATE_RECIPES_USE_CASE,
-          useFactory: (recipeRepository: PrismaRecipeRepository) => {
-            return new UseCaseProxy(new CreateRecipesUseCase(recipeRepository));
+          useFactory: (
+            recipeRepository: PrismaRecipeRepository,
+            firebaseService: FirebaseService,
+          ) => {
+            return new UseCaseProxy(
+              new CreateRecipesUseCase(recipeRepository, firebaseService),
+            );
           },
         },
         {
@@ -120,16 +125,26 @@ export class UseCaseProxyModule {
           },
         },
         {
-          inject: [PrismaRecipeRepository],
+          inject: [PrismaRecipeRepository, FirebaseService],
           provide: UseCaseProxyModule.CREATE_RECIPE_USE_CASE,
-          useFactory: (recipeRepository: PrismaRecipeRepository) =>
-            new UseCaseProxy(new CreateRecipeUseCase(recipeRepository)),
+          useFactory: (
+            recipeRepository: PrismaRecipeRepository,
+            firebaseService: FirebaseService,
+          ) =>
+            new UseCaseProxy(
+              new CreateRecipeUseCase(recipeRepository, firebaseService),
+            ),
         },
         {
-          inject: [PrismaRecipeRepository],
+          inject: [PrismaRecipeRepository, FirebaseService],
           provide: UseCaseProxyModule.UPDATE_RECIPE_USE_CASE,
-          useFactory: (recipeRepository: PrismaRecipeRepository) =>
-            new UseCaseProxy(new UpdateRecipeUseCase(recipeRepository)),
+          useFactory: (
+            recipeRepository: PrismaRecipeRepository,
+            firebaseService: FirebaseService,
+          ) =>
+            new UseCaseProxy(
+              new UpdateRecipeUseCase(recipeRepository, firebaseService),
+            ),
         },
         {
           inject: [PrismaRecipeRepository],
