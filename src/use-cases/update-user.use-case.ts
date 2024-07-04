@@ -22,6 +22,7 @@ export class UpdateUserUseCase {
       const { imageUrl, filename: updatedFilename } =
         await uploadImageToStorage(
           storage,
+          'profile',
           updateUserDto.imageUrl,
           prevFilename,
         );

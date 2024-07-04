@@ -3,8 +3,17 @@ import axios from 'axios';
 import { randomUUID } from 'crypto';
 import { HttpException } from '@nestjs/common';
 
+/**
+ * 画像をストレージにアップロードする
+ * @param storage
+ * @param path
+ * @param image
+ * @param prevFilename
+ * @returns filename, imageUrl
+ */
 export const uploadImageToStorage = async (
   storage: Storage,
+  path: 'profile' | 'recipe',
   image: string,
   prevFilename: string,
 ) => {
@@ -18,7 +27,7 @@ export const uploadImageToStorage = async (
     const base64Image = image.split(';base64,').pop();
     ext = image.split(';')[0].split('/')[1];
     buffer = Buffer.from(base64Image, 'base64');
-    filename = `profile/${randomUUID()}.${ext}`;
+    filename = `${path}/${randomUUID()}.${ext}`;
   }
   // URLの場合
   if (image.startsWith('http')) {
@@ -27,7 +36,7 @@ export const uploadImageToStorage = async (
     });
     buffer = Buffer.from(response.data, 'binary');
     ext = response.headers['content-type'].split('/')[1];
-    filename = `profile/${randomUUID()}.${ext}`;
+    filename = `${path}/${randomUUID()}.${ext}`;
   }
   const blob = bucket.file(filename);
   const blobStream = blob.createWriteStream({
@@ -52,8 +61,7 @@ export const uploadImageToStorage = async (
 
     // 元の画像を削除
     if (prevFilename?.length) {
-      const prevBlob = bucket.file(prevFilename);
-      await prevBlob.delete();
+      await deleteImageFromStorage(storage, prevFilename);
     }
   } catch (error) {
     throw new HttpException(
@@ -65,4 +73,26 @@ export const uploadImageToStorage = async (
     filename,
     imageUrl,
   };
+};
+
+/**
+ * ストレージから画像を削除する
+ * @param storage
+ * @param filename
+ */
+export const deleteImageFromStorage = async (
+  storage: Storage,
+  filename: string,
+) => {
+  if (!filename?.length) return;
+  const bucket = storage.bucket();
+  const blob = bucket.file(filename);
+  try {
+    await blob.delete();
+  } catch (error) {
+    throw new HttpException(
+      `Unable to delete image, something went wrong: ${error}`,
+      500,
+    );
+  }
 };

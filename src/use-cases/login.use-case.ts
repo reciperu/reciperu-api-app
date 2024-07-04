@@ -29,6 +29,7 @@ export class LoginUseCase {
       const storage = this.firebaseService.admin.storage();
       const { imageUrl, filename } = await uploadImageToStorage(
         storage,
+        'profile',
         picture,
         '',
       );
