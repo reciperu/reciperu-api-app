@@ -30,8 +30,6 @@ export class CreateRecipeUseCase {
       faviconUrl: createRecipesDto.faviconUrl,
       appName: createRecipesDto.appName,
     };
-    console.log('createRecipesDto: ');
-    console.log(createRecipesDto);
     const storage = this.firebaseService.admin.storage();
     // thumbnailUrlがある場合はstorageに登録
     if (createRecipesDto.thumbnailUrl.length) {
@@ -67,7 +65,6 @@ export class CreateRecipeUseCase {
         }
       }
     }
-    console.log(recipeObject);
     return await this.recipeRepository.save(
       new RecipeBeforePersist(recipeObject),
     );
