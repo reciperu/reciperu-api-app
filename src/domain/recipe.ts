@@ -104,6 +104,10 @@ export class RecipeBeforePersist {
   set setAppName(appName: string) {
     this.appName = appName;
   }
+
+  set setSpaceId(spaceId: string) {
+    this.spaceId = spaceId;
+  }
 }
 
 export class RecipeRequester {
@@ -206,8 +210,7 @@ export type IRecipeRepository = {
   save(recipe: Recipe | RecipeBeforePersist): Promise<Recipe>;
   findRecipes(
     spaceId: string,
-    cursor?: string,
-    filterOptions?: FilterRecipeOptions,
+    findRecipeOptions?: FindRecipeOptions,
   ): Promise<Recipe[]>;
 };
 
@@ -236,9 +239,11 @@ export type CreateRecipeDto = {
   appName?: string;
 };
 
-export type FilterRecipeOptions = {
+export type FindRecipeOptions = {
+  cursor?: string;
   requestUserId?: string;
   title?: string;
+  userId?: string;
 };
 
 export type CreateRequestedRecipeDto = {

@@ -33,6 +33,7 @@ export class SetCurrentUserMiddleware implements NestMiddleware {
             activeStatus: user.getActiveStatus,
             spaceId: user.getSpaceId,
             spaceRole: user.getSpaceRole,
+            mySpaceId: user.getMySpaceId,
           })
         : null;
 
