@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SendContactDto, User } from 'src/domain';
+import * as functions from 'firebase-functions';
 
 @Injectable()
 export class SendContactToSlackUseCase {
@@ -11,7 +12,12 @@ export class SendContactToSlackUseCase {
       // 400エラーを返す
       throw new HttpException('No message provided', HttpStatus.BAD_REQUEST);
     }
-    const slackWebhookUrl = this.configService.get('SLACK_WEBHOOK_URL');
+    let slackWebhookUrl = '';
+    if (process.env.NODE_ENV === 'local') {
+      slackWebhookUrl = this.configService.get('SLACK_WEBHOOK_URL');
+    } else {
+      slackWebhookUrl = functions.config().env.slack_webhook_url;
+    }
     const response = await fetch(slackWebhookUrl, {
       method: 'POST',
       headers: {
