@@ -12,8 +12,7 @@
         "*.local"
       ],
       "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run lint",
-        "npm --prefix \"$RESOURCE_DIR\" run build"
+        "cross-env NODE_ENV=$FIREBASE_ENV npm --prefix \"$RESOURCE_DIR\" run build"
       ]
     }
   ]

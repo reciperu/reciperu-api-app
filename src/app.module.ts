@@ -15,15 +15,21 @@ import { AuthModule } from './infrastructure/auth/auth.module';
 import { SetCurrentUserMiddleware } from './middleware/setCurrentUser.middleware';
 import { FirebaseService } from './infrastructure/firebase/firebase.service';
 import { PrismaService } from './infrastructure/database/prisma/prisma.service';
+import { getEnvFilePath } from './functions/getEnvFilePath';
+
+const envFilePath: string = getEnvFilePath(`${__dirname}/envs`);
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath,
+      isGlobal: true,
+    }),
     FirebaseModule,
     ControllersModule,
     DatabaseModule,
     UseCaseProxyModule,
     AuthModule,
-    ConfigModule.forRoot(),
   ],
   providers: [
     {

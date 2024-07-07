@@ -31,6 +31,7 @@ import {
   PrismaSpaceRepository,
   PrismaRequestedRecipeRepository,
 } from 'src/infrastructure/database/prisma';
+import { ConfigService } from '@nestjs/config';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -208,9 +209,10 @@ export class UseCaseProxyModule {
             new UseCaseProxy(new GetMenuListUseCase(menuRepository)),
         },
         {
-          inject: [],
+          inject: [ConfigService],
           provide: UseCaseProxyModule.SEND_CONTACT_TO_SLACK_USE_CASE,
-          useFactory: () => new UseCaseProxy(new SendContactToSlackUseCase()),
+          useFactory: (configService: ConfigService) =>
+            new UseCaseProxy(new SendContactToSlackUseCase(configService)),
         },
         {
           inject: [PrismaRecipeRepository],

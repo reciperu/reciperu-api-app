@@ -8,6 +8,7 @@ import * as bodyParser from 'body-parser';
 import { ValidationPipe } from '@nestjs/common';
 
 import { HttpExceptionFilter } from './infrastructure/filter/http-exception.filter';
+import { PrismaService } from './infrastructure/database/prisma';
 
 const server = express();
 
@@ -27,6 +28,9 @@ export const createNestServer = async (expressInstance) => {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   app.use(helmet());
+
+  const prismaService = app.get(PrismaService);
+  prismaService.enableShutdownHooks(app);
 
   console.log('the server is starting @ firebase');
   return app.init();
