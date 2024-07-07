@@ -21,7 +21,6 @@ export class PrismaSpaceRepository implements ISpaceRepository {
     this.prismaService = prismaService;
   }
   async findSpace(spaceId: string): Promise<Space | null> {
-    const prisma = this.prismaService.getClient();
     const prismaSpace = await this.prismaService.space.findUnique({
       where: { spaceId },
       include: {
@@ -35,8 +34,7 @@ export class PrismaSpaceRepository implements ISpaceRepository {
   }
 
   async updateSpace(space: Space): Promise<Space> {
-    const prisma = this.prismaService.getClient();
-    const prismaSpace = await prisma.space.update({
+    const prismaSpace = await this.prismaService.space.update({
       where: { spaceId: space.getId },
       data: {
         name: space.getName,

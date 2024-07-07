@@ -1,37 +1,12 @@
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import { PrismaClient, Prisma } from '@prisma/client';
 
-type Client = PrismaClient | Prisma.TransactionClient;
-export interface IDataAccessClientManager<T> {
-  setClient(client: T): void;
-  getClient(): T;
-}
 @Injectable()
 export class PrismaService
   extends PrismaClient<Prisma.PrismaClientOptions, Prisma.LogLevel>
-  implements OnModuleInit, IDataAccessClientManager<Client>
+  implements OnModuleInit
 {
   private readonly logger = new Logger(PrismaService.name);
-  private client: Client = new PrismaClient({
-    log: [
-      {
-        emit: 'event',
-        level: 'query',
-      },
-      {
-        emit: 'event',
-        level: 'info',
-      },
-      {
-        emit: 'event',
-        level: 'warn',
-      },
-      {
-        emit: 'event',
-        level: 'error',
-      },
-    ],
-  });
   constructor() {
     super({
       log: [
@@ -73,17 +48,5 @@ export class PrismaService
       this.logger.log(`warn: ${event.message}`);
     });
     await this.$connect();
-  }
-
-  async onModuleDestroy() {
-    await this.$disconnect();
-  }
-
-  setClient(client: Client): void {
-    this.client = client;
-  }
-
-  getClient() {
-    return this.client;
   }
 }

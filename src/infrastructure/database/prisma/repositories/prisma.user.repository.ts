@@ -39,10 +39,7 @@ export class PrismaUserRepository implements IUserRepository {
   }
 
   async findUser(findOptions: FindOptions): Promise<null | User> {
-    // クエリログが出力できない
-    const prisma = this.prismaService.getClient();
-
-    const user = await prisma.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where:
         'userId' in findOptions
           ? { userId: findOptions.userId }
@@ -65,8 +62,7 @@ export class PrismaUserRepository implements IUserRepository {
   }
 
   async update(user: User): Promise<User> {
-    const prisma = this.prismaService.getClient();
-    const updatedUser = await prisma.user.update({
+    const updatedUser = await this.prismaService.user.update({
       where: { userId: user.getId },
       data: {
         name: user.getName,

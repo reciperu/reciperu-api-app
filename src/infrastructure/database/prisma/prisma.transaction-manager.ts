@@ -9,7 +9,7 @@ export class PrismaTransactionManager implements ITransactionManager {
   async begin<T>(callback: () => Promise<T>): Promise<T | undefined> {
     return await this.prismaService.$transaction(async (transaction) => {
       let result;
-      this.prismaService.setClient(transaction);
+      // this.prismaService.setClient(transaction);
       try {
         result = await callback();
         this.prismaService.$on('query', (e) => {
@@ -19,7 +19,7 @@ export class PrismaTransactionManager implements ITransactionManager {
       } catch (error) {
         throw error;
       } finally {
-        this.prismaService.setClient(this.prismaService.getClient());
+        // this.prismaService.setClient(this.prismaService.getClient());
       }
       return result;
     });
