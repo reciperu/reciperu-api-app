@@ -131,6 +131,9 @@ export class User extends UserBeforePersist {
       throw new BadRequestException('USER_NOT_OWNER');
     }
   }
+  changeSpace(spaceId: string): void {
+    this.spaceId = spaceId;
+  }
 }
 
 export type IUserRepository = {
@@ -138,6 +141,7 @@ export type IUserRepository = {
   findUser(
     findOptions: { uid: string } | { userId: string },
   ): Promise<User | null>;
+  findUsersBySpaceId(spaceId: string): Promise<User[] | null>;
   update(user: User): Promise<User>;
   updateWithSpace(user: User, invitation: SpaceInvitation): Promise<User>;
 };

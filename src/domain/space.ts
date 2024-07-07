@@ -106,6 +106,7 @@ export class SpaceInvitation extends SpaceInvitationBeforePersist {
 export type ISpaceRepository = {
   findSpace(id: string): Promise<Space | null>;
   updateSpace(space: Space): Promise<Space>;
+  deleteSpace(id: string): Promise<void>;
 };
 
 export type ISpaceInvitationRepository = {

@@ -8,7 +8,7 @@ import {
   SpaceRole,
   SpaceInvitation,
 } from 'src/domain';
-import { User as PrismaUser } from '@prisma/client';
+import { Prisma, User as PrismaUser } from '@prisma/client';
 
 export type FindOptions = { uid: string } | { userId: string };
 @Injectable()
@@ -39,7 +39,10 @@ export class PrismaUserRepository implements IUserRepository {
   }
 
   async findUser(findOptions: FindOptions): Promise<null | User> {
-    const user = await this.prismaService.user.findUnique({
+    // クエリログが出力できない
+    const prisma = this.prismaService.getClient();
+
+    const user = await prisma.user.findUnique({
       where:
         'userId' in findOptions
           ? { userId: findOptions.userId }
@@ -51,8 +54,19 @@ export class PrismaUserRepository implements IUserRepository {
     return this.toUser(user);
   }
 
+  async findUsersBySpaceId(spaceId: string): Promise<User[] | null> {
+    const users = await this.prismaService.user.findMany({
+      where: { spaceId },
+    });
+    if (users.length === 0) {
+      return null;
+    }
+    return users.map(this.toUser);
+  }
+
   async update(user: User): Promise<User> {
-    const updatedUser = await this.prismaService.user.update({
+    const prisma = this.prismaService.getClient();
+    const updatedUser = await prisma.user.update({
       where: { userId: user.getId },
       data: {
         name: user.getName,

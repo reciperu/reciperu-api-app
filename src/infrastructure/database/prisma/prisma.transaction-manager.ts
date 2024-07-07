@@ -12,6 +12,10 @@ export class PrismaTransactionManager implements ITransactionManager {
       this.prismaService.setClient(transaction);
       try {
         result = await callback();
+        this.prismaService.$on('query', (e) => {
+          console.log(e.query);
+          console.log(e.params);
+        });
       } catch (error) {
         throw error;
       } finally {

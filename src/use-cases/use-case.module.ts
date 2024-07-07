@@ -19,6 +19,7 @@ import {
   GetRecipeMetaDateUseCase,
   CreateRequestedRecipeUseCase,
   DeleteRequestedRecipeUseCase,
+  DeleteUserUseCase,
 } from './';
 import { DatabaseModule } from 'src/infrastructure/database/database.module';
 import { FirebaseModule } from 'src/infrastructure/firebase/firebase.module';
@@ -30,6 +31,7 @@ import {
   PrismaMenuRepository,
   PrismaSpaceRepository,
   PrismaRequestedRecipeRepository,
+  PrismaTransactionManager,
 } from 'src/infrastructure/database/prisma';
 
 export class UseCaseProxy<T> {
@@ -65,6 +67,8 @@ export class UseCaseProxyModule {
     'CREATE_REQUESTED_RECIPE_USE_CASE';
   static readonly DELETE_REQUESTED_RECIPE_USE_CASE =
     'DELETE_REQUESTED_RECIPE_USE_CASE';
+  static readonly DELETE_USER_USE_CASE = 'DELETE_USER_USE_CASE';
+
   static resister(): DynamicModule {
     return {
       module: UseCaseProxyModule,
@@ -219,6 +223,32 @@ export class UseCaseProxyModule {
               new DeleteRequestedRecipeUseCase(prismaRequestedRecipeRepository),
             ),
         },
+        {
+          inject: [
+            PrismaSpaceRepository,
+            PrismaUserRepository,
+            FirebaseService,
+            PrismaRecipeRepository,
+            PrismaTransactionManager,
+          ],
+          provide: UseCaseProxyModule.DELETE_USER_USE_CASE,
+          useFactory: (
+            spaceRepository: PrismaSpaceRepository,
+            userRepository: PrismaUserRepository,
+            firebaseService: FirebaseService,
+            recipeRepository: PrismaRecipeRepository,
+            transactionManager: PrismaTransactionManager,
+          ) =>
+            new UseCaseProxy(
+              new DeleteUserUseCase(
+                spaceRepository,
+                userRepository,
+                firebaseService,
+                recipeRepository,
+                transactionManager,
+              ),
+            ),
+        },
       ],
       exports: [
         UseCaseProxyModule.LOGIN_USE_CASE,
@@ -240,6 +270,7 @@ export class UseCaseProxyModule {
         UseCaseProxyModule.GET_RECIPE_META_DATE_USE_CASE,
         UseCaseProxyModule.CREATE_REQUESTED_RECIPE_USE_CASE,
         UseCaseProxyModule.DELETE_REQUESTED_RECIPE_USE_CASE,
+        UseCaseProxyModule.DELETE_USER_USE_CASE,
       ],
     };
   }

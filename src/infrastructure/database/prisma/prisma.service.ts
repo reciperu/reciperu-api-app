@@ -12,7 +12,26 @@ export class PrismaService
   implements OnModuleInit, IDataAccessClientManager<Client>
 {
   private readonly logger = new Logger(PrismaService.name);
-  private client: Client = new PrismaClient();
+  private client: Client = new PrismaClient({
+    log: [
+      {
+        emit: 'event',
+        level: 'query',
+      },
+      {
+        emit: 'event',
+        level: 'info',
+      },
+      {
+        emit: 'event',
+        level: 'warn',
+      },
+      {
+        emit: 'event',
+        level: 'error',
+      },
+    ],
+  });
   constructor() {
     super({
       log: [

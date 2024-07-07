@@ -23,8 +23,10 @@ import {
   UseCaseProxyModule,
   UseCaseProxy,
   UpdateUserUseCase,
+  DeleteUserUseCase,
 } from 'src/use-cases';
 import { Request } from 'express';
+import { SuccessPresenter } from '../common/success.presenter';
 
 @ApiTags('user')
 @ApiBearerAuth()
@@ -33,6 +35,8 @@ export class UserController {
   constructor(
     @Inject(UseCaseProxyModule.UPDATE_USER_USE_CASE)
     private readonly updateUserUseCase: UseCaseProxy<UpdateUserUseCase>,
+    @Inject(UseCaseProxyModule.DELETE_USER_USE_CASE)
+    private readonly deleteUserUseCase: UseCaseProxy<DeleteUserUseCase>,
   ) {}
 
   @Get('profile')
@@ -81,17 +85,10 @@ export class UserController {
   @ApiResponse({
     status: 204,
     description: 'ユーザー削除',
+    type: SuccessPresenter,
   })
   async delete(@Param('id') id: string) {
-    try {
-      // await this.userService.delete(uuid);
-    } catch (error) {
-      // throw new HttpException(
-      //   error.message || 'INTERNAL_SERVER_ERROR',
-      //   error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-      // );
-    }
+    await this.deleteUserUseCase.getInstance().execute(id);
+    return new SuccessPresenter();
   }
-
-  // TODO:退会処理のAPI
 }
