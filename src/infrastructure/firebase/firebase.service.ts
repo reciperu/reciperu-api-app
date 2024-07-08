@@ -11,23 +11,22 @@ export class FirebaseService implements OnModuleInit {
   constructor(private readonly configService: ConfigService) {}
 
   onModuleInit() {
-    let storageBucket = '';
-
-    if (process.env.NODE_ENV === 'local') {
-      storageBucket = this.configService.get('STORAGE_BUCKET_NAME');
-    } else {
-      storageBucket = functions.config().env.storage_bucket_name;
-    }
-    console.log(`storageBucket: ${storageBucket}`);
     if (admin.apps.length === 0) {
       admin.initializeApp({
         credential: admin.credential.cert(adminConfig),
-        storageBucket,
+        storageBucket: this.getStorage(),
       });
     }
   }
 
   get admin() {
     return admin;
+  }
+
+  private getStorage() {
+    if (process.env.NODE_ENV === 'local') {
+      return this.configService.get('STORAGE_BUCKET_NAME');
+    }
+    return functions.config().env.storage_bucket_name;
   }
 }
