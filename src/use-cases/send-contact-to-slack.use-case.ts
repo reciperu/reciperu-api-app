@@ -12,12 +12,8 @@ export class SendContactToSlackUseCase {
       // 400エラーを返す
       throw new HttpException('No message provided', HttpStatus.BAD_REQUEST);
     }
-    let slackWebhookUrl = '';
-    if (process.env.NODE_ENV === 'local') {
-      slackWebhookUrl = this.configService.get('SLACK_WEBHOOK_URL');
-    } else {
-      slackWebhookUrl = functions.config().env.slack_webhook_url;
-    }
+    const slackWebhookUrl = this.getSlackWebhookUrl() as string;
+
     const response = await fetch(slackWebhookUrl, {
       method: 'POST',
       headers: {
@@ -38,5 +34,12 @@ export class SendContactToSlackUseCase {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  private getSlackWebhookUrl() {
+    if (process.env.NODE_ENV === 'local') {
+      return this.configService.get('SLACK_WEBHOOK_URL');
+    }
+    return functions.config().env.slack_webhook_url;
   }
 }
