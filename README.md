@@ -69,7 +69,7 @@ http://localhost:54323
 Prisma を使用してデータベーススキーマを反映させます。
 
 ```bash
-npm prisma db push
+npm run prisma:push:local
 ```
 
 ## アプリケーションの実行
