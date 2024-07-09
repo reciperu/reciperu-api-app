@@ -21,9 +21,9 @@ npm install
 以下のコマンドを実行して、必要な環境変数ファイルを作成します。
 
 ```bash
-cp envs/.env.sample envs/.env.development
-cp envs/.env.sample envs/.env.production
-cp envs/.env.sample envs/.env.local
+cp src/envs/.env.sample src/envs/.env.development
+cp src/envs/.env.sample src/envs/.env.production
+cp src/envs/.env.sample src/envs/.env.local
 ```
 
 #### Prisma 用環境変数ファイルの作成
