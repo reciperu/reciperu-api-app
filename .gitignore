@@ -40,3 +40,4 @@ envs/.env.development
 envs/.env.production
 envs/.env.local
 prisma/.env*
+!prisma/.env.sample
