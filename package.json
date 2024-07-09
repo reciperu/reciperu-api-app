@@ -19,6 +19,7 @@
     "build": "nest build",
     "build:dev": "cross-env NODE_ENV=development nest build",
     "build:prod": "cross-env NODE_ENV=production nest build",
+    "build:local": "cross-env NODE_ENV=local nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "npm run prisma:generate:dev && cross-env NODE_ENV=development nest start --watch",
