@@ -8,7 +8,6 @@ import {
 import { createClient } from 'microcms-js-sdk';
 import { RoadmapPresenter } from './roadmap.presenter';
 import { ConfigService } from '@nestjs/config';
-import * as functions from 'firebase-functions';
 
 @ApiTags('roadmap')
 @ApiBearerAuth()
@@ -24,15 +23,9 @@ export class RoadmapController {
     type: RoadmapPresenter,
   })
   async getRoadmap() {
-    let microCmsApiKey = '';
-    if (process.env.NODE_ENV === 'local') {
-      microCmsApiKey = this.configService.get('MICROCMS_API_KEY');
-    } else {
-      microCmsApiKey = functions.config().env.microcms_api_key;
-    }
     const client = createClient({
       serviceDomain: 'sharely',
-      apiKey: microCmsApiKey,
+      apiKey: this.configService.get('MICROCMS_API_KEY'),
     });
     const result = await client.get({
       endpoint: 'roadmap',
