@@ -7,7 +7,7 @@ import {
   Body,
   Delete,
   Inject,
-  BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import {
   ApiOperation,
@@ -47,9 +47,10 @@ export class UserController {
     type: UserPresenter,
   })
   async getProfile(@Req() req: Request) {
-    return req.currentUser
-      ? new UserPresenter(req.currentUser)
-      : new BadRequestException();
+    if (!req.currentUser) {
+      throw new ForbiddenException('Access to this resource is forbidden');
+    }
+    return new UserPresenter(req.currentUser);
   }
 
   @Patch(':id')
