@@ -704,8 +704,11 @@ components:
       properties:
         token:
           type: string
+        expiredAt:
+          type: string
       required:
         - token
+        - expiredAt
     ValidateInvitationDto:
       type: object
       properties:

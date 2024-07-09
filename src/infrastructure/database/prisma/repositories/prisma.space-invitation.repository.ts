@@ -39,13 +39,35 @@ export class PrismaSpaceInvitationRepository
     return this.toSpaceInvitation(prismaInvitation);
   }
 
-  async findSpaceInvitation(token: string): Promise<SpaceInvitation | null> {
+  async findSpaceInvitationByToken(
+    token: string,
+  ): Promise<SpaceInvitation | null> {
     const prismaInvitation =
       await this.prismaService.spaceInvitation.findUnique({
         where: {
           token,
         },
       });
+    if (!prismaInvitation) {
+      return null;
+    }
+    return this.toSpaceInvitation(prismaInvitation);
+  }
+
+  async findValidSpaceInvitation(
+    spaceId: string,
+  ): Promise<SpaceInvitation | null> {
+    const prismaInvitations = await this.prismaService.spaceInvitation.findMany(
+      {
+        where: {
+          spaceId,
+        },
+      },
+    );
+    const prismaInvitation = prismaInvitations.find(
+      // 有効期限が切れていない招待を取得
+      (invitation) => invitation.expiredAt > new Date(),
+    );
     if (!prismaInvitation) {
       return null;
     }

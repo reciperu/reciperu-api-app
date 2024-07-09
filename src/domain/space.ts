@@ -1,6 +1,6 @@
 import { User } from '.';
-import { randomUUID } from 'crypto';
 import * as dayjs from 'dayjs';
+import { nanoid } from 'nanoid';
 export class Space {
   private id: string;
   private name: string;
@@ -57,8 +57,8 @@ export class SpaceInvitationBeforePersist {
   get getExpiredAt(): Date {
     return this.expiredAt;
   }
-  generateToken(): void {
-    this.token = randomUUID();
+  async generateToken(): Promise<void> {
+    this.token = nanoid(6);
   }
   set setToken(token: string) {
     this.token = token;
@@ -108,7 +108,8 @@ export type ISpaceInvitationRepository = {
   save(
     spaceInvitationBeforePersist: SpaceInvitationBeforePersist,
   ): Promise<SpaceInvitation>;
-  findSpaceInvitation(token: string): Promise<SpaceInvitation | null>;
+  findSpaceInvitationByToken(token: string): Promise<SpaceInvitation | null>;
+  findValidSpaceInvitation(spaceId: string): Promise<SpaceInvitation | null>;
 };
 
 export type CreateSpaceDto = {

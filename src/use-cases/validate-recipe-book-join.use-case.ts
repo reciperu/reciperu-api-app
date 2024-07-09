@@ -9,9 +9,8 @@ export class ValidateSpaceJoinUseCase {
   ) {}
 
   async execute(token: string, userId: string): Promise<void> {
-    const invitation = await this.spaceInvitationRepository.findSpaceInvitation(
-      token,
-    );
+    const invitation =
+      await this.spaceInvitationRepository.findSpaceInvitationByToken(token);
 
     invitation.validate();
     invitation.useToken();
