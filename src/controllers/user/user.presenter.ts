@@ -29,3 +29,16 @@ export class UserPresenter {
     this.spaceId = user.getSpaceId;
   }
 }
+
+export class UserTokenPresenter {
+  @ApiProperty()
+  readonly deviceId: string;
+
+  @ApiProperty()
+  readonly token: string;
+
+  constructor({ deviceId, token }: { deviceId: string; token: string }) {
+    this.deviceId = deviceId;
+    this.token = token;
+  }
+}
