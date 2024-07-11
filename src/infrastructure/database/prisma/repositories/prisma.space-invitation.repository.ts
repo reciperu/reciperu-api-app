@@ -54,9 +54,9 @@ export class PrismaSpaceInvitationRepository
     return this.toSpaceInvitation(prismaInvitation);
   }
 
-  async findValidSpaceInvitation(
+  async findValidSpaceInvitationsBySpaceId(
     spaceId: string,
-  ): Promise<SpaceInvitation | null> {
+  ): Promise<SpaceInvitation[]> {
     const prismaInvitations = await this.prismaService.spaceInvitation.findMany(
       {
         where: {
@@ -64,14 +64,10 @@ export class PrismaSpaceInvitationRepository
         },
       },
     );
-    const prismaInvitation = prismaInvitations.find(
-      // 有効期限が切れていない招待を取得
-      (invitation) => invitation.expiredAt > new Date(),
+
+    return prismaInvitations.map((prismaInvitation) =>
+      this.toSpaceInvitation(prismaInvitation),
     );
-    if (!prismaInvitation) {
-      return null;
-    }
-    return this.toSpaceInvitation(prismaInvitation);
   }
 
   private toSpaceInvitation(prismaInvitation: PrismaInvitation) {
