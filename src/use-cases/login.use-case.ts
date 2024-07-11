@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { DecodedIdToken } from 'firebase-admin/auth';
 import { User, UserBeforePersist, IUserRepository } from 'src/domain';
 import { FirebaseService } from 'src/infrastructure/firebase/firebase.service';
-import { uploadImageToStorage } from 'src/functions/image';
 
 @Injectable()
 export class LoginUseCase {
@@ -9,30 +9,24 @@ export class LoginUseCase {
     private readonly userRepository: IUserRepository,
     private readonly firebaseService: FirebaseService,
   ) {}
-  async execute(user: User | null, token: string): Promise<User> {
-    if (user) return user;
-    const decodedToken = await this.firebaseService.admin
-      .auth()
-      .verifyIdToken(token);
 
-    // TODO: uidが同じものが存在する場合はエラーを返す？
+  private async processUserDto(decodedToken: DecodedIdToken) {
+    const { name, uid, picture } = decodedToken;
     const userObject = {
-      name: decodedToken.name,
+      name,
       imageUrl: '',
       filename: '',
-      uid: decodedToken.uid,
+      uid,
     };
-    const picture = decodedToken.picture;
 
     if (picture?.length) {
       // storageに登録
-      const storage = this.firebaseService.admin.storage();
-      const { imageUrl, filename } = await uploadImageToStorage(
-        storage,
-        'profile',
-        picture,
-        '',
-      );
+      const { imageUrl, filename } =
+        await this.firebaseService.uploadProfileImageToStorage(
+          'profile',
+          picture,
+          '',
+        );
       if (imageUrl) {
         userObject.imageUrl = imageUrl;
       }
@@ -40,7 +34,15 @@ export class LoginUseCase {
         userObject.filename = filename;
       }
     }
-    const userBeforePersist = new UserBeforePersist(userObject);
-    return await this.userRepository.create(userBeforePersist);
+    return new UserBeforePersist(userObject);
+  }
+
+  async execute(user: User | null, token: string): Promise<User> {
+    if (user) return user;
+    const decodedToken = await this.firebaseService.admin
+      .auth()
+      .verifyIdToken(token);
+    const userDto = await this.processUserDto(decodedToken);
+    return await this.userRepository.create(userDto);
   }
 }
