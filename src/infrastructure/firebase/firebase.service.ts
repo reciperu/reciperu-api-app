@@ -4,15 +4,18 @@ import { ServiceAccount } from 'firebase-admin';
 import axios from 'axios';
 import { randomUUID } from 'crypto';
 import firebaseServiceAccount = require('../../../firebase-service-account.json');
+import { ConfigService } from '@nestjs/config';
 
 const adminConfig: ServiceAccount = firebaseServiceAccount;
 @Injectable()
 export class FirebaseService implements OnModuleInit {
+  constructor(private readonly configService: ConfigService) {}
+
   onModuleInit() {
     if (admin.apps.length === 0) {
       admin.initializeApp({
         credential: admin.credential.cert(adminConfig),
-        storageBucket: process.env.STORAGE_BUCKET_NAME,
+        storageBucket: this.configService.get('STORAGE_BUCKET_NAME'),
       });
     }
   }

@@ -7,16 +7,14 @@ import {
 } from '@nestjs/swagger';
 import { createClient } from 'microcms-js-sdk';
 import { RoadmapPresenter } from './roadmap.presenter';
-
-const client = createClient({
-  serviceDomain: 'sharely',
-  apiKey: process.env.MICROCMS_API_KEY,
-});
+import { ConfigService } from '@nestjs/config';
 
 @ApiTags('roadmap')
 @ApiBearerAuth()
 @Controller('roadmap')
 export class RoadmapController {
+  constructor(private readonly configService: ConfigService) {}
+
   @Get()
   @ApiOperation({ operationId: 'roadmap' })
   @ApiResponse({
@@ -25,6 +23,10 @@ export class RoadmapController {
     type: RoadmapPresenter,
   })
   async getRoadmap() {
+    const client = createClient({
+      serviceDomain: 'sharely',
+      apiKey: this.configService.get('MICROCMS_API_KEY'),
+    });
     const result = await client.get({
       endpoint: 'roadmap',
       queries: { limit: 20 },

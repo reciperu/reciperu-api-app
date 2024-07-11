@@ -28,6 +28,7 @@ import {
 } from 'src/use-cases';
 import { Request } from 'express';
 import { SuccessPresenter } from '../common/success.presenter';
+import * as dayjs from 'dayjs';
 
 @ApiTags('spaces')
 @ApiBearerAuth()
@@ -75,7 +76,10 @@ export class SpaceController {
       .getInstance()
       .execute(req.currentUser.getSpaceId, req.currentUser.getId);
 
-    return new SpaceInvitationPresenter({ token: invitation.getToken });
+    return new SpaceInvitationPresenter({
+      token: invitation.getToken,
+      expiredAt: dayjs(invitation.getExpiredAt).format('YYYY-MM-DD HH:mm:ss'),
+    });
   }
 
   @Put('joins')

@@ -36,4 +36,7 @@ lerna-debug.log*
 
 firebase-service-account.json
 
-.env
+src/envs/.env.*
+!src/envs/.env.sample
+prisma/.env*
+!prisma/.env.sample

@@ -1,14 +1,19 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { SendContactDto, User } from 'src/domain';
 
 @Injectable()
 export class SendContactToSlackUseCase {
+  constructor(private readonly configService: ConfigService) {}
+
   async execute(user: User, sendContactDto: SendContactDto) {
     if (!sendContactDto.content.length) {
       // 400エラーを返す
       throw new HttpException('No message provided', HttpStatus.BAD_REQUEST);
     }
-    const response = await fetch(process.env.SLACK_WEBHOOK_URL, {
+    const slackWebhookUrl = this.configService.get('SLACK_WEBHOOK_URL');
+
+    const response = await fetch(slackWebhookUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
