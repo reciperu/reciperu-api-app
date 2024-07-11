@@ -57,7 +57,7 @@ export class SpaceInvitationBeforePersist {
   get getExpiredAt(): Date {
     return this.expiredAt;
   }
-  generateToken(): void {
+  generateAndSetToken(): void {
     this.token = nanoid(6);
   }
   set setToken(token: string) {

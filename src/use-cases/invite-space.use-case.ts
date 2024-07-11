@@ -33,7 +33,7 @@ export class InviteSpaceUseCase {
     const spaceInvitationBeforePersist = new SpaceInvitationBeforePersist({
       spaceId,
     });
-    await spaceInvitationBeforePersist.generateToken();
+    spaceInvitationBeforePersist.generateAndSetToken();
     return await this.spaceInvitationRepository.save(
       spaceInvitationBeforePersist,
     );
