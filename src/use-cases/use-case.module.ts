@@ -30,7 +30,9 @@ import {
   PrismaMenuRepository,
   PrismaSpaceRepository,
   PrismaRequestedRecipeRepository,
+  PrismaUserTokenRepository,
 } from 'src/infrastructure/database/prisma';
+import { UpdateUserTokenUseCase } from './update-user-token.use-case';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -65,6 +67,7 @@ export class UseCaseProxyModule {
     'CREATE_REQUESTED_RECIPE_USE_CASE';
   static readonly DELETE_REQUESTED_RECIPE_USE_CASE =
     'DELETE_REQUESTED_RECIPE_USE_CASE';
+  static readonly UPDATE_USER_TOKEN_USE_CASE = 'UPDATE_USER_TOKEN_USE_CASE';
   static resister(): DynamicModule {
     return {
       module: UseCaseProxyModule,
@@ -237,6 +240,14 @@ export class UseCaseProxyModule {
               new DeleteRequestedRecipeUseCase(prismaRequestedRecipeRepository),
             ),
         },
+        {
+          inject: [PrismaUserTokenRepository],
+          provide: UseCaseProxyModule.UPDATE_USER_TOKEN_USE_CASE,
+          useFactory: (prismaUserTokenRepository: PrismaUserTokenRepository) =>
+            new UseCaseProxy(
+              new UpdateUserTokenUseCase(prismaUserTokenRepository),
+            ),
+        },
       ],
       exports: [
         UseCaseProxyModule.LOGIN_USE_CASE,
@@ -258,6 +269,7 @@ export class UseCaseProxyModule {
         UseCaseProxyModule.GET_RECIPE_META_DATE_USE_CASE,
         UseCaseProxyModule.CREATE_REQUESTED_RECIPE_USE_CASE,
         UseCaseProxyModule.DELETE_REQUESTED_RECIPE_USE_CASE,
+        UseCaseProxyModule.UPDATE_USER_TOKEN_USE_CASE,
       ],
     };
   }

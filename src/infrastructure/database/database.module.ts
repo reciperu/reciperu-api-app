@@ -7,6 +7,7 @@ import {
   PrismaSpaceInvitationRepository,
   PrismaMenuRepository,
   PrismaRequestedRecipeRepository,
+  PrismaUserTokenRepository,
 } from './prisma';
 
 @Module({
@@ -18,6 +19,7 @@ import {
     PrismaSpaceInvitationRepository,
     PrismaMenuRepository,
     PrismaRequestedRecipeRepository,
+    PrismaUserTokenRepository,
   ],
   exports: [
     PrismaUserRepository,
@@ -26,6 +28,7 @@ import {
     PrismaSpaceInvitationRepository,
     PrismaMenuRepository,
     PrismaRequestedRecipeRepository,
+    PrismaUserTokenRepository,
   ],
 })
 export class DatabaseModule {}
