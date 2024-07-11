@@ -109,9 +109,7 @@ export type ISpaceInvitationRepository = {
     spaceInvitationBeforePersist: SpaceInvitationBeforePersist,
   ): Promise<SpaceInvitation>;
   findSpaceInvitationByToken(token: string): Promise<SpaceInvitation | null>;
-  findValidSpaceInvitationsBySpaceId(
-    spaceId: string,
-  ): Promise<SpaceInvitation[]>;
+  findSpaceInvitationsBySpaceId(spaceId: string): Promise<SpaceInvitation[]>;
 };
 
 export type CreateSpaceDto = {

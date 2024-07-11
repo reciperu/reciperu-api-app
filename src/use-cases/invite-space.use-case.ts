@@ -19,7 +19,7 @@ export class InviteSpaceUseCase {
     user.canInviteSpace();
     // スペースの有効な招待を取得
     const invitations =
-      await this.spaceInvitationRepository.findValidSpaceInvitationsBySpaceId(
+      await this.spaceInvitationRepository.findSpaceInvitationsBySpaceId(
         user.getSpaceId,
       );
     // 有効な招待が存在する場合はその招待を返す

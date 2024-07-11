@@ -54,7 +54,7 @@ export class PrismaSpaceInvitationRepository
     return this.toSpaceInvitation(prismaInvitation);
   }
 
-  async findValidSpaceInvitationsBySpaceId(
+  async findSpaceInvitationsBySpaceId(
     spaceId: string,
   ): Promise<SpaceInvitation[]> {
     const prismaInvitations = await this.prismaService.spaceInvitation.findMany(
