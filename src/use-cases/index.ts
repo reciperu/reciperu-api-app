@@ -18,3 +18,4 @@ export * from './send-contact-to-slack.use-case';
 export * from './get-recipe-meta-data.use-case';
 export * from './create-requested-recipe.use-case';
 export * from './delete-requested-recipe.use-case';
+export * from './update-user-token.use-case';

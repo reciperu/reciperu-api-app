@@ -54,9 +54,23 @@ model User {
   requestedRecipes RequestedRecipe[]
   spaceId          String?           @map("space_id")
   space            Space?            @relation(fields: [spaceId], references: [spaceId], onDelete: Cascade)
+  UserToken        UserToken[]
 
   @@index([userId])
   @@map("users")
+}
+
+model UserToken {
+  userTokenId      String   @id @default(cuid()) @map("user_token_id")
+  token            String
+  deviceId         String   @map("device_id")
+  lastActive       DateTime @default(now()) @map("last_active")
+  userId           String   @map("user_id")
+  user             User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@index([userTokenId])
+  @@index([userId])
+  @@map("user_tokens")
 }
 
 model SpaceInvitation {

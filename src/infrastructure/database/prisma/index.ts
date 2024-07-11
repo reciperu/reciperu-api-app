@@ -5,3 +5,4 @@ export * from './repositories/prisma.space.repository';
 export * from './repositories/prisma.space-invitation.repository';
 export * from './repositories/prisma.menu.repository';
 export * from './repositories/prisma.requested-recipe.repository';
+export * from './repositories/prisma.user-token.repository';
