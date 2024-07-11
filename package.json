@@ -58,6 +58,7 @@
     "js-yaml": "^4.1.0",
     "jsdom": "^24.0.0",
     "microcms-js-sdk": "^2.7.0",
+    "nanoid": "^3.3.7",
     "passport-http-bearer": "^1.0.1",
     "prisma": "^5.1.1",
     "reflect-metadata": "^0.1.13",

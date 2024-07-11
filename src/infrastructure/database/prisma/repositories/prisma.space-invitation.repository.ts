@@ -39,7 +39,9 @@ export class PrismaSpaceInvitationRepository
     return this.toSpaceInvitation(prismaInvitation);
   }
 
-  async findSpaceInvitation(token: string): Promise<SpaceInvitation | null> {
+  async findSpaceInvitationByToken(
+    token: string,
+  ): Promise<SpaceInvitation | null> {
     const prismaInvitation =
       await this.prismaService.spaceInvitation.findUnique({
         where: {
@@ -50,6 +52,22 @@ export class PrismaSpaceInvitationRepository
       return null;
     }
     return this.toSpaceInvitation(prismaInvitation);
+  }
+
+  async findSpaceInvitationsBySpaceId(
+    spaceId: string,
+  ): Promise<SpaceInvitation[]> {
+    const prismaInvitations = await this.prismaService.spaceInvitation.findMany(
+      {
+        where: {
+          spaceId,
+        },
+      },
+    );
+
+    return prismaInvitations.map((prismaInvitation) =>
+      this.toSpaceInvitation(prismaInvitation),
+    );
   }
 
   private toSpaceInvitation(prismaInvitation: PrismaInvitation) {
