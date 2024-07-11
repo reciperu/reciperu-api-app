@@ -19,6 +19,7 @@ import {
   GetRecipeMetaDateUseCase,
   CreateRequestedRecipeUseCase,
   DeleteRequestedRecipeUseCase,
+  UpdateUserTokenUseCase,
   DeleteUserUseCase,
 } from './';
 import { DatabaseModule } from 'src/infrastructure/database/database.module';
@@ -31,8 +32,10 @@ import {
   PrismaMenuRepository,
   PrismaSpaceRepository,
   PrismaRequestedRecipeRepository,
+  PrismaUserTokenRepository,
   PrismaTransactionManager,
 } from 'src/infrastructure/database/prisma';
+import { ConfigService } from '@nestjs/config';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -67,6 +70,7 @@ export class UseCaseProxyModule {
     'CREATE_REQUESTED_RECIPE_USE_CASE';
   static readonly DELETE_REQUESTED_RECIPE_USE_CASE =
     'DELETE_REQUESTED_RECIPE_USE_CASE';
+  static readonly UPDATE_USER_TOKEN_USE_CASE = 'UPDATE_USER_TOKEN_USE_CASE';
   static readonly DELETE_USER_USE_CASE = 'DELETE_USER_USE_CASE';
 
   static resister(): DynamicModule {
@@ -86,17 +90,27 @@ export class UseCaseProxyModule {
           },
         },
         {
-          inject: [PrismaUserRepository],
+          inject: [PrismaUserRepository, FirebaseService],
           provide: UseCaseProxyModule.UPDATE_USER_USE_CASE,
-          useFactory: (userRepository: PrismaUserRepository) => {
-            return new UseCaseProxy(new UpdateUserUseCase(userRepository));
+          useFactory: (
+            userRepository: PrismaUserRepository,
+            firebaseService: FirebaseService,
+          ) => {
+            return new UseCaseProxy(
+              new UpdateUserUseCase(userRepository, firebaseService),
+            );
           },
         },
         {
-          inject: [PrismaRecipeRepository],
+          inject: [PrismaRecipeRepository, FirebaseService],
           provide: UseCaseProxyModule.CREATE_RECIPES_USE_CASE,
-          useFactory: (recipeRepository: PrismaRecipeRepository) => {
-            return new UseCaseProxy(new CreateRecipesUseCase(recipeRepository));
+          useFactory: (
+            recipeRepository: PrismaRecipeRepository,
+            firebaseService: FirebaseService,
+          ) => {
+            return new UseCaseProxy(
+              new CreateRecipesUseCase(recipeRepository, firebaseService),
+            );
           },
         },
         {
@@ -119,16 +133,26 @@ export class UseCaseProxyModule {
           },
         },
         {
-          inject: [PrismaRecipeRepository],
+          inject: [PrismaRecipeRepository, FirebaseService],
           provide: UseCaseProxyModule.CREATE_RECIPE_USE_CASE,
-          useFactory: (recipeRepository: PrismaRecipeRepository) =>
-            new UseCaseProxy(new CreateRecipeUseCase(recipeRepository)),
+          useFactory: (
+            recipeRepository: PrismaRecipeRepository,
+            firebaseService: FirebaseService,
+          ) =>
+            new UseCaseProxy(
+              new CreateRecipeUseCase(recipeRepository, firebaseService),
+            ),
         },
         {
-          inject: [PrismaRecipeRepository],
+          inject: [PrismaRecipeRepository, FirebaseService],
           provide: UseCaseProxyModule.UPDATE_RECIPE_USE_CASE,
-          useFactory: (recipeRepository: PrismaRecipeRepository) =>
-            new UseCaseProxy(new UpdateRecipeUseCase(recipeRepository)),
+          useFactory: (
+            recipeRepository: PrismaRecipeRepository,
+            firebaseService: FirebaseService,
+          ) =>
+            new UseCaseProxy(
+              new UpdateRecipeUseCase(recipeRepository, firebaseService),
+            ),
         },
         {
           inject: [PrismaRecipeRepository],
@@ -194,9 +218,10 @@ export class UseCaseProxyModule {
             new UseCaseProxy(new GetMenuListUseCase(menuRepository)),
         },
         {
-          inject: [],
+          inject: [ConfigService],
           provide: UseCaseProxyModule.SEND_CONTACT_TO_SLACK_USE_CASE,
-          useFactory: () => new UseCaseProxy(new SendContactToSlackUseCase()),
+          useFactory: (configService: ConfigService) =>
+            new UseCaseProxy(new SendContactToSlackUseCase(configService)),
         },
         {
           inject: [PrismaRecipeRepository],
@@ -221,6 +246,14 @@ export class UseCaseProxyModule {
           ) =>
             new UseCaseProxy(
               new DeleteRequestedRecipeUseCase(prismaRequestedRecipeRepository),
+            ),
+        },
+        {
+          inject: [PrismaUserTokenRepository],
+          provide: UseCaseProxyModule.UPDATE_USER_TOKEN_USE_CASE,
+          useFactory: (prismaUserTokenRepository: PrismaUserTokenRepository) =>
+            new UseCaseProxy(
+              new UpdateUserTokenUseCase(prismaUserTokenRepository),
             ),
         },
         {
@@ -270,6 +303,7 @@ export class UseCaseProxyModule {
         UseCaseProxyModule.GET_RECIPE_META_DATE_USE_CASE,
         UseCaseProxyModule.CREATE_REQUESTED_RECIPE_USE_CASE,
         UseCaseProxyModule.DELETE_REQUESTED_RECIPE_USE_CASE,
+        UseCaseProxyModule.UPDATE_USER_TOKEN_USE_CASE,
         UseCaseProxyModule.DELETE_USER_USE_CASE,
       ],
     };

@@ -5,12 +5,15 @@ import * as fs from 'fs';
 import { dump } from 'js-yaml';
 import * as bodyParser from 'body-parser';
 import { ValidationPipe } from '@nestjs/common';
+import helmet from 'helmet';
 import { HttpExceptionFilter } from './infrastructure/filter/http-exception.filter';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   app.enableShutdownHooks();
   app.useGlobalFilters(new HttpExceptionFilter());
+  app.use(helmet());
   app.use(bodyParser.json({ limit: '50mb' })); // jsonをパースする際のlimitを設定
   app.use(bodyParser.urlencoded({ limit: '50mb', extended: true })); // urlencodeされたボディをパースする際のlimitを設定
   const globalPrefix = 'api';

@@ -14,7 +14,12 @@ const prismaMenuType = async (prisma: PrismaClient, menuId: string) =>
   await prisma.menu.findUnique({
     where: { menuId },
     include: {
-      recipe: true,
+      recipe: {
+        include: {
+          requestedRecipes: true,
+          user: true,
+        },
+      },
     },
   });
 
@@ -42,7 +47,12 @@ export class PrismaMenuRepository implements IMenuRepository {
         status: { in: statuses },
       },
       include: {
-        recipe: true,
+        recipe: {
+          include: {
+            requestedRecipes: true,
+            user: true,
+          },
+        },
       },
       take: 20,
       ...(cursor && { cursor: { menuId: cursor }, skip: 1 }),
@@ -69,7 +79,12 @@ export class PrismaMenuRepository implements IMenuRepository {
         status: 'id' in menu ? menu.getStatus : 'PENDING',
       },
       include: {
-        recipe: true,
+        recipe: {
+          include: {
+            requestedRecipes: true,
+            user: true,
+          },
+        },
       },
     });
     return this.toMenu(prismaMenu);
@@ -79,7 +94,12 @@ export class PrismaMenuRepository implements IMenuRepository {
     const prismaMenu = await this.prismaService.menu.findUnique({
       where: { menuId },
       include: {
-        recipe: true,
+        recipe: {
+          include: {
+            requestedRecipes: true,
+            user: true,
+          },
+        },
       },
     });
     return this.toMenu(prismaMenu);

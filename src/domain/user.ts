@@ -1,5 +1,6 @@
 import { BadRequestException } from 'src/infrastructure/exceptions';
 import { SpaceInvitation } from './space';
+
 export enum SpaceRole {
   OWNER = 'OWNER',
   PARTICIPANT = 'PARTICIPANT',
@@ -14,18 +15,22 @@ export enum ActiveStatus {
 export class UserBeforePersist {
   private name: string;
   private imageUrl: string;
+  private filename: string;
   private uid: string;
   constructor({
     name,
     imageUrl,
+    filename,
     uid,
   }: {
     name: string;
     imageUrl: string;
+    filename: string;
     uid: string;
   }) {
     this.name = name;
     this.imageUrl = imageUrl;
+    this.filename = filename;
     this.uid = uid;
   }
   get getName(): string {
@@ -33,6 +38,9 @@ export class UserBeforePersist {
   }
   get getImageUrl(): string {
     return this.imageUrl;
+  }
+  get getFilename(): string {
+    return this.filename;
   }
   get getUid(): string {
     return this.uid;
@@ -43,6 +51,9 @@ export class UserBeforePersist {
   }
   set setImageUrl(imageUrl: string) {
     this.imageUrl = imageUrl;
+  }
+  set setFilename(filename: string) {
+    this.filename = filename;
   }
 }
 
@@ -57,6 +68,7 @@ export class User extends UserBeforePersist {
     id,
     name,
     imageUrl,
+    filename,
     uid,
     activeStatus,
     spaceId,
@@ -66,13 +78,14 @@ export class User extends UserBeforePersist {
     id: string;
     name: string;
     imageUrl: string;
+    filename: string;
     uid: string;
     activeStatus: ActiveStatus;
     spaceId: string;
     spaceRole: SpaceRole;
     mySpaceId: string;
   }) {
-    super({ name, imageUrl, uid });
+    super({ name, imageUrl, uid, filename });
     this.id = id;
     this.activeStatus = activeStatus;
     this.spaceId = spaceId;
@@ -104,14 +117,17 @@ export class User extends UserBeforePersist {
   update({
     name,
     imageUrl,
+    filename,
     activeStatus,
   }: {
     name: string;
     imageUrl: string;
+    filename: string;
     activeStatus: ActiveStatus;
   }): void {
     this.setName = name;
     this.setImageUrl = imageUrl;
+    this.setFilename = filename;
     this.setActiveStatus = activeStatus;
   }
 
@@ -136,6 +152,79 @@ export class User extends UserBeforePersist {
   }
 }
 
+export class UserTokenBeforePersist {
+  private token: string;
+  private deviceId: string;
+  private userId: string;
+  constructor({
+    userId,
+    deviceId,
+    token,
+  }: {
+    userId: string;
+    deviceId: string;
+    token: string;
+  }) {
+    this.userId = userId;
+    this.deviceId = deviceId;
+    this.token = token;
+  }
+  get getToken(): string {
+    return this.token;
+  }
+
+  get getDeviceId(): string {
+    return this.deviceId;
+  }
+
+  get getUserId(): string {
+    return this.userId;
+  }
+
+  set setToken(token: string) {
+    this.token = token;
+  }
+}
+
+export class UserToken extends UserTokenBeforePersist {
+  private id: string;
+  private lastActive: Date;
+  constructor({
+    id,
+    token,
+    deviceId,
+    lastActive,
+    userId,
+  }: {
+    id: string;
+    token: string;
+    deviceId: string;
+    lastActive: Date;
+    userId: string;
+  }) {
+    super({
+      userId,
+      deviceId,
+      token,
+    });
+    this.id = id;
+    this.setToken = token;
+    this.lastActive = lastActive;
+  }
+  get getId(): string {
+    return this.id;
+  }
+
+  get getLastActive(): Date {
+    return this.lastActive;
+  }
+
+  update(token: string): void {
+    this.setToken = token;
+    this.lastActive = new Date();
+  }
+}
+
 export type IUserRepository = {
   create(user: UserBeforePersist): Promise<User>;
   findUser(
@@ -146,8 +235,19 @@ export type IUserRepository = {
   updateWithSpace(user: User, invitation: SpaceInvitation): Promise<User>;
 };
 
+export type IUserTokenRepository = {
+  save(userTokenBeforePersist: UserTokenBeforePersist): Promise<UserToken>;
+  findUserToken(userId: string, deviceId: string): Promise<UserToken | null>;
+  findUserTokens(userId: string): Promise<UserToken[] | null>;
+};
+
 export type UpdateUserDto = {
   name: string;
   imageUrl: string;
   activeStatus: ActiveStatus;
+};
+
+export type UpdateUserTokenDto = {
+  deviceId: string;
+  token: string;
 };

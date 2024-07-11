@@ -2,12 +2,14 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "darwin-arm64", "darwin"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum SpaceRole {
@@ -42,6 +44,7 @@ model Space {
 model User {
   userId           String            @id @default(cuid()) @map("user_id")
   name             String
+  filename         String
   imageUrl         String            @map("image_url")
   activeStatus     ActiveStatus      @default(ONBOARDING) @map("active_status")
   uid              String            @unique
@@ -52,9 +55,23 @@ model User {
   requestedRecipes RequestedRecipe[]
   spaceId          String?           @map("space_id")
   space            Space?            @relation(fields: [spaceId], references: [spaceId], onDelete: Cascade)
+  UserToken        UserToken[]
 
   @@index([userId])
   @@map("users")
+}
+
+model UserToken {
+  userTokenId      String   @id @default(cuid()) @map("user_token_id")
+  token            String
+  deviceId         String   @map("device_id")
+  lastActive       DateTime @default(now()) @map("last_active")
+  userId           String   @map("user_id")
+  user             User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@index([userTokenId])
+  @@index([userId])
+  @@map("user_tokens")
 }
 
 model SpaceInvitation {
@@ -69,23 +86,25 @@ model SpaceInvitation {
 }
 
 model Recipe {
-  recipeId         String            @id @default(cuid())
-  title            String
-  thumbnailUrl     String?           @map("thumbnail_url")
-  imageUrls        String?           @map("image_urls")
-  recipeUrl        String?           @map("recipe_url")
-  memo             String?
-  faviconUrl       String?           @map("favicon_url")
-  appName          String?           @map("app_name")
-  spaceId          String            @map("space_id")
-  userId           String            @map("user_id")
-  archivedAt       DateTime?         @map("archived_at")
-  createdAt        DateTime          @default(now()) @map("created_at")
-  updatedAt        DateTime?         @updatedAt @map("updated_at")
-  space            Space             @relation(fields: [spaceId], references: [spaceId], onDelete: Cascade)
-  menus            Menu[]
-  requestedRecipes RequestedRecipe[]
-  user             User              @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  recipeId          String            @id @default(cuid())
+  title             String
+  thumbnailUrl      String?           @map("thumbnail_url")
+  thumbnailFilename String?           @map("thumbnail_filename")
+  imageUrls         String[]          @map("image_urls")
+  imageFilenames    String[]          @map("image_filenames")
+  recipeUrl         String?           @map("recipe_url")
+  memo              String?
+  faviconUrl        String?           @map("favicon_url")
+  appName           String?           @map("app_name")
+  spaceId           String            @map("space_id")
+  userId            String            @map("user_id")
+  archivedAt        DateTime?         @map("archived_at")
+  createdAt         DateTime          @default(now()) @map("created_at")
+  updatedAt         DateTime?         @updatedAt @map("updated_at")
+  space             Space             @relation(fields: [spaceId], references: [spaceId], onDelete: Cascade)
+  menus             Menu[]
+  requestedRecipes  RequestedRecipe[]
+  user              User              @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
   @@index([recipeId])
   @@index([createdAt])

@@ -17,10 +17,23 @@ export class InviteSpaceUseCase {
   async execute(spaceId: string, userId: string): Promise<SpaceInvitation> {
     const user = await this.userRepository.findUser({ userId });
     user.canInviteSpace();
+    // スペースの有効な招待を取得
+    const invitations =
+      await this.spaceInvitationRepository.findSpaceInvitationsBySpaceId(
+        user.getSpaceId,
+      );
+    // 有効な招待が存在する場合はその招待を返す
+    const invitation = invitations.find(
+      (invitation) => invitation.getExpiredAt > new Date(),
+    );
+    if (invitation) {
+      return invitation;
+    }
+    // 有効な招待が存在しない場合は新規作成
     const spaceInvitationBeforePersist = new SpaceInvitationBeforePersist({
       spaceId,
     });
-    spaceInvitationBeforePersist.generateToken();
+    spaceInvitationBeforePersist.generateAndSetToken();
     return await this.spaceInvitationRepository.save(
       spaceInvitationBeforePersist,
     );

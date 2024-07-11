@@ -22,7 +22,11 @@ export class SpaceInvitationPresenter {
   @ApiProperty()
   readonly token: string;
 
-  constructor({ token }: { token: string }) {
+  @ApiProperty()
+  readonly expiredAt: string;
+
+  constructor({ token, expiredAt }: { token: string; expiredAt: string }) {
     this.token = token;
+    this.expiredAt = expiredAt;
   }
 }

@@ -7,6 +7,7 @@ import {
   PrismaSpaceInvitationRepository,
   PrismaMenuRepository,
   PrismaRequestedRecipeRepository,
+  PrismaUserTokenRepository,
 } from './prisma';
 import { PrismaTransactionManager } from './prisma/prisma.transaction-manager';
 
@@ -20,6 +21,7 @@ import { PrismaTransactionManager } from './prisma/prisma.transaction-manager';
     PrismaSpaceInvitationRepository,
     PrismaMenuRepository,
     PrismaRequestedRecipeRepository,
+    PrismaUserTokenRepository,
   ],
   exports: [
     PrismaUserRepository,
@@ -28,6 +30,7 @@ import { PrismaTransactionManager } from './prisma/prisma.transaction-manager';
     PrismaSpaceInvitationRepository,
     PrismaMenuRepository,
     PrismaRequestedRecipeRepository,
+    PrismaUserTokenRepository,
     PrismaTransactionManager,
   ],
 })

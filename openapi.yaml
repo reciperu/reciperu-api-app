@@ -60,6 +60,26 @@ paths:
                 $ref: '#/components/schemas/SuccessPresenter'
       tags: *ref_0
       security: *ref_1
+  /api/users/token:
+    put:
+      operationId: updateUserToken
+      summary: ''
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserTokenDto'
+      responses:
+        '200':
+          description: トークンの更新
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTokenPresenter'
+      tags: *ref_0
+      security: *ref_1
   /api/recipes:
     get:
       operationId: getRecipe
@@ -543,6 +563,26 @@ components:
         - name
         - imageUrl
         - activeStatus
+    UpdateUserTokenDto:
+      type: object
+      properties:
+        deviceId:
+          type: string
+        token:
+          type: string
+      required:
+        - deviceId
+        - token
+    UserTokenPresenter:
+      type: object
+      properties:
+        deviceId:
+          type: string
+        token:
+          type: string
+      required:
+        - deviceId
+        - token
     SuccessPresenter:
       type: object
       properties:
@@ -708,8 +748,11 @@ components:
       properties:
         token:
           type: string
+        expiredAt:
+          type: string
       required:
         - token
+        - expiredAt
     ValidateInvitationDto:
       type: object
       properties:
