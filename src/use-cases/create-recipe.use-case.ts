@@ -4,7 +4,6 @@ import {
   RecipeBeforePersist,
   CreateRecipeDto,
 } from 'src/domain';
-import { uploadImageToStorage } from 'src/functions/image';
 import { FirebaseService } from 'src/infrastructure/firebase/firebase.service';
 @Injectable()
 export class CreateRecipeUseCase {
@@ -12,12 +11,12 @@ export class CreateRecipeUseCase {
     private readonly recipeRepository: IRecipeRepository,
     private readonly firebaseService: FirebaseService,
   ) {}
-  async execute(
+  private async processRecipeDto(
     createRecipesDto: CreateRecipeDto,
     userId: string,
     spaceId: string,
   ) {
-    const recipeObject = {
+    const recipeDto = {
       title: createRecipesDto.title,
       spaceId,
       userId: userId,
@@ -30,43 +29,52 @@ export class CreateRecipeUseCase {
       faviconUrl: createRecipesDto.faviconUrl,
       appName: createRecipesDto.appName,
     };
-    const storage = this.firebaseService.admin.storage();
     // thumbnailUrlがある場合はstorageに登録
     if (createRecipesDto.thumbnailUrl.length) {
-      const { imageUrl, filename } = await uploadImageToStorage(
-        storage,
-        'recipe',
-        createRecipesDto.thumbnailUrl,
-        '',
-      );
+      const { imageUrl, filename } =
+        await this.firebaseService.uploadProfileImageToStorage(
+          'recipe',
+          createRecipesDto.thumbnailUrl,
+          '',
+        );
       if (imageUrl) {
-        recipeObject.thumbnailUrl = imageUrl;
+        recipeDto.thumbnailUrl = imageUrl;
       }
       if (filename) {
-        recipeObject.thumbnailFilename = filename;
+        recipeDto.thumbnailFilename = filename;
       }
     }
     // imageUrlsがbase64の場合はstorageに登録
     if (createRecipesDto.imageUrls.length) {
       for (let i = 0; i < createRecipesDto.imageUrls.length; i++) {
         if (createRecipesDto.imageUrls[i].length) {
-          const { imageUrl, filename } = await uploadImageToStorage(
-            storage,
-            'recipe',
-            createRecipesDto.imageUrls[i],
-            '',
-          );
+          const { imageUrl, filename } =
+            await this.firebaseService.uploadProfileImageToStorage(
+              'recipe',
+              createRecipesDto.imageUrls[i],
+              '',
+            );
           if (imageUrl) {
-            recipeObject.imageUrls[i] = imageUrl;
+            recipeDto.imageUrls[i] = imageUrl;
           }
           if (filename) {
-            recipeObject.imageFilenames[i] = filename;
+            recipeDto.imageFilenames[i] = filename;
           }
         }
       }
     }
-    return await this.recipeRepository.save(
-      new RecipeBeforePersist(recipeObject),
+    return recipeDto;
+  }
+  async execute(
+    createRecipesDto: CreateRecipeDto,
+    userId: string,
+    spaceId: string,
+  ) {
+    const recipeDto = await this.processRecipeDto(
+      createRecipesDto,
+      userId,
+      spaceId,
     );
+    return await this.recipeRepository.save(new RecipeBeforePersist(recipeDto));
   }
 }

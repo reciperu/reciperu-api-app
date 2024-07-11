@@ -7,8 +7,8 @@ import {
   Body,
   Delete,
   Inject,
-  BadRequestException,
   Put,
+  ForbiddenException,
 } from '@nestjs/common';
 import {
   ApiOperation,
@@ -24,9 +24,11 @@ import {
   UseCaseProxyModule,
   UseCaseProxy,
   UpdateUserUseCase,
+  DeleteUserUseCase,
 } from 'src/use-cases';
 import { Request } from 'express';
 import { UpdateUserTokenUseCase } from 'src/use-cases/update-user-token.use-case';
+import { SuccessPresenter } from '../common/success.presenter';
 
 @ApiTags('user')
 @ApiBearerAuth()
@@ -37,6 +39,8 @@ export class UserController {
     private readonly updateUserUseCase: UseCaseProxy<UpdateUserUseCase>,
     @Inject(UseCaseProxyModule.UPDATE_USER_TOKEN_USE_CASE)
     private readonly updateUserTokenUseCase: UseCaseProxy<UpdateUserTokenUseCase>,
+    @Inject(UseCaseProxyModule.DELETE_USER_USE_CASE)
+    private readonly deleteUserUseCase: UseCaseProxy<DeleteUserUseCase>,
   ) {}
 
   @Get('profile')
@@ -47,9 +51,10 @@ export class UserController {
     type: UserPresenter,
   })
   async getProfile(@Req() req: Request) {
-    return req.currentUser
-      ? new UserPresenter(req.currentUser)
-      : new BadRequestException();
+    if (!req.currentUser) {
+      throw new ForbiddenException('Access to this resource is forbidden');
+    }
+    return new UserPresenter(req.currentUser);
   }
 
   @Patch(':id')
@@ -111,17 +116,10 @@ export class UserController {
   @ApiResponse({
     status: 204,
     description: 'ユーザー削除',
+    type: SuccessPresenter,
   })
   async delete(@Param('id') id: string) {
-    try {
-      // await this.userService.delete(uuid);
-    } catch (error) {
-      // throw new HttpException(
-      //   error.message || 'INTERNAL_SERVER_ERROR',
-      //   error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-      // );
-    }
+    await this.deleteUserUseCase.getInstance().execute(id);
+    return new SuccessPresenter();
   }
-
-  // TODO:退会処理のAPI
 }

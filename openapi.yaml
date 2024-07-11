@@ -54,6 +54,10 @@ paths:
       responses:
         '204':
           description: ユーザー削除
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessPresenter'
       tags: *ref_0
       security: *ref_1
   /api/users/token:
@@ -579,6 +583,14 @@ components:
       required:
         - deviceId
         - token
+    SuccessPresenter:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+      required:
+        - success
     RecipePresenter:
       type: object
       properties:
@@ -716,14 +728,6 @@ components:
           type: string
       required:
         - recipeId
-    SuccessPresenter:
-      type: object
-      properties:
-        success:
-          type: boolean
-          default: true
-      required:
-        - success
     SpacePresenter:
       type: object
       properties:

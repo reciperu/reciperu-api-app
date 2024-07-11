@@ -49,6 +49,7 @@ model User {
   activeStatus     ActiveStatus      @default(ONBOARDING) @map("active_status")
   uid              String            @unique
   spaceRole        SpaceRole         @default(OWNER) @map("space_role")
+  mySpaceId        String           @map("my_space_id")
   menus            Menu[]
   recipes          Recipe[]
   requestedRecipes RequestedRecipe[]

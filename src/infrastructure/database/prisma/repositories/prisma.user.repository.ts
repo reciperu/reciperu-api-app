@@ -8,7 +8,7 @@ import {
   SpaceRole,
   SpaceInvitation,
 } from 'src/domain';
-import { User as PrismaUser } from '@prisma/client';
+import { Prisma, User as PrismaUser } from '@prisma/client';
 
 export type FindOptions = { uid: string } | { userId: string };
 @Injectable()
@@ -31,6 +31,7 @@ export class PrismaUserRepository implements IUserRepository {
           filename: user.getFilename,
           uid: user.getUid,
           spaceId: space.spaceId,
+          mySpaceId: space.spaceId,
         },
       });
     });
@@ -49,6 +50,16 @@ export class PrismaUserRepository implements IUserRepository {
       return null;
     }
     return this.toUser(user);
+  }
+
+  async findUsersBySpaceId(spaceId: string): Promise<User[] | null> {
+    const users = await this.prismaService.user.findMany({
+      where: { spaceId },
+    });
+    if (users.length === 0) {
+      return null;
+    }
+    return users.map(this.toUser);
   }
 
   async update(user: User): Promise<User> {
@@ -95,6 +106,7 @@ export class PrismaUserRepository implements IUserRepository {
       activeStatus: user.activeStatus as ActiveStatus,
       spaceId: user.spaceId,
       spaceRole: user.spaceRole as SpaceRole,
+      mySpaceId: user.mySpaceId,
     });
   }
 }

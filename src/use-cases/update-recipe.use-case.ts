@@ -1,9 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IRecipeRepository, UpdateRecipeDto } from 'src/domain';
-import {
-  deleteImageFromStorage,
-  uploadImageToStorage,
-} from 'src/functions/image';
+import { IRecipeRepository, Recipe, UpdateRecipeDto } from 'src/domain';
 import { FirebaseService } from 'src/infrastructure/firebase/firebase.service';
 
 @Injectable()
@@ -12,11 +8,14 @@ export class UpdateRecipeUseCase {
     private readonly recipeRepository: IRecipeRepository,
     private readonly firebaseService: FirebaseService,
   ) {}
-  async execute(id: string, updateRecipesDto: UpdateRecipeDto) {
-    const recipe = await this.recipeRepository.findRecipe(id);
+
+  private async processRecipeDto(
+    recipe: Recipe,
+    updateRecipesDto: UpdateRecipeDto,
+  ) {
     const prevImageUrls = recipe.getImageUrls || [];
     const prevImageFilenames = recipe.getImageFilenames || [];
-    const recipeObject = {
+    const recipeDto = {
       title: updateRecipesDto.title,
       thumbnailUrl: recipe.getThumbnailUrl,
       thumbnailFilename: recipe.getThumbnailFilename,
@@ -27,20 +26,19 @@ export class UpdateRecipeUseCase {
       faviconUrl: updateRecipesDto.faviconUrl,
       appName: updateRecipesDto.appName,
     };
-    const storage = this.firebaseService.admin.storage();
     // thumbnailUrlが登録済のデータと異なる場合はstorageに登録
     if (updateRecipesDto.thumbnailUrl !== recipe.getThumbnailUrl) {
-      const { imageUrl, filename } = await uploadImageToStorage(
-        storage,
-        'recipe',
-        updateRecipesDto.thumbnailUrl,
-        recipe.getThumbnailFilename,
-      );
+      const { imageUrl, filename } =
+        await this.firebaseService.uploadProfileImageToStorage(
+          'recipe',
+          updateRecipesDto.thumbnailUrl,
+          recipe.getThumbnailFilename,
+        );
       if (imageUrl) {
-        recipeObject.thumbnailUrl = imageUrl;
+        recipeDto.thumbnailUrl = imageUrl;
       }
       if (filename) {
-        recipeObject.thumbnailFilename = filename;
+        recipeDto.thumbnailFilename = filename;
       }
     }
 
@@ -69,12 +67,10 @@ export class UpdateRecipeUseCase {
       const index = prevImageUrls.findIndex((x) => x === imageUrl);
       const targetFilename = prevImageFilenames[index];
       // storageから削除
-      await deleteImageFromStorage(storage, targetFilename);
-      // recipeObjectから削除
-      recipeObject.imageUrls = recipeObject.imageUrls.filter(
-        (x) => x !== imageUrl,
-      );
-      recipeObject.imageFilenames = recipeObject.imageFilenames.filter(
+      await this.firebaseService.deleteImageFromStorage(targetFilename);
+      // recipeDtoから削除
+      recipeDto.imageUrls = recipeDto.imageUrls.filter((x) => x !== imageUrl);
+      recipeDto.imageFilenames = recipeDto.imageFilenames.filter(
         (x) => x !== targetFilename,
       );
     });
@@ -82,22 +78,32 @@ export class UpdateRecipeUseCase {
     // 画像のアップロード
     const uploadPromises = uploadImageUrlQueue.map(async (imageUrl) => {
       const { imageUrl: newImageUrl, filename: newFilename } =
-        await uploadImageToStorage(storage, 'recipe', imageUrl, '');
+        await this.firebaseService.uploadProfileImageToStorage(
+          'recipe',
+          imageUrl,
+          '',
+        );
       if (newImageUrl) {
-        recipeObject.imageUrls = [...recipeObject.imageUrls, newImageUrl];
+        recipeDto.imageUrls = [...recipeDto.imageUrls, newImageUrl];
       }
       if (newFilename) {
-        recipeObject.imageFilenames = [
-          ...recipeObject.imageFilenames,
-          newFilename,
-        ];
+        recipeDto.imageFilenames = [...recipeDto.imageFilenames, newFilename];
       }
     });
 
     // すべての削除とアップロードが完了するのを待つ
     await Promise.all(deletePromises);
     await Promise.all(uploadPromises);
-    recipe.update(recipeObject);
+
+    return recipeDto;
+  }
+
+  async execute(id: string, updateRecipesDto: UpdateRecipeDto) {
+    const recipe = await this.recipeRepository.findRecipe(id);
+    const recipeDto = await this.processRecipeDto(recipe, updateRecipesDto);
+
+    recipe.update(recipeDto);
+
     return await this.recipeRepository.save(recipe);
   }
 }
