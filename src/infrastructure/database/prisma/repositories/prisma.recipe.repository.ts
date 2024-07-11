@@ -45,7 +45,7 @@ export class PrismaRecipeRepository implements IRecipeRepository {
   ): Promise<Recipe[]> {
     const { requestUserId } = findRecipeOptions;
     const prismaRecipes = await this.prismaService.recipe.findMany({
-      take: 5,
+      take: 20,
       ...(findRecipeOptions.cursor && {
         cursor: { recipeId: findRecipeOptions.cursor },
         skip: 1,
