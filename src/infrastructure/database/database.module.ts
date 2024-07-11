@@ -9,10 +9,12 @@ import {
   PrismaRequestedRecipeRepository,
   PrismaUserTokenRepository,
 } from './prisma';
+import { PrismaTransactionManager } from './prisma/prisma.transaction-manager';
 
 @Module({
   providers: [
     PrismaService,
+    PrismaTransactionManager,
     PrismaUserRepository,
     PrismaRecipeRepository,
     PrismaSpaceRepository,
@@ -29,6 +31,7 @@ import {
     PrismaMenuRepository,
     PrismaRequestedRecipeRepository,
     PrismaUserTokenRepository,
+    PrismaTransactionManager,
   ],
 })
 export class DatabaseModule {}

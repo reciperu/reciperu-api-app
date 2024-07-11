@@ -98,7 +98,8 @@ export class RecipeController {
   ) {
     const recipes = await this.getRecipeListUseCase
       .getInstance()
-      .execute(req.currentUser.getSpaceId, cursor, {
+      .execute(req.currentUser.getSpaceId, {
+        cursor,
         requestUserId: isRequested ? req.currentUser.getId : undefined,
         title,
       });

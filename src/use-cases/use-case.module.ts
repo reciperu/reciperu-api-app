@@ -19,6 +19,7 @@ import {
   GetRecipeMetaDateUseCase,
   CreateRequestedRecipeUseCase,
   DeleteRequestedRecipeUseCase,
+  DeleteUserUseCase,
 } from './';
 import { DatabaseModule } from 'src/infrastructure/database/database.module';
 import { FirebaseModule } from 'src/infrastructure/firebase/firebase.module';
@@ -31,6 +32,7 @@ import {
   PrismaSpaceRepository,
   PrismaRequestedRecipeRepository,
   PrismaUserTokenRepository,
+  PrismaTransactionManager,
 } from 'src/infrastructure/database/prisma';
 import { UpdateUserTokenUseCase } from './update-user-token.use-case';
 
@@ -68,6 +70,8 @@ export class UseCaseProxyModule {
   static readonly DELETE_REQUESTED_RECIPE_USE_CASE =
     'DELETE_REQUESTED_RECIPE_USE_CASE';
   static readonly UPDATE_USER_TOKEN_USE_CASE = 'UPDATE_USER_TOKEN_USE_CASE';
+  static readonly DELETE_USER_USE_CASE = 'DELETE_USER_USE_CASE';
+
   static resister(): DynamicModule {
     return {
       module: UseCaseProxyModule,
@@ -190,11 +194,13 @@ export class UseCaseProxyModule {
           useFactory: (
             spaceInvitationRepository: PrismaSpaceInvitationRepository,
             userRepository: PrismaUserRepository,
+            spaceRepository: PrismaSpaceRepository,
           ) =>
             new UseCaseProxy(
               new ValidateSpaceJoinUseCase(
                 spaceInvitationRepository,
                 userRepository,
+                spaceRepository,
               ),
             ),
         },
@@ -248,6 +254,32 @@ export class UseCaseProxyModule {
               new UpdateUserTokenUseCase(prismaUserTokenRepository),
             ),
         },
+        {
+          inject: [
+            PrismaSpaceRepository,
+            PrismaUserRepository,
+            FirebaseService,
+            PrismaRecipeRepository,
+            PrismaTransactionManager,
+          ],
+          provide: UseCaseProxyModule.DELETE_USER_USE_CASE,
+          useFactory: (
+            spaceRepository: PrismaSpaceRepository,
+            userRepository: PrismaUserRepository,
+            firebaseService: FirebaseService,
+            recipeRepository: PrismaRecipeRepository,
+            transactionManager: PrismaTransactionManager,
+          ) =>
+            new UseCaseProxy(
+              new DeleteUserUseCase(
+                spaceRepository,
+                userRepository,
+                firebaseService,
+                recipeRepository,
+                transactionManager,
+              ),
+            ),
+        },
       ],
       exports: [
         UseCaseProxyModule.LOGIN_USE_CASE,
@@ -270,6 +302,7 @@ export class UseCaseProxyModule {
         UseCaseProxyModule.CREATE_REQUESTED_RECIPE_USE_CASE,
         UseCaseProxyModule.DELETE_REQUESTED_RECIPE_USE_CASE,
         UseCaseProxyModule.UPDATE_USER_TOKEN_USE_CASE,
+        UseCaseProxyModule.DELETE_USER_USE_CASE,
       ],
     };
   }
