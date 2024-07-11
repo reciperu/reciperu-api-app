@@ -57,7 +57,7 @@ export class SpaceInvitationBeforePersist {
   get getExpiredAt(): Date {
     return this.expiredAt;
   }
-  async generateToken(): Promise<void> {
+  generateToken(): void {
     this.token = nanoid(6);
   }
   set setToken(token: string) {
@@ -109,7 +109,9 @@ export type ISpaceInvitationRepository = {
     spaceInvitationBeforePersist: SpaceInvitationBeforePersist,
   ): Promise<SpaceInvitation>;
   findSpaceInvitationByToken(token: string): Promise<SpaceInvitation | null>;
-  findValidSpaceInvitation(spaceId: string): Promise<SpaceInvitation | null>;
+  findValidSpaceInvitationsBySpaceId(
+    spaceId: string,
+  ): Promise<SpaceInvitation[]>;
 };
 
 export type CreateSpaceDto = {
