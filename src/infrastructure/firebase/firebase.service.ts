@@ -90,7 +90,12 @@ export class FirebaseService implements OnModuleInit {
 
       // 元の画像を削除
       if (prevFilename?.length) {
-        await this.deleteImageFromStorage(prevFilename);
+        // 削除エラーは無視
+        try {
+          await this.deleteImageFromStorage(prevFilename);
+        } catch (err) {
+          console.error('Failed to delete image', err);
+        }
       }
     } catch (error) {
       throw new HttpException(
