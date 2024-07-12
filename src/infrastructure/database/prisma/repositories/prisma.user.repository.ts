@@ -8,7 +8,7 @@ import {
   SpaceRole,
   SpaceInvitation,
 } from 'src/domain';
-import { Prisma, User as PrismaUser } from '@prisma/client';
+import { User as PrismaUser } from '@prisma/client';
 
 export type FindOptions = { uid: string } | { userId: string };
 @Injectable()
@@ -68,6 +68,7 @@ export class PrismaUserRepository implements IUserRepository {
       data: {
         name: user.getName,
         imageUrl: user.getImageUrl,
+        filename: user.getFilename,
         activeStatus: user.getActiveStatus as ActiveStatus,
       },
     });
