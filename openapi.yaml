@@ -26,7 +26,7 @@ paths:
           in: path
           description: userId
           schema:
-            type: string
+            type: number
       requestBody:
         required: true
         content:
@@ -48,9 +48,14 @@ paths:
         - name: id
           required: true
           in: path
+          schema:
+            type: number
+        - name: userId
+          required: true
+          in: path
           description: userId
           schema:
-            type: string
+            type: number
       responses:
         '204':
           description: ユーザー削除
@@ -90,7 +95,7 @@ paths:
           in: query
           description: カーソル
           schema:
-            type: string
+            type: number
         - name: isRequested
           required: false
           in: query
@@ -175,8 +180,9 @@ paths:
         - name: id
           required: true
           in: path
+          description: recipeId
           schema:
-            type: string
+            type: number
       responses:
         '200':
           description: レシピ詳細取得
@@ -193,8 +199,9 @@ paths:
         - name: id
           required: true
           in: path
+          description: recipeId
           schema:
-            type: string
+            type: number
       requestBody:
         required: true
         content:
@@ -262,8 +269,9 @@ paths:
         - name: id
           required: true
           in: path
+          description: recipeId
           schema:
-            type: string
+            type: number
       responses:
         '201':
           description: リクエストレシピ削除
@@ -283,7 +291,7 @@ paths:
           in: path
           description: spaceId
           schema:
-            type: string
+            type: number
       responses:
         '200':
           description: スペースとユーザー一覧取得
@@ -302,8 +310,9 @@ paths:
         - name: id
           required: true
           in: path
+          description: spaceId
           schema:
-            type: string
+            type: number
       requestBody:
         required: true
         content:
@@ -363,7 +372,7 @@ paths:
           in: query
           description: カーソル
           schema:
-            type: string
+            type: number
         - name: statuses
           required: false
           in: query
@@ -426,8 +435,9 @@ paths:
         - name: id
           required: true
           in: path
+          description: menuId
           schema:
-            type: string
+            type: number
       requestBody:
         required: true
         content:
@@ -450,8 +460,9 @@ paths:
         - name: id
           required: true
           in: path
+          description: menuId
           schema:
-            type: string
+            type: number
       responses:
         '200':
           description: 献立の削除
@@ -535,7 +546,7 @@ components:
       type: object
       properties:
         id:
-          type: string
+          type: number
         name:
           type: string
         imageUrl:
@@ -547,7 +558,7 @@ components:
             - JOINED_SPACE
             - NOT_JOINED_SPACE
         spaceId:
-          type: string
+          type: number
         spaceRole:
           type: string
           enum:
@@ -609,13 +620,13 @@ components:
       type: object
       properties:
         id:
-          type: string
+          type: number
         title:
           type: string
         spaceId:
-          type: string
+          type: number
         userId:
-          type: string
+          type: number
         thumbnailUrl:
           type: string
         imageUrls:
@@ -661,7 +672,7 @@ components:
           items:
             $ref: '#/components/schemas/RecipePresenter'
         nextCursor:
-          type: string
+          type: number
       required:
         - recipes
         - nextCursor
@@ -748,14 +759,14 @@ components:
       type: object
       properties:
         recipeId:
-          type: string
+          type: number
       required:
         - recipeId
     SpacePresenter:
       type: object
       properties:
         id:
-          type: string
+          type: number
         name:
           type: string
         users:
@@ -797,16 +808,16 @@ components:
       type: object
       properties:
         id:
-          type: string
+          type: number
         status:
           type: string
         scheduledAt:
           format: date-time
           type: string
         userId:
-          type: string
+          type: number
         recipeId:
-          type: string
+          type: number
         recipe:
           $ref: '#/components/schemas/Recipe'
       required:
@@ -824,7 +835,7 @@ components:
           items:
             $ref: '#/components/schemas/MenuPresenter'
         nextCursor:
-          type: string
+          type: number
       required:
         - menus
         - nextCursor
@@ -832,7 +843,7 @@ components:
       type: object
       properties:
         recipeId:
-          type: string
+          type: number
         scheduledAt:
           format: date-time
           type: string
