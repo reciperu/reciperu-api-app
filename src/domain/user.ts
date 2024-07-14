@@ -9,7 +9,7 @@ export enum SpaceRole {
 export enum ActiveStatus {
   ONBOARDING = 'ONBOARDING',
   JOINED_SPACE = 'JOINED_SPACE',
-  NOT_JOINED_SPACE = 'NOT_JOINED_SPACE',
+  RE_ONBOARDING = 'RE_ONBOARDING',
 }
 
 export class UserBeforePersist {
