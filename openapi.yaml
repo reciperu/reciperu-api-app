@@ -153,6 +153,39 @@ paths:
                 $ref: '#/components/schemas/RecipeMetaDataPresenter'
       tags: *ref_2
       security: *ref_3
+  /api/recipes/requests:
+    get:
+      operationId: getRequestedRecipes
+      summary: ''
+      parameters: []
+      responses:
+        '200':
+          description: スペースの食べたいに設定したレシピ一覧取得
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestedRecipePresenter'
+      tags: *ref_2
+      security: *ref_3
+    post:
+      operationId: createRequestedRecipe
+      summary: ''
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRequestedRecipeDto'
+      responses:
+        '201':
+          description: リクエストレシピ登録
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessPresenter'
+      tags: *ref_2
+      security: *ref_3
   /api/recipes/{id}:
     get:
       operationId: getRecipe
@@ -218,26 +251,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RecipePresenter'
-      tags: *ref_2
-      security: *ref_3
-  /api/recipes/requests:
-    post:
-      operationId: createRequestedRecipe
-      summary: ''
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateRequestedRecipeDto'
-      responses:
-        '201':
-          description: リクエストレシピ登録
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessPresenter'
       tags: *ref_2
       security: *ref_3
   /api/recipes/{id}/requests:
@@ -667,6 +680,15 @@ components:
         - thumbnailUrl
         - appName
         - faviconUrl
+    RequestedRecipePresenter:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipePresenter'
+      required:
+        - data
     CreateRecipeDto:
       type: object
       properties:

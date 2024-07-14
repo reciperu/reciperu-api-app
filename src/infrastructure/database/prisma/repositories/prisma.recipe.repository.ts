@@ -77,6 +77,26 @@ export class PrismaRecipeRepository implements IRecipeRepository {
     return prismaRecipes.map((prismaRecipe) => this.toRecipe(prismaRecipe));
   }
 
+  async findRequestedRecipes(spaceId: string): Promise<Recipe[]> {
+    const prismaRecipes = await this.prismaService.recipe.findMany({
+      take: 100,
+      where: {
+        spaceId,
+        requestedRecipes: {
+          some: {},
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        requestedRecipes: true,
+        user: true,
+      },
+    });
+    return prismaRecipes.map((prismaRecipe) => this.toRecipe(prismaRecipe));
+  }
+
   async bulkInsert(recipes: RecipeBeforePersist[]): Promise<Recipe[]> {
     const prismaRecipes = await this.prismaService.$transaction(
       recipes.map((recipe) =>

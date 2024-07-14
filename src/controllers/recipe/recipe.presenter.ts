@@ -74,6 +74,30 @@ export class PaginatedRecipePresenter {
   }
 }
 
+export class RequestedRecipePresenter {
+  @ApiProperty({ type: [RecipePresenter] })
+  data: Record<string, Recipe[]>;
+
+  constructor(data: Record<string, Recipe[]>) {
+    const transformedData: Record<string, any[]> = {};
+
+    Object.keys(data).forEach((key) => {
+      transformedData[key] = data[key].map((recipe) => {
+        const newRequesters = recipe.getRequesters.map(
+          (requester) => requester.getUserId,
+        );
+
+        return {
+          ...recipe,
+          requesters: newRequesters, // 変更したプロパティを追加
+        };
+      });
+    });
+
+    this.data = transformedData;
+  }
+}
+
 export class RecipeMetaDataPresenter {
   @ApiProperty()
   title?: string;

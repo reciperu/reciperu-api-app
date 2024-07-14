@@ -255,6 +255,7 @@ export type IRecipeRepository = {
     spaceId: string,
     findRecipeOptions?: FindRecipeOptions,
   ): Promise<Recipe[]>;
+  findRequestedRecipes(spaceId: string): Promise<Recipe[]>;
 };
 
 export type IRequestedRecipeRepository = {

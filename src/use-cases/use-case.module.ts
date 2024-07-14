@@ -14,6 +14,7 @@ import {
   DeleteMenuUseCase,
   ValidateSpaceJoinUseCase,
   GetRecipeListUseCase,
+  GetRequestedRecipeListUseCase,
   GetMenuListUseCase,
   SendContactToSlackUseCase,
   GetRecipeMetaDateUseCase,
@@ -61,6 +62,8 @@ export class UseCaseProxyModule {
   static readonly DELETE_MENU_USE_CASE = 'DELETE_MENU_USE_CASE';
   static readonly VALIDATE_SPACE_JOIN_USE_CASE = 'VALIDATE_SPACE_JOIN_USE_CASE';
   static readonly GET_RECIPE_LIST_USE_CASE = 'GET_RECIPE_LIST_USE_CASE';
+  static readonly GET_REQUESTED_RECIPE_LIST_USE_CASE =
+    'GET_REQUESTED_RECIPE_LIST_USE_CASE';
   static readonly GET_MENU_LIST_USE_CASE = 'GET_MENU_LIST_USE_CASE';
   static readonly SEND_CONTACT_TO_SLACK_USE_CASE =
     'SEND_CONTACT_TO_SLACK_USE_CASE';
@@ -212,6 +215,14 @@ export class UseCaseProxyModule {
             new UseCaseProxy(new GetRecipeListUseCase(recipeRepository)),
         },
         {
+          inject: [PrismaRecipeRepository],
+          provide: UseCaseProxyModule.GET_REQUESTED_RECIPE_LIST_USE_CASE,
+          useFactory: (recipeRepository: PrismaRecipeRepository) =>
+            new UseCaseProxy(
+              new GetRequestedRecipeListUseCase(recipeRepository),
+            ),
+        },
+        {
           inject: [PrismaMenuRepository],
           provide: UseCaseProxyModule.GET_MENU_LIST_USE_CASE,
           useFactory: (menuRepository: PrismaMenuRepository) =>
@@ -298,6 +309,7 @@ export class UseCaseProxyModule {
         UseCaseProxyModule.DELETE_MENU_USE_CASE,
         UseCaseProxyModule.VALIDATE_SPACE_JOIN_USE_CASE,
         UseCaseProxyModule.GET_RECIPE_LIST_USE_CASE,
+        UseCaseProxyModule.GET_REQUESTED_RECIPE_LIST_USE_CASE,
         UseCaseProxyModule.GET_MENU_LIST_USE_CASE,
         UseCaseProxyModule.SEND_CONTACT_TO_SLACK_USE_CASE,
         UseCaseProxyModule.GET_RECIPE_META_DATE_USE_CASE,
