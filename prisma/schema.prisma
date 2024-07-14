@@ -26,7 +26,7 @@ enum MenuStatus {
 enum ActiveStatus {
   ONBOARDING
   JOINED_SPACE
-  NOT_JOINED_SPACE
+  RE_ONBOARDING
 }
 
 model Space {
