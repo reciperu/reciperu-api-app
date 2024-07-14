@@ -153,6 +153,20 @@ paths:
                 $ref: '#/components/schemas/RecipeMetaDataPresenter'
       tags: *ref_2
       security: *ref_3
+  /api/recipes/user-group-requests:
+    get:
+      operationId: getRequestedRecipesByUser
+      summary: ''
+      parameters: []
+      responses:
+        '200':
+          description: スペースの食べたいに設定したユーザーごとのレシピ一覧取得
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestedRecipePresenterByUser'
+      tags: *ref_2
+      security: *ref_3
   /api/recipes/{id}:
     get:
       operationId: getRecipe
@@ -667,6 +681,15 @@ components:
         - thumbnailUrl
         - appName
         - faviconUrl
+    RequestedRecipePresenterByUser:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipePresenter'
+      required:
+        - data
     CreateRecipeDto:
       type: object
       properties:

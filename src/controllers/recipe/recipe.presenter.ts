@@ -74,6 +74,31 @@ export class PaginatedRecipePresenter {
   }
 }
 
+export class RequestedRecipePresenterByUser {
+  @ApiProperty({ type: [RecipePresenter] })
+  data: Record<string, Recipe[]>;
+
+  constructor(data: Record<string, Recipe[]>) {
+    //NOTE: RecipePresenterと同じレスポンスデータにするため、valueのrequesters情報をオブジェクトからuserIdの文字列配列に変換
+    const transformedData: Record<string, any[]> = {};
+
+    Object.keys(data).forEach((key) => {
+      transformedData[key] = data[key].map((recipe) => {
+        const newRequesters = recipe.getRequesters.map(
+          (requester) => requester.getUserId,
+        );
+
+        return {
+          ...recipe,
+          requesters: newRequesters,
+        };
+      });
+    });
+
+    this.data = transformedData;
+  }
+}
+
 export class RecipeMetaDataPresenter {
   @ApiProperty()
   title?: string;
