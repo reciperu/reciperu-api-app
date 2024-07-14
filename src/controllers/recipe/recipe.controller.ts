@@ -9,6 +9,7 @@ import {
   Req,
   Query,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -17,6 +18,7 @@ import {
   ApiQuery,
   ApiResponse,
   ApiTags,
+  ApiParam,
 } from '@nestjs/swagger';
 import {
   RecipePresenter,
@@ -74,7 +76,7 @@ export class RecipeController {
   @ApiQuery({
     name: 'cursor',
     description: 'カーソル',
-    type: String,
+    type: Number,
     required: false,
   })
   @ApiQuery({
@@ -96,7 +98,7 @@ export class RecipeController {
   })
   async index(
     @Req() req: Request,
-    @Query('cursor') cursor: string | undefined,
+    @Query('cursor', ParseIntPipe) cursor: number | undefined,
     @Query('isRequested') isRequested: boolean | undefined,
     @Query('title') title: string | undefined,
   ) {
@@ -148,12 +150,18 @@ export class RecipeController {
 
   @Get(':id')
   @ApiOperation({ operationId: 'getRecipe' })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    required: true,
+    description: 'recipeId',
+  })
   @ApiResponse({
     status: 200,
     description: 'レシピ詳細取得',
     type: RecipePresenter,
   })
-  async show(@Param('id') id: string) {
+  async show(@Param('id', ParseIntPipe) id: number) {
     return new RecipePresenter(
       await this.getRecipeDetailUseCase.getInstance().execute(id),
     );
@@ -188,11 +196,17 @@ export class RecipeController {
     description: 'レシピ更新',
     type: RecipePresenter,
   })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    required: true,
+    description: 'recipeId',
+  })
   @ApiBody({
     type: UpdateRecipeDto,
   })
   async update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateRecipeDto: UpdateRecipeDto,
   ) {
     return new RecipePresenter(
@@ -248,12 +262,21 @@ export class RecipeController {
 
   @Delete(':id/requests')
   @ApiOperation({ operationId: 'deleteRequestedRecipe' })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    required: true,
+    description: 'recipeId',
+  })
   @ApiResponse({
     status: 201,
     description: 'リクエストレシピ削除',
     type: SuccessPresenter,
   })
-  async deleteRequestedRecipe(@Req() req: Request, @Param('id') id: string) {
+  async deleteRequestedRecipe(
+    @Req() req: Request,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
     await this.deleteRequestedRecipeUseCase
       .getInstance()
       .execute(id, req.currentUser.getId);

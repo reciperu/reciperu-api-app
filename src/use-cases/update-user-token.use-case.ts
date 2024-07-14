@@ -10,7 +10,7 @@ import {
 export class UpdateUserTokenUseCase {
   constructor(private readonly userTokenRepository: IUserTokenRepository) {}
   async execute(
-    userId: string,
+    userId: number,
     updateUserDto: UpdateUserTokenDto,
   ): Promise<UserToken> {
     const userToken = await this.userTokenRepository.findUserToken(

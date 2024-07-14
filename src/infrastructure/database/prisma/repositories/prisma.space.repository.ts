@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Space, ISpaceRepository } from 'src/domain';
 import { PrismaService } from '../prisma.service';
-import { Prisma, PrismaClient, Space as PrismaSpace } from '@prisma/client';
+import { PrismaClient, Space as PrismaSpace } from '@prisma/client';
 import { PrismaUserRepository } from './prisma.user.repository';
-const prismaSpaceType = async (prisma: PrismaClient, spaceId: string) =>
+const prismaSpaceType = async (prisma: PrismaClient, spaceId: number) =>
   await prisma.space.findUnique({
     where: { spaceId },
     include: {
@@ -20,7 +20,7 @@ export class PrismaSpaceRepository implements ISpaceRepository {
   ) {
     this.prismaService = prismaService;
   }
-  async findSpace(spaceId: string): Promise<Space | null> {
+  async findSpace(spaceId: number): Promise<Space | null> {
     const prismaSpace = await this.prismaService.space.findUnique({
       where: { spaceId },
       include: {
@@ -46,7 +46,7 @@ export class PrismaSpaceRepository implements ISpaceRepository {
     return this.toSpace(prismaSpace);
   }
 
-  async deleteSpace(id: string): Promise<void> {
+  async deleteSpace(id: number): Promise<void> {
     await this.prismaService.space.delete({
       where: { spaceId: id },
     });

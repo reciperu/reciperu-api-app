@@ -10,7 +10,7 @@ import { PrismaService } from '../prisma.service';
 import { PrismaClient } from '@prisma/client';
 import { PrismaRecipeRepository } from './prisma.recipe.repository';
 
-const prismaMenuType = async (prisma: PrismaClient, menuId: string) =>
+const prismaMenuType = async (prisma: PrismaClient, menuId: number) =>
   await prisma.menu.findUnique({
     where: { menuId },
     include: {
@@ -37,8 +37,8 @@ export class PrismaMenuRepository implements IMenuRepository {
     cursor,
     statuses,
   }: {
-    spaceId: string;
-    cursor?: string;
+    spaceId: number;
+    cursor?: number;
     statuses?: MenuStatusKey[];
   }): Promise<Menu[]> {
     const prismaMenus = await this.prismaService.menu.findMany({
@@ -65,7 +65,7 @@ export class PrismaMenuRepository implements IMenuRepository {
 
   async save(menu: MenuBeforePersist | Menu) {
     const prismaMenu = await this.prismaService.menu.upsert({
-      where: { menuId: 'id' in menu ? menu.getId : '' },
+      where: { menuId: 'id' in menu ? menu.getId : -1 },
       create: {
         userId: menu.getUserId,
         scheduledAt: menu.getScheduledAt,
@@ -90,7 +90,7 @@ export class PrismaMenuRepository implements IMenuRepository {
     return this.toMenu(prismaMenu);
   }
 
-  async findMenu(menuId: string): Promise<Menu> {
+  async findMenu(menuId: number): Promise<Menu> {
     const prismaMenu = await this.prismaService.menu.findUnique({
       where: { menuId },
       include: {
@@ -105,7 +105,7 @@ export class PrismaMenuRepository implements IMenuRepository {
     return this.toMenu(prismaMenu);
   }
 
-  async delete(menuId: string): Promise<void> {
+  async delete(menuId: number): Promise<void> {
     await this.prismaService.menu.delete({
       where: { menuId },
     });

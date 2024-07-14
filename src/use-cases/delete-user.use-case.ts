@@ -19,8 +19,7 @@ export class DeleteUserUseCase {
     private readonly recipeRepository: IRecipeRepository,
     private readonly transactionManager: ITransactionManager,
   ) {}
-  async execute(userId: string) {
-    console.log(userId);
+  async execute(userId: number) {
     await this.transactionManager.begin(async () => {
       const user = await this.userRepository.findUser({
         userId,
@@ -88,7 +87,7 @@ export class DeleteUserUseCase {
     });
   }
 
-  private async findParticipants(spaceId: string) {
+  private async findParticipants(spaceId: number) {
     const users = await this.userRepository.findUsersBySpaceId(spaceId);
     if (!users) {
       throw new BadRequestException();

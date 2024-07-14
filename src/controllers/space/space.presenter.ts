@@ -3,7 +3,7 @@ import { Space, User } from 'src/domain';
 
 export class SpacePresenter {
   @ApiProperty()
-  readonly id: string;
+  readonly id: number;
 
   @ApiProperty()
   readonly name: string;

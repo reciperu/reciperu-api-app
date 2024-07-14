@@ -2,8 +2,8 @@ import { User } from './user';
 
 export class RecipeBeforePersist {
   private title: string;
-  private spaceId: string;
-  private userId: string;
+  private spaceId: number;
+  private userId: number;
   private thumbnailUrl?: string;
   private thumbnailFilename?: string;
   private imageUrls?: string[];
@@ -27,8 +27,8 @@ export class RecipeBeforePersist {
     appName,
   }: {
     title: string;
-    spaceId: string;
-    userId: string;
+    spaceId: number;
+    userId: number;
     thumbnailUrl?: string;
     thumbnailFilename?: string;
     imageUrls?: string[];
@@ -55,11 +55,11 @@ export class RecipeBeforePersist {
     return this.title;
   }
 
-  get getSpaceId(): string {
+  get getSpaceId(): number {
     return this.spaceId;
   }
 
-  get getUserId(): string {
+  get getUserId(): number {
     return this.userId;
   }
 
@@ -129,22 +129,22 @@ export class RecipeBeforePersist {
     this.appName = appName;
   }
 
-  set setSpaceId(spaceId: string) {
+  set setSpaceId(spaceId: number) {
     this.spaceId = spaceId;
   }
 }
 
 export class RecipeRequester {
-  private userId: string;
-  constructor({ userId }: { userId: string }) {
+  private userId: number;
+  constructor({ userId }: { userId: number }) {
     this.userId = userId;
   }
-  get getUserId(): string {
+  get getUserId(): number {
     return this.userId;
   }
 }
 export class Recipe extends RecipeBeforePersist {
-  private id: string;
+  private id: number;
   private createdAt: Date;
   private requesters: RecipeRequester[];
   private user: User;
@@ -165,10 +165,10 @@ export class Recipe extends RecipeBeforePersist {
     requesters,
     user,
   }: {
-    id: string;
+    id: number;
     title: string;
-    spaceId: string;
-    userId: string;
+    spaceId: number;
+    userId: number;
     thumbnailUrl?: string;
     thumbnailFilename?: string;
     imageUrls?: string[];
@@ -199,7 +199,7 @@ export class Recipe extends RecipeBeforePersist {
     this.requesters = requesters;
     this.user = user;
   }
-  get getId(): string {
+  get getId(): number {
     return this.id;
   }
   get getCreatedAt(): Date {
@@ -248,19 +248,19 @@ export class Recipe extends RecipeBeforePersist {
 }
 
 export type IRecipeRepository = {
-  findRecipe(recipeId: string): Promise<Recipe>;
+  findRecipe(recipeId: number): Promise<Recipe>;
   bulkInsert(recipes: RecipeBeforePersist[]): Promise<Recipe[]>;
   save(recipe: Recipe | RecipeBeforePersist): Promise<Recipe>;
   findRecipes(
-    spaceId: string,
+    spaceId: number,
     findRecipeOptions?: FindRecipeOptions,
   ): Promise<Recipe[]>;
-  findRequestedRecipes(spaceId: string): Promise<Recipe[]>;
+  findRequestedRecipes(spaceId: number): Promise<Recipe[]>;
 };
 
 export type IRequestedRecipeRepository = {
-  create(userId: string, recipeId: string): Promise<void>;
-  delete(userId: string, recipeId: string): Promise<void>;
+  create(userId: number, recipeId: number): Promise<void>;
+  delete(userId: number, recipeId: number): Promise<void>;
 };
 
 export type UpdateRecipeDto = {
@@ -284,12 +284,12 @@ export type CreateRecipeDto = {
 };
 
 export type FindRecipeOptions = {
-  cursor?: string;
-  requestUserId?: string;
+  cursor?: number;
+  requestUserId?: number;
   title?: string;
-  userId?: string;
+  userId?: number;
 };
 
 export type CreateRequestedRecipeDto = {
-  recipeId: string;
+  recipeId: number;
 };

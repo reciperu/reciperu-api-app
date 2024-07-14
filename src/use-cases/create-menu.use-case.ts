@@ -12,8 +12,8 @@ export class CreateMenuUseCase {
 
   async execute(
     createMenuDto: CreateMenuDto,
-    userId: string,
-    spaceId: string,
+    userId: number,
+    spaceId: number,
   ): Promise<Menu> {
     return await this.menuRepository.save(
       new MenuBeforePersist({

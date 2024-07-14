@@ -9,8 +9,8 @@ export class GetMenuListUseCase {
     cursor,
     statuses,
   }: {
-    spaceId: string;
-    cursor: string | undefined;
+    spaceId: number;
+    cursor: number | undefined;
     statuses?: MenuStatusKey[];
   }) {
     return await this.menuRepository.findMenus({ spaceId, cursor, statuses });

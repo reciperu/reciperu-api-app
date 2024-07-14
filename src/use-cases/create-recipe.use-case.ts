@@ -13,8 +13,8 @@ export class CreateRecipeUseCase {
   ) {}
   private async processRecipeDto(
     createRecipesDto: CreateRecipeDto,
-    userId: string,
-    spaceId: string,
+    userId: number,
+    spaceId: number,
   ) {
     const recipeDto = {
       title: createRecipesDto.title,
@@ -67,8 +67,8 @@ export class CreateRecipeUseCase {
   }
   async execute(
     createRecipesDto: CreateRecipeDto,
-    userId: string,
-    spaceId: string,
+    userId: number,
+    spaceId: number,
   ) {
     const recipeDto = await this.processRecipeDto(
       createRecipesDto,

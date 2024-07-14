@@ -11,7 +11,7 @@ export class CreateRequestedRecipeUseCase {
   ) {}
   async execute(
     createRequestedRecipeDto: CreateRequestedRecipeDto,
-    userId: string,
+    userId: number,
   ) {
     return await this.requestedRecipeRepository.create(
       userId,

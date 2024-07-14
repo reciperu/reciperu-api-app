@@ -2,7 +2,7 @@ import { User } from '.';
 import * as dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 export class Space {
-  private id: string;
+  private id: number;
   private name: string;
   private users: User[];
   constructor({
@@ -10,7 +10,7 @@ export class Space {
     name,
     users,
   }: {
-    id: string;
+    id: number;
     name: string;
     users: User[];
   }) {
@@ -19,7 +19,7 @@ export class Space {
     this.users = users;
   }
 
-  get getId(): string {
+  get getId(): number {
     return this.id;
   }
   get getName(): string {
@@ -41,12 +41,12 @@ export class Space {
 export class SpaceInvitationBeforePersist {
   private token: string;
   private expiredAt: Date;
-  private spaceId: string;
-  constructor({ spaceId }: { spaceId: string }) {
+  private spaceId: number;
+  constructor({ spaceId }: { spaceId: number }) {
     this.spaceId = spaceId;
     this.expiredAt = dayjs().add(1, 'day').toDate();
   }
-  get getSpaceId(): string {
+  get getSpaceId(): number {
     return this.spaceId;
   }
 
@@ -75,7 +75,7 @@ export class SpaceInvitation extends SpaceInvitationBeforePersist {
     token: string;
     expiredAt: Date;
     usedAt: Date;
-    spaceId: string;
+    spaceId: number;
   }) {
     super({
       spaceId,
@@ -104,9 +104,9 @@ export class SpaceInvitation extends SpaceInvitationBeforePersist {
 }
 
 export type ISpaceRepository = {
-  findSpace(id: string): Promise<Space | null>;
+  findSpace(id: number): Promise<Space | null>;
   updateSpace(space: Space): Promise<Space>;
-  deleteSpace(id: string): Promise<void>;
+  deleteSpace(id: number): Promise<void>;
 };
 
 export type ISpaceInvitationRepository = {
@@ -114,7 +114,7 @@ export type ISpaceInvitationRepository = {
     spaceInvitationBeforePersist: SpaceInvitationBeforePersist,
   ): Promise<SpaceInvitation>;
   findSpaceInvitationByToken(token: string): Promise<SpaceInvitation | null>;
-  findSpaceInvitationsBySpaceId(spaceId: string): Promise<SpaceInvitation[]>;
+  findSpaceInvitationsBySpaceId(spaceId: number): Promise<SpaceInvitation[]>;
 };
 
 export type CreateSpaceDto = {

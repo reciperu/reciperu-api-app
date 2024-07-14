@@ -4,16 +4,16 @@ import { UserPresenter } from '../user';
 
 export class RecipePresenter {
   @ApiProperty()
-  id: string;
+  id: number;
 
   @ApiProperty()
   title: string;
 
   @ApiProperty()
-  spaceId: string;
+  spaceId: number;
 
   @ApiProperty()
-  userId: string;
+  userId: number;
 
   @ApiProperty()
   thumbnailUrl?: string;
@@ -37,7 +37,7 @@ export class RecipePresenter {
   createdAt: Date;
 
   @ApiProperty()
-  requesters?: string[];
+  requesters?: number[];
 
   @ApiProperty()
   user?: UserPresenter;
@@ -66,7 +66,7 @@ export class PaginatedRecipePresenter {
   recipes: RecipePresenter[];
 
   @ApiProperty()
-  nextCursor?: string;
+  nextCursor?: number;
 
   constructor(recipes: RecipePresenter[]) {
     this.recipes = recipes;

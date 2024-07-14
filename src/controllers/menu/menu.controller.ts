@@ -9,6 +9,7 @@ import {
   Put,
   Req,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -17,6 +18,7 @@ import {
   ApiQuery,
   ApiResponse,
   ApiTags,
+  ApiParam,
 } from '@nestjs/swagger';
 import { MenuPresenter, PaginatedMenuPresenter } from './menu.presenter';
 import { CreateMenuDto, UpdateMenuDto } from './menu.dto';
@@ -51,7 +53,7 @@ export class MenuController {
   @ApiQuery({
     name: 'cursor',
     description: 'カーソル',
-    type: String,
+    type: Number,
     required: false,
   })
   @ApiQuery({
@@ -68,7 +70,7 @@ export class MenuController {
   })
   async index(
     @Req() req: Request,
-    @Query('cursor') cursor: string | undefined,
+    @Query('cursor', ParseIntPipe) cursor: number | undefined,
     @Query('statuses') statuses: MenuStatusKey[] | undefined,
   ) {
     const menus = await this.getMenuListUseCase.getInstance().execute({
@@ -117,12 +119,21 @@ export class MenuController {
   @Put(':id')
   @ApiOperation({ operationId: 'updateMenu' })
   @ApiBody({ type: UpdateMenuDto })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    required: true,
+    description: 'menuId',
+  })
   @ApiResponse({
     status: 200,
     description: '献立の更新',
     type: MenuPresenter,
   })
-  async update(@Param('id') id: string, @Body() updateMenuDto: UpdateMenuDto) {
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateMenuDto: UpdateMenuDto,
+  ) {
     return new MenuPresenter(
       await this.updateMenuUseCase.getInstance().execute(id, updateMenuDto),
     );
@@ -130,12 +141,18 @@ export class MenuController {
 
   @Delete(':id')
   @ApiOperation({ operationId: 'deleteMenu' })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    required: true,
+    description: 'menuId',
+  })
   @ApiResponse({
     status: 200,
     description: '献立の削除',
     type: SuccessPresenter,
   })
-  async delete(@Param('id') id: string) {
+  async delete(@Param('id', ParseIntPipe) id: number) {
     await this.deleteMenuUseCase.getInstance().execute(id);
     return new SuccessPresenter();
   }

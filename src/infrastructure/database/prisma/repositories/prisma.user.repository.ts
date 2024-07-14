@@ -10,7 +10,7 @@ import {
 } from 'src/domain';
 import { User as PrismaUser } from '@prisma/client';
 
-export type FindOptions = { uid: string } | { userId: string };
+export type FindOptions = { uid: string } | { userId: number };
 @Injectable()
 export class PrismaUserRepository implements IUserRepository {
   constructor(private readonly prismaService: PrismaService) {
@@ -52,7 +52,7 @@ export class PrismaUserRepository implements IUserRepository {
     return this.toUser(user);
   }
 
-  async findUsersBySpaceId(spaceId: string): Promise<User[] | null> {
+  async findUsersBySpaceId(spaceId: number): Promise<User[] | null> {
     const users = await this.prismaService.user.findMany({
       where: { spaceId },
     });

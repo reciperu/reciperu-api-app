@@ -5,7 +5,7 @@ import { IRecipeRepository, Recipe } from 'src/domain';
 export class GetRequestedRecipeListByUserUseCase {
   constructor(private readonly recipeRepository: IRecipeRepository) {}
 
-  async execute(spaceId: string) {
+  async execute(spaceId: number) {
     const requestedRecipes = await this.recipeRepository.findRequestedRecipes(
       spaceId,
     );
