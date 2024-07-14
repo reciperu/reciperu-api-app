@@ -22,7 +22,7 @@ import {
   RecipePresenter,
   PaginatedRecipePresenter,
   RecipeMetaDataPresenter,
-  RequestedRecipePresenter,
+  RequestedRecipePresenterByUser,
 } from './recipe.presenter';
 import {
   CreateRecipeDto,
@@ -40,7 +40,7 @@ import {
   GetRecipeMetaDateUseCase,
   CreateRequestedRecipeUseCase,
   DeleteRequestedRecipeUseCase,
-  GetRequestedRecipeListUseCase,
+  GetRequestedRecipeListByUserUseCase,
 } from 'src/use-cases';
 import { Request } from 'express';
 import { SuccessPresenter } from '../common/success.presenter';
@@ -60,8 +60,8 @@ export class RecipeController {
     private readonly getRecipeDetailUseCase: UseCaseProxy<GetRecipeDetailUseCase>,
     @Inject(UseCaseProxyModule.GET_RECIPE_LIST_USE_CASE)
     private readonly getRecipeListUseCase: UseCaseProxy<GetRecipeListUseCase>,
-    @Inject(UseCaseProxyModule.GET_REQUESTED_RECIPE_LIST_USE_CASE)
-    private readonly getRequestedRecipeListUseCase: UseCaseProxy<GetRequestedRecipeListUseCase>,
+    @Inject(UseCaseProxyModule.GET_REQUESTED_RECIPE_LIST_BY_USER_USE_CASE)
+    private readonly getRequestedRecipeListByUserUseCase: UseCaseProxy<GetRequestedRecipeListByUserUseCase>,
     @Inject(UseCaseProxyModule.GET_RECIPE_META_DATE_USE_CASE)
     private readonly getRecipeMetaDataUseCase: UseCaseProxy<GetRecipeMetaDateUseCase>,
     @Inject(UseCaseProxyModule.CREATE_REQUESTED_RECIPE_USE_CASE)
@@ -130,19 +130,20 @@ export class RecipeController {
     );
   }
 
-  @Get('requests')
-  @ApiOperation({ operationId: 'getRequestedRecipes' })
+  @Get('user-group-requests')
+  @ApiOperation({ operationId: 'getRequestedRecipesByUser' })
   @ApiResponse({
     status: 200,
-    description: 'スペースの食べたいに設定したレシピ一覧取得',
-    type: RequestedRecipePresenter,
+    description: 'スペースの食べたいに設定したユーザーごとのレシピ一覧取得',
+    type: RequestedRecipePresenterByUser,
   })
   async getRequestedRecipes(@Req() req: Request) {
-    const recipes = await this.getRequestedRecipeListUseCase
-      .getInstance()
-      .execute(req.currentUser.getSpaceId);
+    const requestedRecipesByUser =
+      await this.getRequestedRecipeListByUserUseCase
+        .getInstance()
+        .execute(req.currentUser.getSpaceId);
 
-    return new RequestedRecipePresenter(recipes);
+    return new RequestedRecipePresenterByUser(requestedRecipesByUser);
   }
 
   @Get(':id')

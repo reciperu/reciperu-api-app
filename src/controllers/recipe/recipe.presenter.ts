@@ -74,11 +74,12 @@ export class PaginatedRecipePresenter {
   }
 }
 
-export class RequestedRecipePresenter {
+export class RequestedRecipePresenterByUser {
   @ApiProperty({ type: [RecipePresenter] })
   data: Record<string, Recipe[]>;
 
   constructor(data: Record<string, Recipe[]>) {
+    //NOTE: RecipePresenterと同じレスポンスデータにするため、valueのrequesters情報をオブジェクトからuserIdの文字列配列に変換
     const transformedData: Record<string, any[]> = {};
 
     Object.keys(data).forEach((key) => {
@@ -89,7 +90,7 @@ export class RequestedRecipePresenter {
 
         return {
           ...recipe,
-          requesters: newRequesters, // 変更したプロパティを追加
+          requesters: newRequesters,
         };
       });
     });

@@ -13,7 +13,7 @@ export * from './update-menu.use-case';
 export * from './delete-menu.use-case';
 export * from './validate-recipe-book-join.use-case';
 export * from './get-recipe-list.use-case';
-export * from './get-requested-recipe-list.use-case';
+export * from './get-requested-recipe-list-by-user.use-case';
 export * from './get-menu-list.use-case';
 export * from './send-contact-to-slack.use-case';
 export * from './get-recipe-meta-data.use-case';

@@ -2,8 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { IRecipeRepository, Recipe } from 'src/domain';
 
 @Injectable()
-export class GetRequestedRecipeListUseCase {
+export class GetRequestedRecipeListByUserUseCase {
   constructor(private readonly recipeRepository: IRecipeRepository) {}
+
+  async execute(spaceId: string) {
+    const requestedRecipes = await this.recipeRepository.findRequestedRecipes(
+      spaceId,
+    );
+    return this.groupRecipesByUser(requestedRecipes);
+  }
+
   private groupRecipesByUser(recipes: Recipe[]) {
     const userRecipeMap: Record<string, Recipe[]> = {};
 
@@ -18,9 +26,5 @@ export class GetRequestedRecipeListUseCase {
     });
 
     return userRecipeMap;
-  }
-  async execute(spaceId: string) {
-    const recipes = await this.recipeRepository.findRequestedRecipes(spaceId);
-    return this.groupRecipesByUser(recipes);
   }
 }

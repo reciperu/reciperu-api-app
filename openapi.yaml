@@ -153,37 +153,18 @@ paths:
                 $ref: '#/components/schemas/RecipeMetaDataPresenter'
       tags: *ref_2
       security: *ref_3
-  /api/recipes/requests:
+  /api/recipes/user-group-requests:
     get:
-      operationId: getRequestedRecipes
+      operationId: getRequestedRecipesByUser
       summary: ''
       parameters: []
       responses:
         '200':
-          description: スペースの食べたいに設定したレシピ一覧取得
+          description: スペースの食べたいに設定したユーザーごとのレシピ一覧取得
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RequestedRecipePresenter'
-      tags: *ref_2
-      security: *ref_3
-    post:
-      operationId: createRequestedRecipe
-      summary: ''
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateRequestedRecipeDto'
-      responses:
-        '201':
-          description: リクエストレシピ登録
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessPresenter'
+                $ref: '#/components/schemas/RequestedRecipePresenterByUser'
       tags: *ref_2
       security: *ref_3
   /api/recipes/{id}:
@@ -251,6 +232,26 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RecipePresenter'
+      tags: *ref_2
+      security: *ref_3
+  /api/recipes/requests:
+    post:
+      operationId: createRequestedRecipe
+      summary: ''
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRequestedRecipeDto'
+      responses:
+        '201':
+          description: リクエストレシピ登録
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessPresenter'
       tags: *ref_2
       security: *ref_3
   /api/recipes/{id}/requests:
@@ -680,7 +681,7 @@ components:
         - thumbnailUrl
         - appName
         - faviconUrl
-    RequestedRecipePresenter:
+    RequestedRecipePresenterByUser:
       type: object
       properties:
         data:
