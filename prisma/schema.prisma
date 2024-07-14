@@ -30,7 +30,7 @@ enum ActiveStatus {
 }
 
 model Space {
-  spaceId          String            @id @default(cuid()) @map("space_id")
+  spaceId          Int               @id @default(autoincrement()) @map("space_id")
   name             String?
   spaceInvitations SpaceInvitation[]
   recipes          Recipe[]
@@ -42,18 +42,18 @@ model Space {
 }
 
 model User {
-  userId           String            @id @default(cuid()) @map("user_id")
+  userId           Int               @id @default(autoincrement()) @map("user_id")
   name             String
   filename         String
   imageUrl         String            @map("image_url")
   activeStatus     ActiveStatus      @default(ONBOARDING) @map("active_status")
   uid              String            @unique
   spaceRole        SpaceRole         @default(OWNER) @map("space_role")
-  mySpaceId        String           @map("my_space_id")
+  mySpaceId        Int            @map("my_space_id")
   menus            Menu[]
   recipes          Recipe[]
   requestedRecipes RequestedRecipe[]
-  spaceId          String?           @map("space_id")
+  spaceId          Int?              @map("space_id")
   space            Space?            @relation(fields: [spaceId], references: [spaceId], onDelete: Cascade)
   UserToken        UserToken[]
 
@@ -62,12 +62,12 @@ model User {
 }
 
 model UserToken {
-  userTokenId      String   @id @default(cuid()) @map("user_token_id")
-  token            String
-  deviceId         String   @map("device_id")
-  lastActive       DateTime @default(now()) @map("last_active")
-  userId           String   @map("user_id")
-  user             User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  userTokenId String   @id @default(cuid()) @map("user_token_id")
+  token       String
+  deviceId    String   @map("device_id")
+  lastActive  DateTime @default(now()) @map("last_active")
+  userId      Int      @map("user_id")
+  user        User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
   @@index([userTokenId])
   @@index([userId])
@@ -78,7 +78,7 @@ model SpaceInvitation {
   token     String    @id @unique
   expiredAt DateTime  @map("expired_at")
   usedAt    DateTime? @map("used_at")
-  spaceId   String    @map("space_id")
+  spaceId   Int       @map("space_id")
   space     Space     @relation(fields: [spaceId], references: [spaceId], onDelete: Cascade)
 
   @@index([token])
@@ -86,7 +86,7 @@ model SpaceInvitation {
 }
 
 model Recipe {
-  recipeId          String            @id @default(cuid())
+  recipeId          Int               @id @default(autoincrement()) @map("recipe_id")
   title             String
   thumbnailUrl      String?           @map("thumbnail_url")
   thumbnailFilename String?           @map("thumbnail_filename")
@@ -96,8 +96,8 @@ model Recipe {
   memo              String?
   faviconUrl        String?           @map("favicon_url")
   appName           String?           @map("app_name")
-  spaceId           String            @map("space_id")
-  userId            String            @map("user_id")
+  spaceId           Int               @map("space_id")
+  userId            Int               @map("user_id")
   archivedAt        DateTime?         @map("archived_at")
   createdAt         DateTime          @default(now()) @map("created_at")
   updatedAt         DateTime?         @updatedAt @map("updated_at")
@@ -112,12 +112,12 @@ model Recipe {
 }
 
 model Menu {
-  menuId      String     @id @default(cuid()) @map("menu_id")
+  menuId      Int        @id @default(autoincrement()) @map("menu_id")
   status      MenuStatus @default(PENDING)
   scheduledAt DateTime   @map("scheduledAt") @db.Date
-  spaceId     String     @map("space_id")
-  userId      String     @map("user_id")
-  recipeId    String     @map("recipe_id")
+  spaceId     Int        @map("space_id")
+  userId      Int        @map("user_id")
+  recipeId    Int        @map("recipe_id")
   createdAt   DateTime   @default(now()) @map("created_at")
   user        User       @relation(fields: [userId], references: [userId], onDelete: Cascade)
   recipe      Recipe     @relation(fields: [recipeId], references: [recipeId], onDelete: Cascade)
@@ -128,8 +128,8 @@ model Menu {
 }
 
 model RequestedRecipe {
-  userId    String   @map("user_id")
-  recipeId  String   @map("recipe_id")
+  userId    Int      @map("user_id")
+  recipeId  Int      @map("recipe_id")
   createdAt DateTime @default(now()) @map("created_at")
   user      User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
   recipe    Recipe   @relation(fields: [recipeId], references: [recipeId], onDelete: Cascade)
