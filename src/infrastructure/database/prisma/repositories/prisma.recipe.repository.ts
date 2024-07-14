@@ -10,7 +10,7 @@ import {
 import { Recipe as PrismaRecipe, PrismaClient } from '@prisma/client';
 import { PrismaUserRepository } from './prisma.user.repository';
 
-const prismaRecipeType = async (prisma: PrismaClient, recipeId: string) =>
+const prismaRecipeType = async (prisma: PrismaClient, recipeId: number) =>
   await prisma.recipe.findUnique({
     where: { recipeId },
     include: {
@@ -29,7 +29,7 @@ export class PrismaRecipeRepository implements IRecipeRepository {
     private readonly prismaUserRepository: PrismaUserRepository,
   ) {}
 
-  async findRecipe(recipeId: string): Promise<Recipe> {
+  async findRecipe(recipeId: number): Promise<Recipe> {
     const prismaRecipe = await this.prismaService.recipe.findUnique({
       where: { recipeId },
     });
@@ -40,7 +40,7 @@ export class PrismaRecipeRepository implements IRecipeRepository {
   }
 
   async findRecipes(
-    spaceId: string,
+    spaceId: number,
     findRecipeOptions?: FindRecipeOptions,
   ): Promise<Recipe[]> {
     const { requestUserId } = findRecipeOptions;
@@ -77,7 +77,7 @@ export class PrismaRecipeRepository implements IRecipeRepository {
     return prismaRecipes.map((prismaRecipe) => this.toRecipe(prismaRecipe));
   }
 
-  async findRequestedRecipes(spaceId: string): Promise<Recipe[]> {
+  async findRequestedRecipes(spaceId: number): Promise<Recipe[]> {
     const prismaRecipes = await this.prismaService.recipe.findMany({
       take: 100,
       where: {
@@ -122,7 +122,7 @@ export class PrismaRecipeRepository implements IRecipeRepository {
 
   async save(recipe: Recipe | RecipeBeforePersist) {
     const prismaRecipe = await this.prismaService.recipe.upsert({
-      where: { recipeId: 'id' in recipe ? recipe.getId : '' },
+      where: { recipeId: 'id' in recipe ? recipe.getId : -1 },
       update: {
         title: recipe.getTitle,
         spaceId: recipe.getSpaceId,

@@ -36,7 +36,7 @@ export class PrismaUserTokenRepository implements IUserTokenRepository {
   }
 
   async findUserToken(
-    userId: string,
+    userId: number,
     deviceId: string,
   ): Promise<UserToken | null> {
     const prismaUserToken = await this.prismaService.userToken.findFirst({
@@ -51,7 +51,7 @@ export class PrismaUserTokenRepository implements IUserTokenRepository {
     return this.toUserToken(prismaUserToken);
   }
 
-  async findUserTokens(userId: string): Promise<UserToken[] | null> {
+  async findUserTokens(userId: number): Promise<UserToken[] | null> {
     const prismaUserTokens = await this.prismaService.userToken.findMany({
       where: {
         userId,

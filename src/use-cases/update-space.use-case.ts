@@ -7,7 +7,7 @@ export class UpdateSpaceUseCase {
     private readonly spaceRepository: ISpaceRepository,
     private readonly userRepository: IUserRepository,
   ) {}
-  async execute(id: string, updateSpaceDto: UpdateSpaceDto, userId: string) {
+  async execute(id: number, updateSpaceDto: UpdateSpaceDto, userId: number) {
     const user = await this.userRepository.findUser({ userId });
     user.canUpdateSpace();
     const space = await this.spaceRepository.findSpace(id);

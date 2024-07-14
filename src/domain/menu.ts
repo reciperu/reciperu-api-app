@@ -8,10 +8,10 @@ export enum MenuStatus {
 
 export type MenuStatusKey = keyof typeof MenuStatus;
 export class MenuBeforePersist {
-  private recipeId: string;
+  private recipeId: number;
   private scheduledAt?: Date;
-  private userId: string;
-  private spaceId: string;
+  private userId: number;
+  private spaceId: number;
 
   constructor({
     recipeId,
@@ -19,28 +19,28 @@ export class MenuBeforePersist {
     userId,
     spaceId,
   }: {
-    recipeId: string;
+    recipeId: number;
     scheduledAt?: Date;
-    userId: string;
-    spaceId: string;
+    userId: number;
+    spaceId: number;
   }) {
     this.recipeId = recipeId;
     this.userId = userId;
     this.scheduledAt = scheduledAt;
     this.spaceId = spaceId;
   }
-  get getRecipeId(): string {
+  get getRecipeId(): number {
     return this.recipeId;
   }
 
-  get getUserId(): string {
+  get getUserId(): number {
     return this.userId;
   }
   get getScheduledAt(): Date | undefined {
     return this.scheduledAt;
   }
 
-  get getSpaceId(): string {
+  get getSpaceId(): number {
     return this.spaceId;
   }
 
@@ -50,7 +50,7 @@ export class MenuBeforePersist {
 }
 
 export class Menu extends MenuBeforePersist {
-  private id: string;
+  private id: number;
   private status: MenuStatus;
   private createdAt: Date;
   private recipe: Recipe;
@@ -64,14 +64,14 @@ export class Menu extends MenuBeforePersist {
     recipe,
     spaceId,
   }: {
-    id: string;
-    recipeId: string;
+    id: number;
+    recipeId: number;
     scheduledAt?: Date;
     status: MenuStatus;
     createdAt: Date;
     recipe: Recipe;
-    userId: string;
-    spaceId: string;
+    userId: number;
+    spaceId: number;
   }) {
     super({
       recipeId,
@@ -84,7 +84,7 @@ export class Menu extends MenuBeforePersist {
     this.createdAt = createdAt;
     this.recipe = recipe;
   }
-  get getId(): string {
+  get getId(): number {
     return this.id;
   }
   get getStatus(): MenuStatus {
@@ -114,17 +114,17 @@ export type IMenuRepository = {
     cursor,
     statuses,
   }: {
-    spaceId: string;
-    cursor?: string;
+    spaceId: number;
+    cursor?: number;
     statuses?: MenuStatusKey[];
   }): Promise<Menu[]>;
-  findMenu(id: string): Promise<Menu>;
+  findMenu(id: number): Promise<Menu>;
   save(menu: MenuBeforePersist | Menu): Promise<Menu>;
-  delete(id: string): Promise<void>;
+  delete(id: number): Promise<void>;
 };
 
 export type CreateMenuDto = {
-  recipeId: string;
+  recipeId: number;
   scheduledAt?: Date;
 };
 

@@ -9,7 +9,7 @@ export class PrismaRequestedRecipeRepository
   constructor(private readonly prismaService: PrismaService) {
     this.prismaService = prismaService;
   }
-  async create(userId: string, recipeId: string): Promise<void> {
+  async create(userId: number, recipeId: number): Promise<void> {
     await this.prismaService.requestedRecipe.create({
       data: {
         userId,
@@ -18,7 +18,7 @@ export class PrismaRequestedRecipeRepository
     });
   }
 
-  async delete(userId: string, recipeId: string): Promise<void> {
+  async delete(userId: number, recipeId: number): Promise<void> {
     await this.prismaService.requestedRecipe.delete({
       where: {
         userId_recipeId: {

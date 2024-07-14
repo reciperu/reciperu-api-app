@@ -14,7 +14,7 @@ export class InviteSpaceUseCase {
     this.spaceInvitationRepository = spaceInvitationRepository;
   }
 
-  async execute(spaceId: string, userId: string): Promise<SpaceInvitation> {
+  async execute(spaceId: number, userId: number): Promise<SpaceInvitation> {
     const user = await this.userRepository.findUser({ userId });
     user.canInviteSpace();
     // スペースの有効な招待を取得

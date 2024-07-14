@@ -9,6 +9,15 @@ export class UpdateRecipeUseCase {
     private readonly firebaseService: FirebaseService,
   ) {}
 
+  async execute(id: number, updateRecipesDto: UpdateRecipeDto) {
+    const recipe = await this.recipeRepository.findRecipe(id);
+    const recipeDto = await this.processRecipeDto(recipe, updateRecipesDto);
+
+    recipe.update(recipeDto);
+
+    return await this.recipeRepository.save(recipe);
+  }
+
   private async processRecipeDto(
     recipe: Recipe,
     updateRecipesDto: UpdateRecipeDto,
@@ -96,14 +105,5 @@ export class UpdateRecipeUseCase {
     await Promise.all(uploadPromises);
 
     return recipeDto;
-  }
-
-  async execute(id: string, updateRecipesDto: UpdateRecipeDto) {
-    const recipe = await this.recipeRepository.findRecipe(id);
-    const recipeDto = await this.processRecipeDto(recipe, updateRecipesDto);
-
-    recipe.update(recipeDto);
-
-    return await this.recipeRepository.save(recipe);
   }
 }

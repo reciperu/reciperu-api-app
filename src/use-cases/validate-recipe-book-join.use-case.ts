@@ -15,7 +15,7 @@ export class ValidateSpaceJoinUseCase {
     private readonly spaceRepository: ISpaceRepository,
   ) {}
 
-  async execute(token: string, userId: string): Promise<void> {
+  async execute(token: string, userId: number): Promise<void> {
     const invitation =
       await this.spaceInvitationRepository.findSpaceInvitationByToken(token);
 

@@ -4,7 +4,7 @@ import { FindRecipeOptions, IRecipeRepository } from 'src/domain';
 @Injectable()
 export class GetRecipeListUseCase {
   constructor(private readonly recipeRepository: IRecipeRepository) {}
-  async execute(spaceId: string, findOptions?: FindRecipeOptions) {
+  async execute(spaceId: number, findOptions?: FindRecipeOptions) {
     return await this.recipeRepository.findRecipes(spaceId, findOptions);
   }
 }

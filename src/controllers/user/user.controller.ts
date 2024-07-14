@@ -9,6 +9,7 @@ import {
   Inject,
   Put,
   ForbiddenException,
+  ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiOperation,
@@ -61,7 +62,7 @@ export class UserController {
   @ApiOperation({ operationId: 'updateUser' })
   @ApiParam({
     name: 'id',
-    type: String,
+    type: Number,
     required: true,
     description: 'userId',
   })
@@ -74,7 +75,7 @@ export class UserController {
     type: UserPresenter,
   })
   async updateUser(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
   ) {
     const updatedUser = await this.updateUserUseCase
@@ -108,8 +109,8 @@ export class UserController {
 
   @Delete(':id')
   @ApiParam({
-    name: 'id',
-    type: String,
+    name: 'userId',
+    type: Number,
     required: true,
     description: 'userId',
   })
@@ -118,7 +119,7 @@ export class UserController {
     description: 'ユーザー削除',
     type: SuccessPresenter,
   })
-  async delete(@Param('id') id: string) {
+  async delete(@Param('id', ParseIntPipe) id: number) {
     await this.deleteUserUseCase.getInstance().execute(id);
     return new SuccessPresenter();
   }

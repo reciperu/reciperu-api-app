@@ -13,8 +13,8 @@ export class CreateRecipesUseCase {
   ) {}
   private async processRecipesDto(
     createRecipesDto: CreateRecipeDto[],
-    userId: string,
-    spaceId: string,
+    userId: number,
+    spaceId: number,
   ) {
     return await Promise.all(
       createRecipesDto.map(async (x) => {
@@ -72,8 +72,8 @@ export class CreateRecipesUseCase {
 
   async execute(
     createRecipesDto: CreateRecipeDto[],
-    userId: string,
-    spaceId: string,
+    userId: number,
+    spaceId: number,
   ) {
     const recipesDto = await this.processRecipesDto(
       createRecipesDto,

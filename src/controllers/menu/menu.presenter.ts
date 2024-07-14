@@ -3,7 +3,7 @@ import { Menu, Recipe, MenuStatus } from 'src/domain';
 
 export class MenuPresenter {
   @ApiProperty()
-  id: string;
+  id: number;
 
   @ApiProperty()
   status: MenuStatus;
@@ -12,10 +12,10 @@ export class MenuPresenter {
   scheduledAt?: Date;
 
   @ApiProperty()
-  userId: string;
+  userId: number;
 
   @ApiProperty()
-  recipeId: string;
+  recipeId: number;
 
   @ApiProperty()
   recipe: Recipe;
@@ -35,7 +35,7 @@ export class PaginatedMenuPresenter {
   menus: MenuPresenter[];
 
   @ApiProperty()
-  nextCursor?: string;
+  nextCursor?: number;
 
   constructor(menus: MenuPresenter[]) {
     this.menus = menus;

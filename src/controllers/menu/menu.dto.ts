@@ -7,7 +7,7 @@ import {
 
 export class CreateMenuDto implements DomainCreateMenuDto {
   @ApiProperty()
-  recipeId: string;
+  recipeId: number;
 
   @ApiProperty()
   scheduledAt?: Date;

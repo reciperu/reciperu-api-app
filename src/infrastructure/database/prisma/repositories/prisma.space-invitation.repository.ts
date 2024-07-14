@@ -55,7 +55,7 @@ export class PrismaSpaceInvitationRepository
   }
 
   async findSpaceInvitationsBySpaceId(
-    spaceId: string,
+    spaceId: number,
   ): Promise<SpaceInvitation[]> {
     const prismaInvitations = await this.prismaService.spaceInvitation.findMany(
       {

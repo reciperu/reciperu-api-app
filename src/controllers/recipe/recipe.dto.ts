@@ -91,5 +91,5 @@ export class CreateRequestedRecipeDto
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  recipeId: string;
+  recipeId: number;
 }

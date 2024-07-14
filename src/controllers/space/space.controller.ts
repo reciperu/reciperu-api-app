@@ -7,6 +7,7 @@ import {
   Put,
   Post,
   Req,
+  ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -54,11 +55,11 @@ export class SpaceController {
   })
   @ApiParam({
     name: 'id',
-    type: String,
+    type: Number,
     required: true,
     description: 'spaceId',
   })
-  async show(@Param('id') id: string) {
+  async show(@Param('id', ParseIntPipe) id: number) {
     return new SpacePresenter(
       await this.getSpaceUseCase.getInstance().execute(id),
     );
@@ -101,6 +102,12 @@ export class SpaceController {
 
   @Put(':id')
   @ApiOperation({ operationId: 'updateSpace' })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    required: true,
+    description: 'spaceId',
+  })
   @ApiBody({
     type: UpdateSpaceDto,
   })
@@ -111,7 +118,7 @@ export class SpaceController {
   })
   async update(
     @Req() req: Request,
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateSpaceDto: UpdateSpaceDto,
   ) {
     return new SpacePresenter(

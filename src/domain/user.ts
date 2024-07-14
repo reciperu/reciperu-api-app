@@ -58,11 +58,11 @@ export class UserBeforePersist {
 }
 
 export class User extends UserBeforePersist {
-  private id: string;
+  private id: number;
   private activeStatus: ActiveStatus;
-  private spaceId: string;
+  private spaceId: number;
   private spaceRole: SpaceRole;
-  private mySpaceId: string;
+  private mySpaceId: number;
 
   constructor({
     id,
@@ -75,15 +75,15 @@ export class User extends UserBeforePersist {
     spaceRole,
     mySpaceId,
   }: {
-    id: string;
+    id: number;
     name: string;
     imageUrl: string;
     filename: string;
     uid: string;
     activeStatus: ActiveStatus;
-    spaceId: string;
+    spaceId: number;
     spaceRole: SpaceRole;
-    mySpaceId: string;
+    mySpaceId: number;
   }) {
     super({ name, imageUrl, uid, filename });
     this.id = id;
@@ -92,21 +92,21 @@ export class User extends UserBeforePersist {
     this.spaceRole = spaceRole;
     this.mySpaceId = mySpaceId;
   }
-  get getId(): string {
+  get getId(): number {
     return this.id;
   }
 
   get getActiveStatus(): ActiveStatus {
     return this.activeStatus;
   }
-  get getSpaceId(): string {
+  get getSpaceId(): number {
     return this.spaceId;
   }
   get getSpaceRole(): SpaceRole {
     return this.spaceRole;
   }
 
-  get getMySpaceId(): string {
+  get getMySpaceId(): number {
     return this.mySpaceId;
   }
 
@@ -131,7 +131,7 @@ export class User extends UserBeforePersist {
     this.setActiveStatus = activeStatus;
   }
 
-  joinSpace(spaceId: string): void {
+  joinSpace(spaceId: number): void {
     this.spaceId = spaceId;
     this.spaceRole = SpaceRole.PARTICIPANT;
   }
@@ -147,7 +147,7 @@ export class User extends UserBeforePersist {
       throw new BadRequestException('USER_NOT_OWNER');
     }
   }
-  changeSpace(spaceId: string): void {
+  changeSpace(spaceId: number): void {
     this.spaceId = spaceId;
   }
 }
@@ -155,13 +155,13 @@ export class User extends UserBeforePersist {
 export class UserTokenBeforePersist {
   private token: string;
   private deviceId: string;
-  private userId: string;
+  private userId: number;
   constructor({
     userId,
     deviceId,
     token,
   }: {
-    userId: string;
+    userId: number;
     deviceId: string;
     token: string;
   }) {
@@ -177,7 +177,7 @@ export class UserTokenBeforePersist {
     return this.deviceId;
   }
 
-  get getUserId(): string {
+  get getUserId(): number {
     return this.userId;
   }
 
@@ -200,7 +200,7 @@ export class UserToken extends UserTokenBeforePersist {
     token: string;
     deviceId: string;
     lastActive: Date;
-    userId: string;
+    userId: number;
   }) {
     super({
       userId,
@@ -228,17 +228,17 @@ export class UserToken extends UserTokenBeforePersist {
 export type IUserRepository = {
   create(user: UserBeforePersist): Promise<User>;
   findUser(
-    findOptions: { uid: string } | { userId: string },
+    findOptions: { uid: string } | { userId: number },
   ): Promise<User | null>;
-  findUsersBySpaceId(spaceId: string): Promise<User[] | null>;
+  findUsersBySpaceId(spaceId: number): Promise<User[] | null>;
   update(user: User): Promise<User>;
   updateWithSpace(user: User, invitation: SpaceInvitation): Promise<User>;
 };
 
 export type IUserTokenRepository = {
   save(userTokenBeforePersist: UserTokenBeforePersist): Promise<UserToken>;
-  findUserToken(userId: string, deviceId: string): Promise<UserToken | null>;
-  findUserTokens(userId: string): Promise<UserToken[] | null>;
+  findUserToken(userId: number, deviceId: string): Promise<UserToken | null>;
+  findUserTokens(userId: number): Promise<UserToken[] | null>;
 };
 
 export type UpdateUserDto = {

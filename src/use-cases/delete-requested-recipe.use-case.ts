@@ -6,7 +6,7 @@ export class DeleteRequestedRecipeUseCase {
   constructor(
     private readonly requestedRecipeRepository: IRequestedRecipeRepository,
   ) {}
-  async execute(recipeId: string, userId: string) {
+  async execute(recipeId: number, userId: number) {
     return await this.requestedRecipeRepository.delete(userId, recipeId);
   }
 }

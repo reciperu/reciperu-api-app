@@ -36,7 +36,7 @@ export class UpdateUserUseCase {
       activeStatus: updateUserDto.activeStatus,
     };
   }
-  async execute(updateUserDto: UpdateUserDto, userId: string): Promise<User> {
+  async execute(updateUserDto: UpdateUserDto, userId: number): Promise<User> {
     const user = await this.userRepository.findUser({ userId });
     const userDto = await this.processUserDto(user, updateUserDto);
 

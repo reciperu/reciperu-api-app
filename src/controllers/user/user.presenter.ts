@@ -3,7 +3,7 @@ import { User, ActiveStatus, SpaceRole } from 'src/domain';
 
 export class UserPresenter {
   @ApiProperty()
-  readonly id: string;
+  readonly id: number;
 
   @ApiProperty()
   readonly name: string;
@@ -15,7 +15,7 @@ export class UserPresenter {
   readonly activeStatus: ActiveStatus;
 
   @ApiProperty()
-  readonly spaceId: string;
+  readonly spaceId: number;
 
   @ApiProperty({ enum: SpaceRole })
   readonly spaceRole: SpaceRole;
