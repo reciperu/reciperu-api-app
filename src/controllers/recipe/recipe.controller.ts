@@ -10,6 +10,7 @@ import {
   Query,
   Delete,
   ParseIntPipe,
+  DefaultValuePipe,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -46,6 +47,7 @@ import {
 } from 'src/use-cases';
 import { Request } from 'express';
 import { SuccessPresenter } from '../common/success.presenter';
+import { ParseOptionalIntPipe } from 'src/pipes/parseOptionalInt.pipe';
 
 @ApiTags('recipes')
 @ApiBearerAuth()
@@ -98,7 +100,8 @@ export class RecipeController {
   })
   async index(
     @Req() req: Request,
-    @Query('cursor', ParseIntPipe) cursor: number | undefined,
+    @Query('cursor', new DefaultValuePipe(''), ParseOptionalIntPipe)
+    cursor: number | undefined,
     @Query('isRequested') isRequested: boolean | undefined,
     @Query('title') title: string | undefined,
   ) {
