@@ -25,7 +25,7 @@ export class FirebaseService implements OnModuleInit {
   }
 
   get storage() {
-    return admin.storage();
+    return this.admin.storage();
   }
 
   async deleteImageFromStorage(filename: string) {

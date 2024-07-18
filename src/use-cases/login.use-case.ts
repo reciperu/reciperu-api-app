@@ -13,7 +13,7 @@ export class LoginUseCase {
   private async processUserDto(decodedToken: DecodedIdToken) {
     const { name, uid, picture } = decodedToken;
     const userObject = {
-      name,
+      name: name || '',
       imageUrl: '',
       filename: '',
       uid,
