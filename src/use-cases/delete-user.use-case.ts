@@ -20,23 +20,14 @@ export class DeleteUserUseCase {
     private readonly transactionManager: ITransactionManager,
   ) {}
   async execute(userId: number) {
-    await this.transactionManager.begin(async () => {
-      const user = await this.userRepository.findUser({
-        userId,
-      });
-      // await this.change.paceOfParticipantsIfMySpace(user);
-      // user.update({
-      //   name: '削除済みユーザー',
-      // });
-
-      const space = await this.spaceRepository.findSpace(user.getSpaceId);
-      console.log(user, 'user');
-      // await this.firebaseService.admin.auth().deleteUser(user.getUid);
+    // await this.transactionManager.begin(async () => {});
+    // TODO:トランザクション処理
+    const user = await this.userRepository.findUser({
+      userId,
     });
-
-    console.log('delete user');
-
-    // await this.spaceRepository.deleteSpace(user.getSpaceId);
+    await this.changeSpaceOfParticipantsIfMySpace(user);
+    await this.firebaseService.admin.auth().deleteUser(user.getUid);
+    await this.spaceRepository.deleteSpace(user.getSpaceId);
   }
 
   private async changeSpaceOfParticipantsIfMySpace(user: User) {
@@ -45,7 +36,7 @@ export class DeleteUserUseCase {
 
     const participants = await this.findParticipants(user.getSpaceId);
 
-    await this.changeSpaceOfParticipantRecipes(participants, user);
+    await this.changeRecipesByParticipants(participants, user);
 
     await Promise.all(
       participants.map((participant) => {
@@ -55,10 +46,7 @@ export class DeleteUserUseCase {
     );
   }
 
-  private async changeSpaceOfParticipantRecipes(
-    participants: User[],
-    user: User,
-  ) {
+  private async changeRecipesByParticipants(participants: User[], user: User) {
     const recipes = await this.recipeRepository.findRecipes(user.getSpaceId, {
       userId: user.getId,
     });
@@ -77,7 +65,6 @@ export class DeleteUserUseCase {
     participants.map(async (participant) => {
       const recipes = recipesByUserId[participant.getId];
       if (!recipes) return;
-      // TODO:トランザクション処理
       await Promise.all(
         recipes.map((recipe) => {
           recipe.setSpaceId = participant.getMySpaceId;
